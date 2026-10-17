@@ -1,0 +1,73 @@
+{
+  "configVersion": "1.0",
+  "thresholds": {
+    "staleUserDays": 90,
+    "staleComputerDays": 90,
+    "neverLoggedOnGraceDays": 30,
+    "servicePasswordMaxAgeDays": 365,
+    "krbtgtMaxAgeDays": 180
+  },
+  "privilegedGroupMaxMembers": {
+    "default": 10,
+    "Domain Admins": 5,
+    "Enterprise Admins": 3,
+    "Administrators": 8
+  },
+  "passwordPolicy": {
+    "minLength": 14,
+    "minHistory": 24,
+    "complexityRequired": true,
+    "lockoutThresholdMax": 10,
+    "lockoutDurationMinMinutes": 15
+  },
+  "privilegedGroups": [
+    { "name": "Domain Admins", "rid": 512 },
+    { "name": "Enterprise Admins", "rid": 519 },
+    { "name": "Schema Admins", "rid": 518 },
+    { "name": "Administrators", "sid": "S-1-5-32-544" },
+    { "name": "Account Operators", "sid": "S-1-5-32-548" },
+    { "name": "Server Operators", "sid": "S-1-5-32-549" },
+    { "name": "Print Operators", "sid": "S-1-5-32-550" },
+    { "name": "Backup Operators", "sid": "S-1-5-32-551" },
+    { "name": "Replicator", "sid": "S-1-5-32-552" },
+    { "name": "Group Policy Creator Owners", "rid": 520 }
+  ],
+  "trustedPrincipals": {
+    "sids": [],
+    "names": []
+  },
+  "domainControllers": {
+    "unsupportedOsPattern": "Windows (Server )?(2000|2003|2008|2012)",
+    "minDomainFunctionalLevel": "Windows2012R2Domain",
+    "minForestFunctionalLevel": "Windows2012R2Forest"
+  },
+  "securityLog": {
+    "minSizeMB": 1024
+  },
+  "auditPolicy": {
+    "required": [
+      { "name": "Credential Validation", "guid": "0CCE923F-69AE-11D9-BED3-505054503030", "success": true, "failure": true },
+      { "name": "Kerberos Authentication Service", "guid": "0CCE9242-69AE-11D9-BED3-505054503030", "success": true, "failure": true },
+      { "name": "Kerberos Service Ticket Operations", "guid": "0CCE9240-69AE-11D9-BED3-505054503030", "success": true, "failure": true },
+      { "name": "User Account Management", "guid": "0CCE9235-69AE-11D9-BED3-505054503030", "success": true, "failure": true },
+      { "name": "Computer Account Management", "guid": "0CCE9236-69AE-11D9-BED3-505054503030", "success": true, "failure": false },
+      { "name": "Security Group Management", "guid": "0CCE9237-69AE-11D9-BED3-505054503030", "success": true, "failure": false },
+      { "name": "Directory Service Changes", "guid": "0CCE923C-69AE-11D9-BED3-505054503030", "success": true, "failure": false },
+      { "name": "Logon", "guid": "0CCE9215-69AE-11D9-BED3-505054503030", "success": true, "failure": true },
+      { "name": "Special Logon", "guid": "0CCE921B-69AE-11D9-BED3-505054503030", "success": true, "failure": false },
+      { "name": "Audit Policy Change", "guid": "0CCE922F-69AE-11D9-BED3-505054503030", "success": true, "failure": false }
+    ]
+  },
+  "collection": {
+    "aclMaxObjects": 500,
+    "collectDcHostSettings": true,
+    "collectSysvol": true,
+    "collectAcls": true
+  },
+  "exclusions": [],
+  "exceptions": [],
+  "logging": {
+    "level": "Information",
+    "path": null
+  }
+}

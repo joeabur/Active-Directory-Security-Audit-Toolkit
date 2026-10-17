@@ -1,0 +1,12 @@
+# Audit output and directory data must never be committed
+output/
+*.snapshot.json
+snapshots/
+logs/
+*.log
+TestResults/
+coverage.xml
+# Local secrets
+*.pfx
+*.key
+.env
