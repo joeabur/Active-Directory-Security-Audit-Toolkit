@@ -206,9 +206,9 @@
             Severity     = 'Medium'
             Confidence   = 'High'
             FindingType  = 'Misconfiguration'
-            Description  = 'An enabled privileged account lacks the NOT_DELEGATED flag, so its credentials could be forwarded by a delegation-enabled service.'
+            Description  = 'An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.'
             Remediation  = 'Enable ''Account is sensitive and cannot be delegated'' or place the account in the Protected Users group after testing.'
-            Limitations  = 'Membership of Protected Users is not evaluated; accounts protected that way are still reported by this rule.'
+            Limitations  = 'Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.'
             RequiredData = 'Users, Groups'
             Permissions  = 'Authenticated domain user'
         }

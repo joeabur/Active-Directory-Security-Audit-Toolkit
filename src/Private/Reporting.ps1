@@ -140,20 +140,34 @@ dl.ev{margin:0}dl.ev dt{font-weight:600;float:left;clear:left;margin-right:6px}d
     $null = $sb.AppendLine('<p class="small">Severity counts include only FAIL results not covered by a documented exception. ERROR and NOT_ASSESSED results are coverage gaps, never passes. A stale-account finding is hygiene evidence, not a confirmed vulnerability; see each finding''s type and confidence.</p>')
     foreach ($w in @($m.Warnings)) { if ($w) { $null = $sb.AppendLine("<p class=""small"">Configuration warning: $(& $e $w)</p>") } }
 
-    # Findings
+    # Top priorities: first ten active findings (already sorted by severity)
     $active = @($Report.Findings | Where-Object { $_.Status -eq 'FAIL' -and -not $_.Excepted })
+    $null = $sb.AppendLine('<h3>Top priorities</h3>')
+    if ($active.Count -eq 0) { $null = $sb.AppendLine('<p>No active FAIL findings. Review the coverage section before drawing conclusions.</p>') } else {
+        $null = $sb.AppendLine('<div class="wrap"><table><tr><th>Severity</th><th>Rule</th><th>Affected object</th><th>Confidence</th></tr>')
+        foreach ($f in ($active | Select-Object -First 10)) { $null = $sb.AppendLine("<tr><td class=""sev-$(Get-ADSASafeToken $f.Severity $sevAllowed)"">$(& $e $f.Severity)</td><td>$(& $e $f.RuleId) $(& $e $f.Title)</td><td>$(& $e $f.AffectedObject)</td><td>$(& $e $f.Confidence)</td></tr>") }
+        $null = $sb.AppendLine('</table></div>')
+        if ($active.Count -gt 10) { $null = $sb.AppendLine("<p class=""small"">Showing 10 of $(& $e $active.Count) active findings; all are listed below.</p>") }
+    }
+
+    # Findings grouped by rule so a rule that hits many objects is readable
     $null = $sb.AppendLine('<h2 id="findings">Technical findings (FAIL)</h2>')
-    if ($active.Count -eq 0) { $null = $sb.AppendLine('<p>No active FAIL findings. Review the coverage section before drawing conclusions.</p>') }
-    foreach ($f in $active) {
-        $null = $sb.AppendLine("<details open><summary><span class=""sev-$(Get-ADSASafeToken $f.Severity $sevAllowed)"">$(& $e $f.Severity)</span> &middot; $(& $e $f.RuleId) &middot; $(& $e $f.Title) &mdash; <em>$(& $e $f.AffectedObject)</em></summary>")
+    if ($active.Count -eq 0) { $null = $sb.AppendLine('<p>None.</p>') }
+    foreach ($grp in ($active | Group-Object RuleId)) {
+        $items = @($grp.Group)
+        $first = $items[0]
+        $null = $sb.AppendLine("<details open><summary><span class=""sev-$(Get-ADSASafeToken $first.Severity $sevAllowed)"">$(& $e $first.Severity)</span> &middot; $(& $e $first.RuleId) &middot; $(& $e $first.Title) &mdash; <em>$(& $e $items.Count) affected</em></summary>")
         $null = $sb.AppendLine('<div class="wrap"><table>')
-        $null = $sb.AppendLine("<tr><th>Affected object</th><td>$(& $e $f.AffectedObject) <span class=""small"">($(& $e $f.AffectedObjectType))</span></td></tr>")
-        $null = $sb.AppendLine("<tr><th>Finding type / confidence</th><td>$(& $e $f.FindingType) / $(& $e $f.Confidence)</td></tr>")
-        $null = $sb.AppendLine("<tr><th>Evidence</th><td>$(ConvertTo-ADSAEvidenceHtml $f.Evidence)</td></tr>")
-        $null = $sb.AppendLine("<tr><th>Explanation</th><td>$(& $e $f.Explanation)</td></tr>")
-        $null = $sb.AppendLine("<tr><th>Remediation</th><td>$(& $e $f.Remediation)</td></tr>")
-        $null = $sb.AppendLine("<tr><th>Limitations</th><td>$(& $e $f.Limitations)</td></tr>")
-        $null = $sb.AppendLine("<tr><th>Collected / source</th><td>$(& $e $f.CollectionTime) / $(& $e $f.DataSource)</td></tr>")
+        $null = $sb.AppendLine("<tr><th>Finding type</th><td>$(& $e $first.FindingType) ($(& $e $first.Category))</td></tr>")
+        $null = $sb.AppendLine("<tr><th>What it means</th><td>$(& $e $first.Explanation)</td></tr>")
+        $null = $sb.AppendLine("<tr><th>Remediation</th><td>$(& $e $first.Remediation)</td></tr>")
+        $null = $sb.AppendLine("<tr><th>Limitations</th><td>$(& $e $first.Limitations)</td></tr>")
+        $null = $sb.AppendLine('</table></div>')
+        $null = $sb.AppendLine('<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>')
+        foreach ($f in $items) {
+            $note = if ($f.Limitations -ne $first.Limitations -or $f.Explanation -ne $first.Explanation) { "$($f.Limitations)" } else { '' }
+            $null = $sb.AppendLine("<tr><td>$(& $e $f.AffectedObject) <span class=""small"">($(& $e $f.AffectedObjectType))</span></td><td class=""sev-$(Get-ADSASafeToken $f.Severity $sevAllowed)"">$(& $e $f.Severity)</td><td>$(& $e $f.Confidence)</td><td>$(ConvertTo-ADSAEvidenceHtml $f.Evidence)</td><td>$(& $e $f.CollectionTime) / $(& $e $f.DataSource)</td><td>$(& $e $note)</td></tr>")
+        }
         $null = $sb.AppendLine('</table></div></details>')
     }
 

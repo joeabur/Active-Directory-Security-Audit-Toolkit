@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
+<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>AD Security Audit Report</title>
+<style>
+:root{--bg:#fff;--fg:#1b1f24;--muted:#57606a;--line:#d0d7de;--card:#f6f8fa;--crit:#82071e;--high:#cf222e;--med:#9a6700;--low:#0969da;--info:#57606a;--ok:#1a7f37;--warn:#bf8700}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--muted:#8b949e;--line:#30363d;--card:#161b22;--crit:#ff7b72;--high:#ffa198;--med:#e3b341;--low:#79c0ff;--info:#8b949e;--ok:#56d364;--warn:#e3b341}}
+body{font:14px/1.5 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg);margin:0;padding:16px;max-width:1200px;margin-inline:auto}
+h1{font-size:22px}h2{font-size:18px;margin-top:32px;border-bottom:1px solid var(--line);padding-bottom:4px}
+.banner{padding:10px 14px;border:2px solid var(--warn);border-radius:6px;background:var(--card);margin:12px 0}
+.banner.sim{border-color:var(--high)}
+.cards{display:flex;flex-wrap:wrap;gap:10px}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-width:110px}
+.card b{display:block;font-size:22px}
+table{border-collapse:collapse;width:100%;margin:8px 0}th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--card)}
+.wrap{overflow-x:auto}
+.sev-critical{color:var(--crit);font-weight:700}.sev-high{color:var(--high);font-weight:700}.sev-medium{color:var(--med);font-weight:700}.sev-low{color:var(--low);font-weight:700}.sev-informational,.sev-unknown{color:var(--info)}
+.st-fail{color:var(--high);font-weight:700}.st-pass{color:var(--ok);font-weight:700}.st-error{color:var(--warn);font-weight:700}.st-not-assessed{color:var(--warn)}.st-not-applicable,.st-unknown{color:var(--muted)}
+dl.ev{margin:0}dl.ev dt{font-weight:600;float:left;clear:left;margin-right:6px}dl.ev dd{margin:0 0 2px 0;word-break:break-word}
+.small{color:var(--muted);font-size:12px}details{margin:6px 0}
+</style>
+</head><body>
+<h1>Active Directory Security Audit Report</h1>
+<div class="banner sim"><strong>Data source: Simulated</strong> (OfflineSnapshot). SIMULATED DATA: these results come from a synthetic fixture. They are not observations of a real domain and say nothing about the security of any real environment. Object names are pseudonymised (redacted-xxxxxxxx); redaction reduces exposure but is not anonymisation.</div>
+<p class="small">Domain: redacted-977f5673 &middot; Collected: 10/01/2026 00:00:00 &middot; Generated: 10/17/2026 05:53:07 &middot; Tool: ADSecurityAudit 1.0.0 &middot; Schema 1.0</p>
+<p class="small"><strong>Handle as sensitive:</strong> this report contains directory information (account names, group membership, configuration). Store and share it accordingly.</p>
+<h2 id="summary">Executive summary</h2>
+<p>50 active finding(s) across 41 assessed rule(s); 5 rule(s) could not be fully assessed; 0 finding(s) covered by documented exceptions.</p>
+<div class="cards">
+<div class="card"><b class="sev-critical">2</b>Critical</div>
+<div class="card"><b class="sev-high">17</b>High</div>
+<div class="card"><b class="sev-medium">20</b>Medium</div>
+<div class="card"><b class="sev-low">11</b>Low</div>
+<div class="card"><b class="sev-informational">0</b>Informational</div>
+<div class="card"><b>0</b>Excepted</div>
+<div class="card"><b>41 / 44</b>Rules assessed</div>
+<div class="card"><b>5</b>Not fully assessed</div>
+</div>
+<p class="small">Severity counts include only FAIL results not covered by a documented exception. ERROR and NOT_ASSESSED results are coverage gaps, never passes. A stale-account finding is hygiene evidence, not a confirmed vulnerability; see each finding's type and confidence.</p>
+<h3>Top priorities</h3>
+<div class="wrap"><table><tr><th>Severity</th><th>Rule</th><th>Affected object</th><th>Confidence</th></tr>
+<tr><td class="sev-critical">Critical</td><td>ADSA-ACL-002 Directory replication rights granted to a non-default principal</td><td>redacted-7d7787d2</td><td>High</td></tr>
+<tr><td class="sev-critical">Critical</td><td>ADSA-GPO-003 Group Policy Preferences cpassword found in SYSVOL</td><td>redacted-906ffe8d</td><td>High</td></tr>
+<tr><td class="sev-high">High</td><td>ADSA-ACC-005 Enabled account does not require a password</td><td>redacted-bbe40b96</td><td>High</td></tr>
+<tr><td class="sev-high">High</td><td>ADSA-ACC-006 Kerberos pre-authentication disabled</td><td>redacted-6299ecf3</td><td>High</td></tr>
+<tr><td class="sev-high">High</td><td>ADSA-ACL-001 Non-privileged principal holds high-risk rights on a sensitive object</td><td>CN=AdminSDHolder,CN=System,redacted-7d7787d2</td><td>High</td></tr>
+<tr><td class="sev-high">High</td><td>ADSA-ACL-003 Sensitive object owned by a non-privileged principal</td><td>CN=Domain Admins,CN=Users,redacted-7d7787d2</td><td>High</td></tr>
+<tr><td class="sev-high">High</td><td>ADSA-ACL-004 Non-privileged principal can modify a Group Policy Object</td><td>redacted-906ffe8d</td><td>High</td></tr>
+<tr><td class="sev-high">High</td><td>ADSA-DC-001 Print Spooler service running on domain controller</td><td>redacted-b462e39d</td><td>High</td></tr>
+<tr><td class="sev-high">High</td><td>ADSA-DEL-001 Unconstrained delegation</td><td>redacted-30937380</td><td>High</td></tr>
+<tr><td class="sev-high">High</td><td>ADSA-DEL-001 Unconstrained delegation</td><td>redacted-6de71e3f</td><td>High</td></tr>
+</table></div>
+<p class="small">Showing 10 of 50 active findings; all are listed below.</p>
+<h2 id="findings">Technical findings (FAIL)</h2>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-ACC-001 &middot; Stale enabled user account &mdash; <em>2 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Hygiene (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>An enabled user account has not logged on within the configured inactivity threshold. This is hygiene evidence of a possibly unused account, not a confirmed vulnerability.</td></tr>
+<tr><th>Remediation</th><td>Confirm with the account owner. If unused, disable the account, document the change, and delete it after your retention period.</td></tr>
+<tr><th>Limitations</th><td>lastLogonTimestamp is replicated lazily (up to about 14 days of lag) and is not updated by every authentication type. Accounts used only via Kerberos service tickets or cached credentials may appear stale.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-eb502ea6 <span class="small">(User)</span></td><td class="sev-low">Low</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-eb502ea6,CN=Users,redacted-7d7787d2</dd><dt>LastLogonTimestamp</dt><dd>02/01/2025 08:00:00</dd><dt>DaysSinceLastLogon</dt><dd>606</dd><dt>ThresholdDays</dt><dd>90</dd><dt>Note</dt><dd>redacted-e3498e11</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-b1e12905 <span class="small">(User)</span></td><td class="sev-low">Low</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-b1e12905,CN=Users,redacted-7d7787d2</dd><dt>LastLogonTimestamp</dt><dd>01/10/2025 08:00:00</dd><dt>DaysSinceLastLogon</dt><dd>628</dd><dt>ThresholdDays</dt><dd>90</dd><dt>Note</dt><dd>redacted-e3498e11</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-ACC-002 &middot; Inactive enabled computer account &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Hygiene (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>An enabled, non-domain-controller computer account shows no logon or machine password change within the inactivity threshold. This is hygiene evidence, not a confirmed vulnerability.</td></tr>
+<tr><th>Remediation</th><td>Verify the host is decommissioned, then disable and later delete the computer object.</td></tr>
+<tr><th>Limitations</th><td>Computers that are powered off for long periods, or that do not rotate machine passwords, can appear inactive while still in use.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-33111ba8 <span class="small">(Computer)</span></td><td class="sev-low">Low</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-72fc0d59,CN=Computers,redacted-7d7787d2</dd><dt>LastActivity</dt><dd>03/01/2025 08:00:00</dd><dt>DaysInactive</dt><dd>578</dd><dt>ThresholdDays</dt><dd>90</dd><dt>OperatingSystem</dt><dd>redacted-50f21dcb</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-ACC-003 &middot; Enabled account with password that never expires &mdash; <em>3 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>The DONT_EXPIRE_PASSWORD flag is set on an enabled user account, exempting it from password aging. This is a policy exception that needs a documented owner and compensating controls.</td></tr>
+<tr><th>Remediation</th><td>Remove the flag where possible. For genuine service accounts prefer group Managed Service Accounts; otherwise record a time-boxed exception with an owner.</td></tr>
+<tr><th>Limitations</th><td>The flag is a fact; whether it is acceptable depends on the account&#39;s purpose, which this tool cannot determine.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>Administrator <span class="small">(User)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=Administrator,CN=Users,redacted-7d7787d2</dd><dt>FlagsSet</dt><dd>redacted-a8a5d42e</dd><dt>UserAccountControl</dt><dd>66048</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-bd419b9e <span class="small">(User)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-bd419b9e,CN=Users,redacted-7d7787d2</dd><dt>FlagsSet</dt><dd>redacted-a8a5d42e</dd><dt>UserAccountControl</dt><dd>66048</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-4fbdaa06 <span class="small">(User)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-4fbdaa06,CN=Users,redacted-7d7787d2</dd><dt>FlagsSet</dt><dd>redacted-a8a5d42e</dd><dt>UserAccountControl</dt><dd>66048</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-ACC-004 &middot; Potentially orphaned account (manager disabled) &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>PotentialRisk (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>An enabled account lists a manager whose account is disabled, which can indicate the account lost its accountable owner.</td></tr>
+<tr><th>Remediation</th><td>Review ownership with HR or the application owner and assign a current manager or disable the account.</td></tr>
+<tr><th>Limitations</th><td>Heuristic only. Manager attributes are often stale or intentionally unset. Managers outside the collected user set cannot be evaluated.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-f80f2545 <span class="small">(User)</span></td><td class="sev-low">Low</td><td>Low</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-f80f2545,CN=Users,redacted-7d7787d2</dd><dt>Manager</dt><dd>CN=redacted-97e7f49e,CN=Users,redacted-7d7787d2</dd><dt>ManagerEnabled</dt><dd>False</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-ACC-005 &middot; Enabled account does not require a password &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>The PASSWD_NOTREQD flag is set on an enabled account, which can allow an empty password if domain policy does not otherwise prevent it.</td></tr>
+<tr><th>Remediation</th><td>Clear the flag and ensure the account has a strong password; investigate why it was set.</td></tr>
+<tr><th>Limitations</th><td>The flag permits, but does not prove, an empty password; the tool never tests passwords.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-bbe40b96 <span class="small">(User)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-bbe40b96,CN=Users,redacted-7d7787d2</dd><dt>FlagsSet</dt><dd>redacted-1bcbe3fa</dd><dt>UserAccountControl</dt><dd>544</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-ACC-006 &middot; Kerberos pre-authentication disabled &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>The DONT_REQ_PREAUTH flag is set on an enabled account, so an unauthenticated party can request material derived from the account password for offline guessing.</td></tr>
+<tr><th>Remediation</th><td>Enable Kerberos pre-authentication unless a documented legacy dependency exists; ensure the password is long and random.</td></tr>
+<tr><th>Limitations</th><td>Configuration evidence only; the tool does not request or test any authentication material.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-6299ecf3 <span class="small">(User)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-6299ecf3,CN=Users,redacted-7d7787d2</dd><dt>FlagsSet</dt><dd>redacted-450927f0</dd><dt>UserAccountControl</dt><dd>4194816</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-ACC-007 &middot; Weak Kerberos or password storage flags &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>An enabled account is restricted to DES (USE_DES_KEY_ONLY) or stores its password with reversible encryption (ENCRYPTED_TEXT_PWD_ALLOWED).</td></tr>
+<tr><th>Remediation</th><td>Clear the flags, reset the password through your normal process so stronger keys are generated, and retire clients that need DES.</td></tr>
+<tr><th>Limitations</th><td>Configuration evidence only. Domain-wide encryption type policy is not evaluated by this rule.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-f2cd6d7f <span class="small">(User)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-f2cd6d7f,CN=Users,redacted-7d7787d2</dd><dt>FlagsSet</dt><dd>redacted-db962055</dd><dt>UserAccountControl</dt><dd>2097664</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-ACC-008 &middot; Enabled account that has never logged on &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Hygiene (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>An enabled account was created longer ago than the grace period and has no recorded logon. This is hygiene evidence, not a confirmed vulnerability.</td></tr>
+<tr><th>Remediation</th><td>Confirm whether the account is still needed; disable it if not.</td></tr>
+<tr><th>Limitations</th><td>Accounts used only through non-logon paths, or whose lastLogonTimestamp was never replicated to the queried DC, may appear never used.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-6a666b17 <span class="small">(User)</span></td><td class="sev-low">Low</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-6a666b17,CN=Users,redacted-7d7787d2</dd><dt>WhenCreated</dt><dd>06/01/2025 08:00:00</dd><dt>AccountAgeDays</dt><dd>486</dd><dt>GraceDays</dt><dd>30</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-ACL-001 &middot; Non-privileged principal holds high-risk rights on a sensitive object &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Access control)</td></tr>
+<tr><th>What it means</th><td>A principal that is not an expected administrator holds GenericAll, WriteDacl, WriteOwner, GenericWrite, write-all-properties, all-extended-rights, password reset, group membership write or GPO link write rights on a sensitive object.</td></tr>
+<tr><th>Remediation</th><td>Review the ACE with the object owner. Remove it if unnecessary, or document and monitor it. Do not modify ACLs without change control.</td></tr>
+<tr><th>Limitations</th><td>Selective coverage: domain root, AdminSDHolder, privileged groups, Domain Controllers OU, and domain controller objects. Group membership of the principal is not expanded. This is not an exhaustive attack-path analysis.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>CN=AdminSDHolder,CN=System,redacted-7d7787d2 <span class="small">(container)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>TargetRole</dt><dd>AdminSDHolder</dd><dt>Principal</dt><dd>redacted-54286622</dd><dt>HighRiskRights</dt><dd>redacted-40d6a198</dd><dt>InheritedAce</dt><dd>False</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-critical">Critical</span> &middot; ADSA-ACL-002 &middot; Directory replication rights granted to a non-default principal &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Access control)</td></tr>
+<tr><th>What it means</th><td>A principal other than the expected administrators and domain controllers holds both DS-Replication-Get-Changes and DS-Replication-Get-Changes-All on the domain root, which allows it to replicate secrets from the directory (DCSync-capable).</td></tr>
+<tr><th>Remediation</th><td>Remove the rights unless required by a documented synchronisation product, then restrict and monitor the account that uses them.</td></tr>
+<tr><th>Limitations</th><td>Group membership of the principal is not expanded. Legitimate synchronisation accounts should be recorded as exceptions.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-7d7787d2 <span class="small">(domainDNS)</span></td><td class="sev-critical">Critical</td><td>High</td><td><dl class="ev"><dt>Principal</dt><dd>redacted-3136ec33</dd><dt>GrantedVia</dt><dd>redacted-f009fbfa; redacted-27b7fc1d</dd><dt>GetChanges</dt><dd>True</dd><dt>GetChangesAll</dt><dd>True</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-ACL-003 &middot; Sensitive object owned by a non-privileged principal &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Access control)</td></tr>
+<tr><th>What it means</th><td>The owner of a sensitive object is not an expected administrator. Owners can always rewrite the object&#39;s DACL.</td></tr>
+<tr><th>Remediation</th><td>Review and, under change control, restore ownership to an administrative group.</td></tr>
+<tr><th>Limitations</th><td>Selective coverage as for ADSA-ACL-001.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>CN=Domain Admins,CN=Users,redacted-7d7787d2 <span class="small">(group)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>TargetRole</dt><dd>redacted-3035f101</dd><dt>Owner</dt><dd>redacted-a177c312</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-ACL-004 &middot; Non-privileged principal can modify a Group Policy Object &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Access control)</td></tr>
+<tr><th>What it means</th><td>A principal that is not an expected administrator has high-risk write rights on a GPO container. GPO edit rights can lead to code execution on every computer the GPO applies to.</td></tr>
+<tr><th>Remediation</th><td>Remove unnecessary edit rights or restrict them to dedicated policy administrators under change control.</td></tr>
+<tr><th>Limitations</th><td>Only the GPO container object ACL is inspected, not the SYSVOL file ACL. Group Policy Creator Owners members are reported.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-906ffe8d <span class="small">(groupPolicyContainer)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>GpoId</dt><dd>redacted-1148749c</dd><dt>Principal</dt><dd>redacted-a177c312</dd><dt>HighRiskRights</dt><dd>redacted-d3118eef</dd><dt>LinkedTo</dt><dd>OU=redacted-a302fd5f,redacted-7d7787d2</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-AUD-001 &middot; Required advanced audit subcategory not fully enabled &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Authentication policy)</td></tr>
+<tr><th>What it means</th><td>One or more required advanced audit policy subcategories do not audit the configured success or failure events on a domain controller.</td></tr>
+<tr><th>Remediation</th><td>Configure the subcategories via Group Policy so security-relevant events are recorded.</td></tr>
+<tr><th>Limitations</th><td>Parses English auditpol output only; other languages are reported NOT_ASSESSED. Reads local effective policy and requires administrator rights on the DC. 1 domain controllers could not be queried (see ERROR results).</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-b462e39d <span class="small">(DomainController)</span></td><td class="sev-medium">Medium</td><td>Medium</td><td><dl class="ev"><dt>MissingCoverage</dt><dd>{&quot;Subcategory&quot;:&quot;redacted-3d7e151c&quot;,&quot;Configured&quot;:&quot;redacted-d7ad86e2&quot;,&quot;RequiredSuccess&quot;:true,&quot;RequiredFailure&quot;:true}</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-DC-001 &middot; Print Spooler service running on domain controller &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Authentication policy)</td></tr>
+<tr><th>What it means</th><td>The Print Spooler service is running on a domain controller, enlarging its attack surface.</td></tr>
+<tr><th>Remediation</th><td>Disable the Print Spooler service on domain controllers unless there is a documented need.</td></tr>
+<tr><th>Limitations</th><td>Reports the service state at collection time only. 1 domain controllers could not be queried (see ERROR results).</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-b462e39d <span class="small">(DomainController)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>Service</dt><dd>redacted-eb249ece</dd><dt>State</dt><dd>Running</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-DEL-001 &middot; Unconstrained delegation &mdash; <em>2 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Delegation)</td></tr>
+<tr><th>What it means</th><td>An enabled non-domain-controller account is trusted for unconstrained delegation, so it receives the Kerberos TGTs of users that authenticate to it.</td></tr>
+<tr><th>Remediation</th><td>Move to constrained or resource-based constrained delegation, or remove delegation. Protect privileged accounts from delegation.</td></tr>
+<tr><th>Limitations</th><td>Domain controllers are excluded because unconstrained delegation is expected on them.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-30937380 <span class="small">(Computer)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-1371a847,CN=Computers,redacted-7d7787d2</dd><dt>Flag</dt><dd>redacted-c3c229eb</dd><dt>UserAccountControl</dt><dd>528384</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-6de71e3f <span class="small">(User)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-6de71e3f,CN=Users,redacted-7d7787d2</dd><dt>Flag</dt><dd>redacted-c3c229eb</dd><dt>UserAccountControl</dt><dd>524800</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-DEL-002 &middot; Constrained delegation with protocol transition &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Delegation)</td></tr>
+<tr><th>What it means</th><td>An enabled account can use protocol transition (TRUSTED_TO_AUTH_FOR_DELEGATION), allowing it to obtain service tickets for users without those users authenticating via Kerberos.</td></tr>
+<tr><th>Remediation</th><td>Use Kerberos-only constrained delegation where possible and review the delegation targets.</td></tr>
+<tr><th>Limitations</th><td>Whether the configuration is acceptable depends on the targets and the application design.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-02119990 <span class="small">(User)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-02119990,CN=Users,redacted-7d7787d2</dd><dt>Flag</dt><dd>redacted-bbc66735</dd><dt>AllowedToDelegateTo</dt><dd>redacted-64298b85</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-DEL-003 &middot; Constrained delegation to a domain controller service &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Delegation)</td></tr>
+<tr><th>What it means</th><td>An account is allowed to delegate to a sensitive service (for example ldap or cifs) on a domain controller.</td></tr>
+<tr><th>Remediation</th><td>Remove delegation to domain controller services unless there is a documented, reviewed requirement.</td></tr>
+<tr><th>Limitations</th><td>Only service classes ldap, cifs, host, gc, rpcss and wsman are considered. Host matching uses collected DC names.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-02119990 <span class="small">(User)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-02119990,CN=Users,redacted-7d7787d2</dd><dt>DomainControllerTargets</dt><dd>redacted-64298b85</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-DEL-004 &middot; Resource-based constrained delegation configured on a domain controller &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>PotentialRisk (Delegation)</td></tr>
+<tr><th>What it means</th><td>A domain controller computer object allows other principals to act on behalf of users (msDS-AllowedToActOnBehalfOfOtherIdentity). Anyone who controls an allowed principal can impersonate users to that DC.</td></tr>
+<tr><th>Remediation</th><td>Clear the attribute unless a documented, reviewed requirement exists.</td></tr>
+<tr><th>Limitations</th><td>Only domain controller computer objects are inspected. The allowed principals are listed but not resolved to privilege level.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-b8243a21 <span class="small">(DomainController)</span></td><td class="sev-high">High</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-18b024ed,OU=Domain Controllers,redacted-7d7787d2</dd><dt>AllowedToActOnBehalf</dt><dd>CN=redacted-6de71e3f,CN=Users,redacted-7d7787d2</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-GPO-001 &middot; Weak LAN Manager authentication level in GPO &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Group Policy)</td></tr>
+<tr><th>What it means</th><td>A GPO linked to the domain root or Domain Controllers OU sets LmCompatibilityLevel below 5, permitting weaker NTLM variants.</td></tr>
+<tr><th>Remediation</th><td>Set &#39;Send NTLMv2 response only. Refuse LM and NTLM&#39; after validating client compatibility.</td></tr>
+<tr><th>Limitations</th><td>GPO precedence and RSOP are not modelled; conflicting GPOs are reported at Low confidence. If no GPO defines the setting the rule is NOT_ASSESSED.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>Default Domain Controllers Policy <span class="small">(GPO)</span></td><td class="sev-medium">Medium</td><td>Medium</td><td><dl class="ev"><dt>GpoId</dt><dd>redacted-a38dd665</dd><dt>Setting</dt><dd>redacted-245e01e8</dd><dt>ConfiguredValue</dt><dd>3</dd><dt>LinkedTo</dt><dd>OU=Domain Controllers,redacted-7d7787d2</dd><dt>ConflictingCompliantGpos</dt><dd></dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-critical">Critical</span> &middot; ADSA-GPO-003 &middot; Group Policy Preferences cpassword found in SYSVOL &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Group Policy)</td></tr>
+<tr><th>What it means</th><td>A Group Policy Preferences file contains a cpassword value. The encryption key is public, so any domain user can recover the password.</td></tr>
+<tr><th>Remediation</th><td>Remove the preference item, rotate the exposed credential, and use a secrets solution such as LAPS.</td></tr>
+<tr><th>Limitations</th><td>Only common GPP file names are scanned. The cpassword value is never stored or reported, only the file path.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-906ffe8d <span class="small">(GPO)</span></td><td class="sev-critical">Critical</td><td>High</td><td><dl class="ev"><dt>GpoId</dt><dd>redacted-1148749c</dd><dt>Files</dt><dd>redacted-4ce89b7c</dd><dt>Note</dt><dd>cpassword values were detected but are intentionally not recorded.</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-INF-001 &middot; Domain controller runs an unsupported operating system &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Infrastructure)</td></tr>
+<tr><th>What it means</th><td>A domain controller reports an operating system matching the configured unsupported pattern, so it may no longer receive security updates.</td></tr>
+<tr><th>Remediation</th><td>Plan migration to a supported Windows Server version and decommission the old controller.</td></tr>
+<tr><th>Limitations</th><td>Relies on the operatingSystem attribute and the configured regular expression; extended security update programmes are not considered.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-18b024ed <span class="small">(DomainController)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>HostName</dt><dd>redacted-9099e062</dd><dt>OperatingSystem</dt><dd>redacted-e3f3f8c0</dd><dt>OperatingSystemVersion</dt><dd>redacted-690858bd</dd><dt>MatchedPattern</dt><dd>redacted-bcaaf977</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-INF-002 &middot; Functional level below baseline &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Infrastructure)</td></tr>
+<tr><th>What it means</th><td>The domain or forest functional level is below the configured minimum, which blocks newer security features.</td></tr>
+<tr><th>Remediation</th><td>Raise the functional level once all domain controllers support it. This change is irreversible in many cases; plan carefully.</td></tr>
+<tr><th>Limitations</th><td>Unrecognised level names are skipped and reported as not assessed.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-977f5673 <span class="small">(ForestFunctionalLevel)</span></td><td class="sev-low">Low</td><td>High</td><td><dl class="ev"><dt>Scope</dt><dd>redacted-02de2ed7</dd><dt>CurrentLevel</dt><dd>redacted-714236f2</dd><dt>MinimumLevel</dt><dd>redacted-e763886e</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-INF-003 &middot; Trust without SID filtering protection &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Infrastructure)</td></tr>
+<tr><th>What it means</th><td>An external or forest trust that this domain relies on (outbound) lacks SID filtering (quarantine) or is treated as external, allowing SID history abuse across the trust.</td></tr>
+<tr><th>Remediation</th><td>Enable SID filtering on the trust unless a documented migration scenario requires otherwise.</td></tr>
+<tr><th>Limitations</th><td>Trust direction semantics follow MS-ADTS (outbound means this domain trusts the other). Verify with Get-ADTrust before acting.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-a6112536 <span class="small">(Trust)</span></td><td class="sev-high">High</td><td>Medium</td><td><dl class="ev"><dt>Direction</dt><dd>redacted-c4084ddd</dd><dt>TrustAttributes</dt><dd>0</dd><dt>Reason</dt><dd>External trust without SID filtering (QUARANTINED_DOMAIN is not set).</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-INF-004 &middot; Trust without selective authentication &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>PotentialRisk (Infrastructure)</td></tr>
+<tr><th>What it means</th><td>An outbound external or forest trust does not use selective authentication, so all authenticated users of the trusted side can reach resources that grant them access.</td></tr>
+<tr><th>Remediation</th><td>Consider enabling selective authentication and granting the &#39;Allowed to authenticate&#39; right explicitly.</td></tr>
+<tr><th>Limitations</th><td>Selective authentication is a design choice; some trusts legitimately do not use it.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-a6112536 <span class="small">(Trust)</span></td><td class="sev-low">Low</td><td>Medium</td><td><dl class="ev"><dt>Direction</dt><dd>redacted-c4084ddd</dd><dt>TrustAttributes</dt><dd>0</dd><dt>SelectiveAuthentication</dt><dd>False</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-KRB-001 &middot; krbtgt password is old &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Authentication policy)</td></tr>
+<tr><th>What it means</th><td>The krbtgt account password has not been rotated within the configured limit. A stolen krbtgt key allows forged Kerberos tickets until the password is changed twice.</td></tr>
+<tr><th>Remediation</th><td>Rotate krbtgt following Microsoft&#39;s documented two-step procedure during a maintenance window.</td></tr>
+<tr><th>Limitations</th><td>Based on pwdLastSet of the queried DC&#39;s copy. Read-only domain controller krbtgt_* accounts are not evaluated.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>krbtgt <span class="small">(User)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=krbtgt,CN=Users,redacted-7d7787d2</dd><dt>PasswordLastSet</dt><dd>01/15/2023 08:00:00</dd><dt>PasswordAgeDays</dt><dd>1354</dd><dt>ThresholdDays</dt><dd>180</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-LDAP-002 &middot; LDAP channel binding not enforced on domain controller &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Authentication policy)</td></tr>
+<tr><th>What it means</th><td>LdapEnforceChannelBinding is not set to 2 (always), so LDAP over TLS sessions can be relayed.</td></tr>
+<tr><th>Remediation</th><td>Enable channel binding enforcement after auditing clients with event ID 3039/3040.</td></tr>
+<tr><th>Limitations</th><td>Reads the registry value on each DC. Unset values are reported with Medium confidence. 1 domain controllers could not be queried (see ERROR results).</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-b462e39d <span class="small">(DomainController)</span></td><td class="sev-low">Low</td><td>High</td><td><dl class="ev"><dt>LdapEnforceChannelBinding</dt><dd>1</dd><dt>Note</dt><dd>redacted-dc6bf045</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-POL-001 &middot; Minimum password length below baseline &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Authentication policy)</td></tr>
+<tr><th>What it means</th><td>The default domain password policy requires fewer characters than the configured baseline.</td></tr>
+<tr><th>Remediation</th><td>Raise the minimum length in the default domain policy, or apply a fine-grained policy where appropriate.</td></tr>
+<tr><th>Limitations</th><td>Only the default domain policy is evaluated. Fine-grained password policies can override it for specific users and groups.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-977f5673 <span class="small">(Domain)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>MinPasswordLength</dt><dd>8</dd><dt>Required</dt><dd>14</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-POL-004 &middot; Account lockout disabled or threshold too high &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Authentication policy)</td></tr>
+<tr><th>What it means</th><td>The default domain policy has no account lockout, or a lockout threshold above the configured maximum, which weakens protection against online password guessing.</td></tr>
+<tr><th>Remediation</th><td>Set a lockout threshold within the baseline and monitor lockout events.</td></tr>
+<tr><th>Limitations</th><td>Only the default domain policy is evaluated. Lockout can also be used for denial of service; the baseline is organisational policy.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-977f5673 <span class="small">(Domain)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>LockoutThreshold</dt><dd>0</dd><dt>Maximum</dt><dd>10</dd><dt>Note</dt><dd>redacted-a2bc02ce</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-PRV-001 &middot; Privileged group membership exceeds the configured maximum &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>PotentialRisk (Privileged access)</td></tr>
+<tr><th>What it means</th><td>The effective (nested) membership of a privileged group is larger than the configured maximum, widening the set of accounts that can administer the domain.</td></tr>
+<tr><th>Remediation</th><td>Review membership against least privilege; remove accounts that do not need standing privilege and prefer just-in-time elevation.</td></tr>
+<tr><th>Limitations</th><td>Counts are derived from collected group membership. Members that could not be resolved are not counted. Thresholds are organisational policy, not a universal standard.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>Domain Admins <span class="small">(Group)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=Domain Admins,CN=Users,redacted-7d7787d2</dd><dt>EffectiveMemberCount</dt><dd>6</dd><dt>Maximum</dt><dd>5</dd><dt>NestedGroupCount</dt><dd>2</dd><dt>SampleMembers</dt><dd>Administrator; redacted-1ca723e4; redacted-b1e12905; redacted-bd419b9e; redacted-4c0df53b; redacted-6880781a</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-PRV-002 &middot; Disabled or stale account in a privileged group &mdash; <em>2 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Hygiene (Privileged access)</td></tr>
+<tr><th>What it means</th><td>A disabled or stale account remains in a privileged group (directly or through nesting). Dormant privileged accounts are attractive and rarely monitored.</td></tr>
+<tr><th>Remediation</th><td>Remove the account from privileged groups after confirming it is no longer needed.</td></tr>
+<tr><th>Limitations</th><td>Staleness is based on lastLogonTimestamp and shares its replication-lag caveat. Disabled accounts are reported at Low severity.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-b1e12905 <span class="small">(PrivilegedUser)</span></td><td class="sev-high">High</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-b1e12905,CN=Users,redacted-7d7787d2</dd><dt>Reason</dt><dd>Stale</dd><dt>DaysSinceLastLogon</dt><dd>628</dd><dt>ThresholdDays</dt><dd>90</dd><dt>Groups</dt><dd>Domain Admins; redacted-26e7b80a</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-f109d914 <span class="small">(PrivilegedUser)</span></td><td class="sev-low">Low</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-f109d914,CN=Users,redacted-7d7787d2</dd><dt>Reason</dt><dd>Disabled</dd><dt>Groups</dt><dd>Administrators</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-PRV-003 &middot; Privileged account with a password that never expires &mdash; <em>2 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Privileged access)</td></tr>
+<tr><th>What it means</th><td>An enabled privileged account is exempt from password aging.</td></tr>
+<tr><th>Remediation</th><td>Remove the flag; use smart-card enforcement or a documented, owner-approved rotation process for break-glass accounts.</td></tr>
+<tr><th>Limitations</th><td>Documented break-glass accounts should be handled through configuration exceptions.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>Administrator <span class="small">(PrivilegedUser)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=Administrator,CN=Users,redacted-7d7787d2</dd><dt>Flag</dt><dd>redacted-a8a5d42e</dd><dt>Groups</dt><dd>Domain Admins; Enterprise Admins; Administrators</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-bd419b9e <span class="small">(PrivilegedUser)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-bd419b9e,CN=Users,redacted-7d7787d2</dd><dt>Flag</dt><dd>redacted-a8a5d42e</dd><dt>Groups</dt><dd>Domain Admins; redacted-26e7b80a</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-high">High</span> &middot; ADSA-PRV-004 &middot; Privileged account with a service principal name &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Privileged access)</td></tr>
+<tr><th>What it means</th><td>An enabled privileged user account has SPNs, so its service ticket can be requested by any domain user and attacked offline.</td></tr>
+<tr><th>Remediation</th><td>Remove the SPN from the privileged account or run the service under a dedicated least-privilege account or gMSA.</td></tr>
+<tr><th>Limitations</th><td>Documented privileged service accounts should be handled through configuration exceptions with an owner and expiry.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-bd419b9e <span class="small">(PrivilegedUser)</span></td><td class="sev-high">High</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-bd419b9e,CN=Users,redacted-7d7787d2</dd><dt>ServicePrincipalNames</dt><dd>redacted-0a71add0</dd><dt>Groups</dt><dd>Domain Admins; redacted-26e7b80a</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-PRV-005 &middot; Schema Admins group is populated &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Privileged access)</td></tr>
+<tr><th>What it means</th><td>Schema Admins should be empty except during schema changes. Standing membership grants forest-wide schema modification rights.</td></tr>
+<tr><th>Remediation</th><td>Remove all members and add accounts only for the duration of an approved schema change.</td></tr>
+<tr><th>Limitations</th><td>Only evaluated when the Schema Admins group exists in the queried domain (forest root).</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>Schema Admins <span class="small">(Group)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=Schema Admins,CN=Users,redacted-7d7787d2</dd><dt>MemberCount</dt><dd>1</dd><dt>Members</dt><dd>redacted-08b4b3f0</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-PRV-006 &middot; Privileged account not marked sensitive and cannot be delegated &mdash; <em>7 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Misconfiguration (Privileged access)</td></tr>
+<tr><th>What it means</th><td>An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.</td></tr>
+<tr><th>Remediation</th><td>Enable &#39;Account is sensitive and cannot be delegated&#39; or place the account in the Protected Users group after testing.</td></tr>
+<tr><th>Limitations</th><td>Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>Administrator <span class="small">(PrivilegedUser)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=Administrator,CN=Users,redacted-7d7787d2</dd><dt>AccountIsSensitiveAndCannotBeDelegated</dt><dd>False</dd><dt>ProtectedUsersMember</dt><dd>False</dd><dt>Groups</dt><dd>Domain Admins; Enterprise Admins; Administrators</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-1ca723e4 <span class="small">(PrivilegedUser)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-1ca723e4,CN=Users,redacted-7d7787d2</dd><dt>AccountIsSensitiveAndCannotBeDelegated</dt><dd>False</dd><dt>ProtectedUsersMember</dt><dd>False</dd><dt>Groups</dt><dd>Domain Admins; redacted-26e7b80a</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-4c0df53b <span class="small">(PrivilegedUser)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-4c0df53b,CN=Users,redacted-7d7787d2</dd><dt>AccountIsSensitiveAndCannotBeDelegated</dt><dd>False</dd><dt>ProtectedUsersMember</dt><dd>False</dd><dt>Groups</dt><dd>redacted-2c632c34; redacted-f7738561</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-b1e12905 <span class="small">(PrivilegedUser)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-b1e12905,CN=Users,redacted-7d7787d2</dd><dt>AccountIsSensitiveAndCannotBeDelegated</dt><dd>False</dd><dt>ProtectedUsersMember</dt><dd>False</dd><dt>Groups</dt><dd>Domain Admins; redacted-26e7b80a</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-6880781a <span class="small">(PrivilegedUser)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-6880781a,CN=Users,redacted-7d7787d2</dd><dt>AccountIsSensitiveAndCannotBeDelegated</dt><dd>False</dd><dt>ProtectedUsersMember</dt><dd>False</dd><dt>Groups</dt><dd>redacted-f0a4e7f4; Administrators (nested via Domain Admins &gt; redacted-af8c520a &gt; redacted-b531806b)</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-08b4b3f0 <span class="small">(PrivilegedUser)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-08b4b3f0,CN=Users,redacted-7d7787d2</dd><dt>AccountIsSensitiveAndCannotBeDelegated</dt><dd>False</dd><dt>ProtectedUsersMember</dt><dd>False</dd><dt>Groups</dt><dd>Schema Admins</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-bd419b9e <span class="small">(PrivilegedUser)</span></td><td class="sev-medium">Medium</td><td>High</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-bd419b9e,CN=Users,redacted-7d7787d2</dd><dt>AccountIsSensitiveAndCannotBeDelegated</dt><dd>False</dd><dt>ProtectedUsersMember</dt><dd>False</dd><dt>Groups</dt><dd>Domain Admins; redacted-26e7b80a</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-PRV-007 &middot; Group membership cycle reachable from a privileged group &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Hygiene (Privileged access)</td></tr>
+<tr><th>What it means</th><td>Groups are nested in a cycle (A in B in ... in A). Cycles do not grant extra access but obscure effective membership and break naive audits.</td></tr>
+<tr><th>Remediation</th><td>Break the cycle by removing the redundant nesting.</td></tr>
+<tr><th>Limitations</th><td>Only cycles reachable from configured privileged groups are reported.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-af8c520a <span class="small">(Group)</span></td><td class="sev-low">Low</td><td>High</td><td><dl class="ev"><dt>Cycle</dt><dd>redacted-af8c520a; redacted-b531806b; redacted-af8c520a</dd><dt>CycleDistinguishedNames</dt><dd>CN=redacted-af8c520a,CN=Users,redacted-7d7787d2; CN=redacted-b531806b,CN=Users,redacted-7d7787d2; CN=redacted-af8c520a,CN=Users,redacted-7d7787d2</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-low">Low</span> &middot; ADSA-PRV-008 &middot; Account with adminCount=1 outside privileged groups &mdash; <em>1 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>Hygiene (Privileged access)</td></tr>
+<tr><th>What it means</th><td>The account still has adminCount=1 but is no longer in a configured privileged group. AdminSDHolder protection and disabled ACL inheritance can persist after removal from privileged groups.</td></tr>
+<tr><th>Remediation</th><td>Verify the account is not privileged, clear adminCount, and re-enable ACL inheritance on the object.</td></tr>
+<tr><th>Limitations</th><td>Protected groups missing from privilegedGroups in the configuration can make legitimate accounts appear orphaned. krbtgt is excluded.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-a378200e <span class="small">(User)</span></td><td class="sev-low">Low</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-a378200e,CN=Users,redacted-7d7787d2</dd><dt>AdminCount</dt><dd>1</dd><dt>Enabled</dt><dd>True</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<details open><summary><span class="sev-medium">Medium</span> &middot; ADSA-SVC-001 &middot; Service account (SPN) with an old password &mdash; <em>2 affected</em></summary>
+<div class="wrap"><table>
+<tr><th>Finding type</th><td>PotentialRisk (Account lifecycle)</td></tr>
+<tr><th>What it means</th><td>An enabled user account with service principal names has a password older than the configured limit. Service tickets for such accounts can be requested by any domain user and attacked offline, so password strength and age matter.</td></tr>
+<tr><th>Remediation</th><td>Migrate to group Managed Service Accounts, or rotate to a long random password and document the rotation schedule.</td></tr>
+<tr><th>Limitations</th><td>Password age is a proxy for exposure; the tool cannot measure password strength.</td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Affected object</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Collected / source</th><th>Notes</th></tr>
+<tr><td>redacted-bd419b9e <span class="small">(ServiceAccount)</span></td><td class="sev-medium">Medium</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-bd419b9e,CN=Users,redacted-7d7787d2</dd><dt>PasswordLastSet</dt><dd>02/01/2024 08:00:00</dd><dt>PasswordAgeDays</dt><dd>972</dd><dt>ThresholdDays</dt><dd>365</dd><dt>ServicePrincipalNames</dt><dd>redacted-0a71add0</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+<tr><td>redacted-4fbdaa06 <span class="small">(ServiceAccount)</span></td><td class="sev-medium">Medium</td><td>Medium</td><td><dl class="ev"><dt>DistinguishedName</dt><dd>CN=redacted-4fbdaa06,CN=Users,redacted-7d7787d2</dd><dt>PasswordLastSet</dt><dd>03/01/2023 08:00:00</dd><dt>PasswordAgeDays</dt><dd>1309</dd><dt>ThresholdDays</dt><dd>365</dd><dt>ServicePrincipalNames</dt><dd>redacted-66f6b8c4</dd></dl></td><td>10/01/2026 00:00:00 / Simulated</td><td></td></tr>
+</table></div></details>
+<h2 id="exceptions">Findings covered by documented exceptions</h2>
+<p>None.</p>
+<h2 id="gaps">Not assessed and errors</h2>
+<div class="wrap"><table><tr><th>Status</th><th>Rule</th><th>Object</th><th>Detail</th></tr>
+<tr><td class="st-error">ERROR</td><td>ADSA-DC-001 Print Spooler service running on domain controller</td><td>redacted-18b024ed</td><td>Evaluation failed: Simulated: WinRM cannot process the request because the server redacted-9099e062 is redacted-19923db5.</td></tr>
+<tr><td class="st-error">ERROR</td><td>ADSA-LDAP-001 LDAP signing not required on domain controller</td><td>redacted-18b024ed</td><td>Evaluation failed: Simulated: WinRM cannot process the request because the server redacted-9099e062 is redacted-19923db5.</td></tr>
+<tr><td class="st-error">ERROR</td><td>ADSA-AUD-001 Required advanced audit subcategory not fully enabled</td><td>redacted-18b024ed</td><td>Evaluation failed: Simulated: WinRM cannot process the request because the server redacted-9099e062 is redacted-19923db5.</td></tr>
+<tr><td class="st-error">ERROR</td><td>ADSA-AUD-002 Security event log capacity below baseline</td><td>redacted-18b024ed</td><td>Evaluation failed: Simulated: WinRM cannot process the request because the server redacted-9099e062 is redacted-19923db5.</td></tr>
+<tr><td class="st-error">ERROR</td><td>ADSA-LDAP-002 LDAP channel binding not enforced on domain controller</td><td>redacted-18b024ed</td><td>Evaluation failed: Simulated: WinRM cannot process the request because the server redacted-9099e062 is redacted-19923db5.</td></tr>
+<tr><td class="st-not-assessed">NOT_ASSESSED</td><td>ADSA-LDAP-001 LDAP signing not required on domain controller</td><td>redacted-5987721a</td><td>Not assessed: LDAPServerIntegrity is not set and the default on this OS version is not asserted by this toolkit; verify the effective value.</td></tr>
+</table></div>
+<h2 id="coverage">Coverage</h2>
+<div class="wrap"><table><tr><th>Rule</th><th>Title</th><th>Module</th><th>Status</th><th>Note</th></tr>
+<tr><td>ADSA-ACC-001</td><td>Stale enabled user account</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACC-002</td><td>Inactive enabled computer account</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACC-003</td><td>Enabled account with password that never expires</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACC-004</td><td>Potentially orphaned account (manager disabled)</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACC-005</td><td>Enabled account does not require a password</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACC-006</td><td>Kerberos pre-authentication disabled</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACC-007</td><td>Weak Kerberos or password storage flags</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACC-008</td><td>Enabled account that has never logged on</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-SVC-001</td><td>Service account (SPN) with an old password</td><td>AccountLifecycle</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-PRV-001</td><td>Privileged group membership exceeds the configured maximum</td><td>PrivilegedAccess</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-PRV-002</td><td>Disabled or stale account in a privileged group</td><td>PrivilegedAccess</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-PRV-003</td><td>Privileged account with a password that never expires</td><td>PrivilegedAccess</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-PRV-004</td><td>Privileged account with a service principal name</td><td>PrivilegedAccess</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-PRV-005</td><td>Schema Admins group is populated</td><td>PrivilegedAccess</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-PRV-006</td><td>Privileged account not marked sensitive and cannot be delegated</td><td>PrivilegedAccess</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-PRV-007</td><td>Group membership cycle reachable from a privileged group</td><td>PrivilegedAccess</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-PRV-008</td><td>Account with adminCount=1 outside privileged groups</td><td>PrivilegedAccess</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-DEL-001</td><td>Unconstrained delegation</td><td>Delegation</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-DEL-002</td><td>Constrained delegation with protocol transition</td><td>Delegation</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-DEL-003</td><td>Constrained delegation to a domain controller service</td><td>Delegation</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-DEL-004</td><td>Resource-based constrained delegation configured on a domain controller</td><td>Delegation</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACL-001</td><td>Non-privileged principal holds high-risk rights on a sensitive object</td><td>Acl</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACL-002</td><td>Directory replication rights granted to a non-default principal</td><td>Acl</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACL-003</td><td>Sensitive object owned by a non-privileged principal</td><td>Acl</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-ACL-004</td><td>Non-privileged principal can modify a Group Policy Object</td><td>Acl</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-POL-001</td><td>Minimum password length below baseline</td><td>AuthenticationPolicy</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-POL-002</td><td>Password complexity not required</td><td>AuthenticationPolicy</td><td class="st-pass">PASS</td><td></td></tr>
+<tr><td>ADSA-POL-003</td><td>Password history below baseline</td><td>AuthenticationPolicy</td><td class="st-pass">PASS</td><td></td></tr>
+<tr><td>ADSA-POL-004</td><td>Account lockout disabled or threshold too high</td><td>AuthenticationPolicy</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-POL-005</td><td>Account lockout duration below baseline</td><td>AuthenticationPolicy</td><td class="st-not-applicable">NOT_APPLICABLE</td><td></td></tr>
+<tr><td>ADSA-POL-006</td><td>Reversible password encryption enabled in domain policy</td><td>AuthenticationPolicy</td><td class="st-pass">PASS</td><td></td></tr>
+<tr><td>ADSA-KRB-001</td><td>krbtgt password is old</td><td>AuthenticationPolicy</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-LDAP-001</td><td>LDAP signing not required on domain controller</td><td>AuthenticationPolicy</td><td class="st-error">ERROR</td><td>Partial: some objects could not be assessed. </td></tr>
+<tr><td>ADSA-LDAP-002</td><td>LDAP channel binding not enforced on domain controller</td><td>AuthenticationPolicy</td><td class="st-fail">FAIL</td><td>Partial: some objects could not be assessed. </td></tr>
+<tr><td>ADSA-DC-001</td><td>Print Spooler service running on domain controller</td><td>AuthenticationPolicy</td><td class="st-fail">FAIL</td><td>Partial: some objects could not be assessed. </td></tr>
+<tr><td>ADSA-AUD-001</td><td>Required advanced audit subcategory not fully enabled</td><td>AuthenticationPolicy</td><td class="st-fail">FAIL</td><td>Partial: some objects could not be assessed. </td></tr>
+<tr><td>ADSA-AUD-002</td><td>Security event log capacity below baseline</td><td>AuthenticationPolicy</td><td class="st-error">ERROR</td><td>Partial: some objects could not be assessed. </td></tr>
+<tr><td>ADSA-GPO-001</td><td>Weak LAN Manager authentication level in GPO</td><td>GroupPolicy</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-GPO-002</td><td>SMB server signing not required in GPO</td><td>GroupPolicy</td><td class="st-pass">PASS</td><td></td></tr>
+<tr><td>ADSA-GPO-003</td><td>Group Policy Preferences cpassword found in SYSVOL</td><td>GroupPolicy</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-INF-001</td><td>Domain controller runs an unsupported operating system</td><td>Infrastructure</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-INF-002</td><td>Functional level below baseline</td><td>Infrastructure</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-INF-003</td><td>Trust without SID filtering protection</td><td>Infrastructure</td><td class="st-fail">FAIL</td><td></td></tr>
+<tr><td>ADSA-INF-004</td><td>Trust without selective authentication</td><td>Infrastructure</td><td class="st-fail">FAIL</td><td></td></tr>
+</table></div>
+<div class="wrap"><table><tr><th>Data section</th><th>Status</th><th>Objects</th><th>Error category</th><th>Warnings</th></tr>
+<tr><td>Users</td><td>Collected</td><td>23</td><td></td><td>0</td></tr>
+<tr><td>Computers</td><td>Collected</td><td>6</td><td></td><td>0</td></tr>
+<tr><td>Groups</td><td>Collected</td><td>14</td><td></td><td>0</td></tr>
+<tr><td>DomainControllers</td><td>Collected</td><td>3</td><td></td><td>0</td></tr>
+<tr><td>PasswordPolicy</td><td>Collected</td><td>1</td><td></td><td>0</td></tr>
+<tr><td>FineGrainedPolicies</td><td>Error</td><td>0</td><td>AccessDenied</td><td>0</td></tr>
+<tr><td>Trusts</td><td>Collected</td><td>2</td><td></td><td>0</td></tr>
+<tr><td>Acls</td><td>Collected</td><td>4</td><td></td><td>0</td></tr>
+<tr><td>Gpos</td><td>Collected</td><td>3</td><td></td><td>0</td></tr>
+<tr><td>DcHosts</td><td>Collected</td><td>3</td><td></td><td>0</td></tr>
+</table></div>
+<h2 id="errors">Collection errors</h2>
+<div class="wrap"><table><tr><th>Source</th><th>Target</th><th>Category</th><th>Message</th></tr>
+<tr><td>FineGrainedPolicies</td><td></td><td>AccessDenied</td><td>Simulated: Access is denied. Fine-grained password policy objects are readable only by Domain Admins by default.</td></tr>
+<tr><td>DcHosts</td><td>redacted-18b024ed</td><td>Unreachable</td><td>Simulated: WinRM cannot process the request because the server redacted-9099e062 is redacted-19923db5.</td></tr>
+</table></div>
+<h2 id="inventory">Inventories (informational)</h2>
+<h3>Privileged groups</h3><div class="wrap"><table><tr><th>Group</th><th>Found</th><th>Effective members</th><th>Nested groups</th><th>Unresolved</th></tr>
+<tr><td>Domain Admins</td><td>True</td><td>6</td><td>2</td><td>0</td></tr>
+<tr><td>Enterprise Admins</td><td>True</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>Schema Admins</td><td>True</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>Administrators</td><td>True</td><td>7</td><td>4</td><td>0</td></tr>
+<tr><td>Account Operators</td><td>True</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Server Operators</td><td>True</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Print Operators</td><td>True</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Backup Operators</td><td>True</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Replicator</td><td>True</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Group Policy Creator Owners</td><td>True</td><td>0</td><td>0</td><td>0</td></tr>
+</table></div>
+<h3>Service accounts (users with SPNs)</h3><div class="wrap"><table><tr><th>Account</th><th>Enabled</th><th>Password last set</th><th>Never expires</th><th>Privileged</th><th>SPNs</th></tr>
+<tr><td>redacted-4fbdaa06</td><td>True</td><td>03/01/2023 08:00:00</td><td>True</td><td>False</td><td>1</td></tr>
+<tr><td>redacted-bd419b9e</td><td>True</td><td>02/01/2024 08:00:00</td><td>True</td><td>True</td><td>1</td></tr>
+<tr><td>redacted-6de71e3f</td><td>True</td><td>08/01/2026 08:00:00</td><td>False</td><td>False</td><td>1</td></tr>
+<tr><td>redacted-02119990</td><td>True</td><td>08/01/2026 08:00:00</td><td>False</td><td>False</td><td>1</td></tr>
+</table></div>
+<p>Enabled accounts with password-expiration exception: 3</p>
+<h3>Domain controllers</h3><div class="wrap"><table><tr><th>Name</th><th>Operating system</th><th>Site</th><th>Read-only</th></tr>
+<tr><td>redacted-b462e39d</td><td>redacted-5cb924ab</td><td>redacted-679015e8</td><td>False</td></tr>
+<tr><td>redacted-18b024ed</td><td>redacted-e3f3f8c0</td><td>redacted-baeeb24a</td><td>False</td></tr>
+<tr><td>redacted-5987721a</td><td>redacted-7dd31081</td><td>redacted-679015e8</td><td>False</td></tr>
+</table></div>
+<h3>Trusts</h3><div class="wrap"><table><tr><th>Name</th><th>Direction</th><th>Attributes</th></tr>
+<tr><td>redacted-a6112536</td><td>3</td><td>0</td></tr>
+<tr><td>redacted-bd88ab88</td><td>3</td><td>20</td></tr>
+</table></div>
+<h2 id="limits">Limitations</h2><ul><li>This toolkit performs selected, read-only checks. It does not claim to find every Active Directory attack path or misconfiguration.</li><li>PASS means the checked objects did not violate the rule, within the stated limitations; it is not a certification.</li><li>Results from mock or simulated data demonstrate the tooling only and never establish the security of a real domain.</li></ul>
+</body></html>

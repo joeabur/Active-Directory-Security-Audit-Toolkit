@@ -210,6 +210,7 @@ function New-ADSAReportObject {
             RulesInCatalog     = $catalog.Rules.Count
             RulesAssessed      = $assessed
             RulesNotFullyAssessed = $notAssessed
+            TopFindings        = @($failActive | Select-Object -First 10 | ForEach-Object { [pscustomobject][ordered]@{ Severity = $_.Severity; RuleId = $_.RuleId; Title = $_.Title; AffectedObject = $_.AffectedObject; Confidence = $_.Confidence } })
         }
         Coverage         = [pscustomobject][ordered]@{ Rules = $ruleCoverage.ToArray(); Sections = $sectionCoverage.ToArray() }
         CollectionErrors = $collectionErrors.ToArray()

@@ -104,6 +104,7 @@ function Protect-ADSAReportData {
         $f.Evidence = Convert-ADSAStringTree -InputObject $f.Evidence -Transform $transform
         if ($f.Status -in 'ERROR', 'NOT_ASSESSED') { $f.Explanation = & $transform "$($f.Explanation)" }
     }
+    $copy.Summary.TopFindings = Convert-ADSAStringTree -InputObject $copy.Summary.TopFindings -Transform $transform
     $copy.Inventories = Convert-ADSAStringTree -InputObject $copy.Inventories -Transform $transform
     foreach ($e in @($copy.CollectionErrors)) { $e.Target = & $transform "$($e.Target)"; $e.Message = & $transform "$($e.Message)" }
     $copy.Metadata.Domain = Convert-ADSAStringTree -InputObject $copy.Metadata.Domain -Transform $transform

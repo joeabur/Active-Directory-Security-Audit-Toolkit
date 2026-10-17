@@ -243,9 +243,36 @@ function Get-ADSASnapshotData {
         Get-ADComputer -Filter * -Properties $props @common -ErrorAction Stop | ForEach-Object { ConvertTo-ADSAComputerRecord -Computer $_ }
     }
     $sections['Groups'] = Invoke-ADSACollector -Name 'Groups' -Script {
-        Get-ADGroup -Filter * -Properties 'Member', 'adminCount' @common -ErrorAction Stop | ForEach-Object {
-            [ordered]@{ SamAccountName = "$($_.SamAccountName)"; Name = "$($_.Name)"; DistinguishedName = "$($_.DistinguishedName)"; Sid = "$(Get-ADSAProp -InputObject $_.SID -Name 'Value' -Default $_.SID)"; Members = @($_.Member | Where-Object { $_ }); AdminCount = (Get-ADSAProp -InputObject $_ -Name 'adminCount') }
+        # Member lists are fetched only for the configured privileged groups, Protected Users and the groups nested in them,
+        # so huge groups such as Domain Users are never downloaded. Other groups carry MembersCollected = $false.
+        $records = @{}
+        $order = New-Object System.Collections.Generic.List[string]
+        foreach ($g in (Get-ADGroup -Filter * -Properties 'adminCount' @common -ErrorAction Stop)) {
+            $dnKey = "$($g.DistinguishedName)".ToLowerInvariant()
+            $records[$dnKey] = [ordered]@{ SamAccountName = "$($g.SamAccountName)"; Name = "$($g.Name)"; DistinguishedName = "$($g.DistinguishedName)"; Sid = "$(Get-ADSAProp -InputObject $g.SID -Name 'Value' -Default $g.SID)"; Members = @(); MembersCollected = $false; AdminCount = (Get-ADSAProp -InputObject $g -Name 'adminCount') }
+            $order.Add($dnKey)
         }
+        $wanted = New-Object System.Collections.Generic.List[string]
+        foreach ($cfg in @($Config['privilegedGroups'])) {
+            $targetSid = if ($cfg['sid']) { "$($cfg['sid'])" } else { "$($domain.sid)-$($cfg['rid'])" }
+            $wanted.Add($targetSid)
+        }
+        $wanted.Add("$($domain.sid)-525")
+        $queue = New-Object System.Collections.Generic.Queue[string]
+        $seen = New-Object 'System.Collections.Generic.HashSet[string]'
+        foreach ($k in $order) { if ($records[$k].Sid -in $wanted) { if ($seen.Add($k)) { $queue.Enqueue($k) } } }
+        while ($queue.Count -gt 0) {
+            $k = $queue.Dequeue()
+            $full = Get-ADGroup -Identity $records[$k].DistinguishedName -Properties 'Member' @common -ErrorAction Stop | Select-Object -First 1
+            $members = @($full.Member | Where-Object { $_ })
+            $records[$k].Members = $members
+            $records[$k].MembersCollected = $true
+            foreach ($m in $members) {
+                $mk = "$m".ToLowerInvariant()
+                if ($records.ContainsKey($mk) -and $seen.Add($mk)) { $queue.Enqueue($mk) }
+            }
+        }
+        foreach ($k in $order) { $records[$k] }
     }
     $sections['DomainControllers'] = Invoke-ADSACollector -Name 'DomainControllers' -Script {
         Get-ADDomainController -Filter * @common -ErrorAction Stop | ForEach-Object {

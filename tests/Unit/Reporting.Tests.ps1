@@ -135,3 +135,17 @@ Describe 'Export-ADSAReport' {
         $files.Count | Should -Be 1
     }
 }
+
+Describe 'HTML report structure' {
+    It 'groups findings by rule and shows a top-priorities table' {
+        $users = 1..30 | ForEach-Object { New-TestUser -Sam "svc$_" -Rid (2000 + $_) -Uac 66048 }
+        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Data $users); Computers = (New-TestSection -Data @()) }
+        $rep = Invoke-TestAudit -Snapshot $snap -Module AccountLifecycle
+        $html = InModuleScope ADSecurityAudit -Parameters @{ R = $rep } { param($R) ConvertTo-ADSAHtmlReport -Report $R }
+        $html | Should -Match 'Top priorities'
+        ([regex]::Matches($html, '<details open>')).Count | Should -Be 1
+        $html | Should -Match '30 affected'
+        $html | Should -Match 'Showing 10 of 30 active findings'
+        $rep.Summary.TopFindings.Count | Should -Be 10
+    }
+}

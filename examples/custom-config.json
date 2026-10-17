@@ -1,0 +1,35 @@
+{
+  "configVersion": "1.0",
+  "thresholds": {
+    "staleUserDays": 120,
+    "staleComputerDays": 60,
+    "servicePasswordMaxAgeDays": 180
+  },
+  "passwordPolicy": {
+    "minLength": 12,
+    "complexityRequired": false
+  },
+  "trustedPrincipals": {
+    "sids": [],
+    "names": ["CONTOSO-SIM\\MSOL_sync"]
+  },
+  "exclusions": [
+    {
+      "pattern": "svc_gmsa_*",
+      "appliesTo": ["user"],
+      "ruleIds": ["ADSA-ACC-003"],
+      "reason": "Managed by a group Managed Service Account process; tracked in CHG-1234"
+    }
+  ],
+  "exceptions": [
+    {
+      "id": "EXC-001",
+      "ruleId": "ADSA-PRV-004",
+      "objectPattern": "svc_backup",
+      "reason": "Backup agent requires domain admin and an SPN until vendor release 9.2",
+      "owner": "backup-team@contoso-sim.test",
+      "approvedBy": "ciso@contoso-sim.test",
+      "expires": "2027-06-30"
+    }
+  ]
+}

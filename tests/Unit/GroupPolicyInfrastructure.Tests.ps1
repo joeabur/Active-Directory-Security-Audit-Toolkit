@@ -100,6 +100,15 @@ Describe 'Infrastructure rules' {
         $r = Invoke-Inf -Dcs @([pscustomobject]@{ Name = 'old'; HostName = 'old.t'; OperatingSystem = 'Windows Server 2012 R2 Standard' }, [pscustomobject]@{ Name = 'new'; HostName = 'new.t'; OperatingSystem = 'Windows Server 2022 Datacenter' }, [pscustomobject]@{ Name = 'x'; HostName = 'x.t'; OperatingSystem = 'Windows Server 2008 R2' })
         @((Get-TestResult $r 'ADSA-INF-001' | Where-Object Status -eq 'FAIL').AffectedObject | Sort-Object) | Should -Be @('old', 'x')
     }
+    It 'INF-001 bounds a pathological operator regex instead of hanging' {
+        $cfg = New-TestConfigFile '{ "domainControllers": { "unsupportedOsPattern": "(a+)+$" } }'
+        $os = ('a' * 45) + '!'
+        $sw = [System.Diagnostics.Stopwatch]::StartNew()
+        $r = Invoke-Inf -Dcs @([pscustomobject]@{ Name = 'x'; HostName = 'x.t'; OperatingSystem = $os }) -Config $cfg
+        $sw.Stop()
+        (Get-TestResult $r 'ADSA-INF-001').Status | Should -Be 'NOT_ASSESSED'
+        $sw.Elapsed.TotalSeconds | Should -BeLessThan 20
+    }
     It 'INF-001 is NOT_ASSESSED when the OS attribute is missing' {
         (Get-TestResult (Invoke-Inf -Dcs @([pscustomobject]@{ Name = 'a'; HostName = 'a.t' })) 'ADSA-INF-001').Status | Should -Be 'NOT_ASSESSED'
     }

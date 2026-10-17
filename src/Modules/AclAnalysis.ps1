@@ -54,7 +54,8 @@ function Get-ADSATrustedSidSet {
     param([AllowNull()] [string] $DomainSid, [System.Collections.IDictionary] $Config)
     $set = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
     foreach ($s in 'S-1-5-18', 'S-1-5-32-544', 'S-1-3-0', 'S-1-5-10', 'S-1-5-9') { [void]$set.Add($s) }
-    if ($DomainSid) { foreach ($rid in 500, 512, 518, 519) { [void]$set.Add("$DomainSid-$rid") } }
+    # 500 Administrator, 512 Domain Admins, 516 Domain Controllers, 518 Schema Admins, 519 Enterprise Admins, 498/521 (Enterprise) read-only DCs
+    if ($DomainSid) { foreach ($rid in 498, 500, 512, 516, 518, 519, 521) { [void]$set.Add("$DomainSid-$rid") } }
     if ($Config) {
         $tp = $Config['trustedPrincipals']
         if ($tp) { foreach ($s in @($tp['sids'])) { if ($s) { [void]$set.Add("$s") } } }

@@ -25,6 +25,7 @@ function Invoke-ADSecurityAudit {
         [ValidateSet('AccountLifecycle', 'PrivilegedAccess', 'Delegation', 'Acl', 'AuthenticationPolicy', 'GroupPolicy', 'Infrastructure')] [string[]] $Module,
         [string] $OutputPath,
         [ValidateSet('Json', 'Csv', 'Html')] [string[]] $Format = @('Json', 'Csv', 'Html'),
+        [string] $BaseName,
         [switch] $Redact,
         [string] $RedactionSalt,
         [switch] $AllowUncOutput,
@@ -69,7 +70,7 @@ function Invoke-ADSecurityAudit {
     $report = New-ADSAReportObject -Snapshot $snap -Config $config -Result $results.ToArray() -ModulesRun $modules -AnalysisMode $mode -ConfigWarning (@($loaded.Warnings) + @($unused))
     if ($Redact) { $report = Protect-ADSAReportData -Report $report -Salt $RedactionSalt }
     if ($outDir) {
-        $files = Export-ADSAReport -Report $report -OutputPath $outDir -Format $Format -AllowUncOutput:$AllowUncOutput -AllowRepositoryOutput:$AllowRepositoryOutput
+        $files = Export-ADSAReport -Report $report -OutputPath $outDir -Format $Format -BaseName $BaseName -AllowUncOutput:$AllowUncOutput -AllowRepositoryOutput:$AllowRepositoryOutput
         Add-Member -InputObject $report -MemberType NoteProperty -Name OutputFiles -Value @($files | ForEach-Object { $_.FullName }) -Force
     }
     return $report

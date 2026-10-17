@@ -130,4 +130,12 @@ Describe 'ACL audit rules' {
         (Get-TestResult $r 'ADSA-ACL-001').Limitations | Should -Match '1 ACL target\(s\) could not be read'
         @($r.CollectionErrors | Where-Object Target -eq 'CN=X').Count | Should -Be 1
     }
+    It 'treats default domain-controller groups as expected principals (no false positive on default ACLs)' {
+        $aces = @((New-TestAce -Sid "$script:TestDomainSid-516" -Rights 'ExtendedRight' -ObjectType '1131f6aa-9c07-11d1-f79f-00c04fc2dcd2'),
+            (New-TestAce -Sid "$script:TestDomainSid-516" -Rights 'ExtendedRight' -ObjectType '1131f6ad-9c07-11d1-f79f-00c04fc2dcd2'),
+            (New-TestAce -Sid "$script:TestDomainSid-521" -Rights 'GenericWrite'), (New-TestAce -Sid "$script:TestDomainSid-498" -Rights 'GenericWrite'))
+        $r = Invoke-Acl -Targets @((New-Target 'DomainRoot' 'domainDNS' $aces))
+        (Get-TestResult $r 'ADSA-ACL-001').Status | Should -Be 'PASS'
+        (Get-TestResult $r 'ADSA-ACL-002').Status | Should -Be 'PASS'
+    }
 }

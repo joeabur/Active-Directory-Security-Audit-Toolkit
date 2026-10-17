@@ -33,11 +33,12 @@ function Invoke-ADSAPrivilegedAccessAudit {
     }
 
     # ---- PRV-001 group size
-    $fail1 = New-Object System.Collections.Generic.List[object]; $eval1 = 0
+    $fail1 = New-Object System.Collections.Generic.List[object]; $eval1 = 0; $na1 = New-Object System.Collections.Generic.List[object]
     $maxMap = $Config['privilegedGroupMaxMembers']
     foreach ($g in $index.Groups) {
         if (-not $g.Found) { continue }
         if (Test-ADSAExcluded -Context $ctx -RuleId 'ADSA-PRV-001' -Name $g.Name -DistinguishedName $g.Dn -Kind group) { continue }
+        if (-not $g.MembersCollected) { $na1.Add(@{ Object = $g.Name; ObjectType = 'Group'; Message = 'the member list of this group was not collected' }); continue }
         $eval1++
         $max = if ($maxMap.Contains($g.Name)) { [int]$maxMap[$g.Name] } else { [int]$maxMap['default'] }
         $count = @($g.Members).Count
@@ -46,7 +47,19 @@ function Invoke-ADSAPrivilegedAccessAudit {
             $fail1.Add(@{ Object = $g.Name; ObjectType = 'Group'; Evidence = [ordered]@{ DistinguishedName = $g.Dn; EffectiveMemberCount = $count; Maximum = $max; NestedGroupCount = @($g.NestedGroups).Count; SampleMembers = $names } })
         }
     }
-    Complete-ADSARule -Context $ctx -RuleId 'ADSA-PRV-001' -Fail $fail1.ToArray() -Evaluated $eval1 -ObjectType 'Group' -Scope 'privileged groups' -ExtraLimitation $compNote
+    Complete-ADSARule -Context $ctx -RuleId 'ADSA-PRV-001' -Fail $fail1.ToArray() -NotAssessed $na1.ToArray() -Evaluated $eval1 -ObjectType 'Group' -Scope 'privileged groups' -ExtraLimitation $compNote
+
+    # Members of Protected Users (RID 525, direct or nested) cannot be delegated, so PRV-006 treats them as compliant
+    $protectedDns = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    $domainSidText = "$(Get-ADSAProp -InputObject (Get-ADSAProp -InputObject $Snapshot -Name 'domain') -Name 'sid' -Default '')"
+    if ($domainSidText) {
+        $puGroup = @($groups.Data | Where-Object { (Get-ADSAProp -InputObject $_ -Name 'Sid') -eq "$domainSidText-525" }) | Select-Object -First 1
+        if ($puGroup) {
+            $compObjects = @(if ($computers.State -eq 'Ok') { $computers.Data })
+            $pu = Resolve-ADSAGroupMembership -GroupDn "$(Get-ADSAProp -InputObject $puGroup -Name 'DistinguishedName')" -GroupIndex (New-ADSADnIndex -Objects @($groups.Data)) -UserIndex (New-ADSADnIndex -Objects @($users.Data)) -ComputerIndex (New-ADSADnIndex -Objects $compObjects)
+            foreach ($m in $pu.Members) { [void]$protectedDns.Add($m.DistinguishedName) }
+        }
+    }
 
     # ---- Per-principal rules (users only; computers in privileged groups are DCs or documented separately)
     $userPrincipals = @($index.Principals.Values | Where-Object { $_.ObjectClass -eq 'user' })
@@ -86,7 +99,7 @@ function Invoke-ADSAPrivilegedAccessAudit {
                 }
                 'ADSA-PRV-006' {
                     if (-not $enabled) { return @{ Outcome = 'NotInScope' } }
-                    if (-not (Test-ADSAUacFlag -Uac $uac -Flag 'NOT_DELEGATED')) { return @{ Outcome = 'Fail'; Evidence = [ordered]@{ DistinguishedName = $dn; AccountIsSensitiveAndCannotBeDelegated = $false; Groups = $via } } }
+                    if (-not (Test-ADSAUacFlag -Uac $uac -Flag 'NOT_DELEGATED') -and -not $protectedDns.Contains($dn)) { return @{ Outcome = 'Fail'; Evidence = [ordered]@{ DistinguishedName = $dn; AccountIsSensitiveAndCannotBeDelegated = $false; ProtectedUsersMember = $false; Groups = $via } } }
                     return @{ Outcome = 'Pass' }
                 }
             }

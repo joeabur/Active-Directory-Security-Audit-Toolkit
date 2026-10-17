@@ -157,7 +157,7 @@ function Get-ADSAPrivilegedIndex {
         $group = $null
         if ($targetSid) { $group = $groups | Where-Object { (Get-ADSAProp -InputObject $_ -Name 'Sid') -eq $targetSid } | Select-Object -First 1 }
         if ($null -eq $group) {
-            $groupResults.Add([pscustomobject]@{ Name = "$($cfg['name'])"; Sid = $targetSid; Found = $false; Dn = $null; Members = @(); Unresolved = @(); NestedGroups = @() })
+            $groupResults.Add([pscustomobject]@{ Name = "$($cfg['name'])"; Sid = $targetSid; Found = $false; Dn = $null; MembersCollected = $true; Members = @(); Unresolved = @(); NestedGroups = @() })
             continue
         }
         $dn = "$(Get-ADSAProp -InputObject $group -Name 'DistinguishedName')"
@@ -168,7 +168,7 @@ function Get-ADSAPrivilegedIndex {
             $primary = @($users | Where-Object { "$(Get-ADSAProp -InputObject $_ -Name 'PrimaryGroupId')" -eq "$rid" } | ForEach-Object { Get-ADSAProp -InputObject $_ -Name 'DistinguishedName' })
         }
         $res = Resolve-ADSAGroupMembership -GroupDn $dn -GroupIndex $groupIndex -UserIndex $userIndex -ComputerIndex $computerIndex -PrimaryGroupMemberDn $primary
-        $groupResults.Add([pscustomobject]@{ Name = "$($cfg['name'])"; Sid = $targetSid; Found = $true; Dn = $dn; Members = $res.Members; Unresolved = $res.Unresolved; NestedGroups = $res.NestedGroups })
+        $groupResults.Add([pscustomobject]@{ Name = "$($cfg['name'])"; Sid = $targetSid; Found = $true; Dn = $dn; MembersCollected = [bool](Get-ADSAProp -InputObject $group -Name 'MembersCollected' -Default $true); Members = $res.Members; Unresolved = $res.Unresolved; NestedGroups = $res.NestedGroups })
         foreach ($m in $res.Members) {
             if (-not $principals.ContainsKey($m.DistinguishedName)) {
                 $obj = if ($m.ObjectClass -eq 'user') { $userIndex[$m.DistinguishedName] } else { $computerIndex[$m.DistinguishedName] }

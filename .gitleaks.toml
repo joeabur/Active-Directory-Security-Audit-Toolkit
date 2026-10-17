@@ -1,0 +1,13 @@
+title = "ADSecurityAudit gitleaks config"
+
+[extend]
+useDefault = true
+
+# The repository contains deliberately synthetic fixtures only. Nothing here is a real secret.
+[allowlist]
+description = "Synthetic test data"
+paths = [
+  '''sample-data/.*''',
+  '''examples/sample-reports/.*''',
+  '''tests/Unit/GroupPolicyInfrastructure\.Tests\.ps1''',
+]

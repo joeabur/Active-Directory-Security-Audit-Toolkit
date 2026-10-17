@@ -5,7 +5,7 @@ BeforeAll {
 
     # Stubs so Pester can mock commands that do not exist off-domain
     foreach ($n in 'Get-ADDomain', 'Get-ADForest', 'Get-ADUser', 'Get-ADComputer', 'Get-ADGroup', 'Get-ADDomainController', 'Get-ADDefaultDomainPasswordPolicy', 'Get-ADFineGrainedPasswordPolicy') {
-        Set-Item -Path "function:global:$n" -Value ([scriptblock]::Create('[CmdletBinding()] param($Filter, $Properties, $Server, $Credential, $ResultPageSize) '))
+        Set-Item -Path "function:global:$n" -Value ([scriptblock]::Create('[CmdletBinding()] param($Filter, $Identity, $Properties, $Server, $Credential, $ResultPageSize) '))
     }
     Set-Item -Path 'function:global:Get-ADObject' -Value ([scriptblock]::Create('[CmdletBinding()] param($Filter, $LDAPFilter, $SearchBase, $Identity, $Properties, $Server, $Credential) '))
     # Write cmdlets exist only so the tests can prove they are never called
@@ -32,7 +32,8 @@ BeforeAll {
             )
         }
         Mock -ModuleName ADSecurityAudit Get-ADComputer { @([pscustomobject]@{ SamAccountName = 'WS1$'; DistinguishedName = 'CN=WS1,CN=Computers,DC=test,DC=local'; SID = [pscustomobject]@{ Value = "$script:TestDomainSid-2000" }; Enabled = $true; userAccountControl = 4096; OperatingSystem = 'Windows 11'; PrincipalsAllowedToDelegateToAccount = @('CN=x,DC=test') }) }
-        Mock -ModuleName ADSecurityAudit Get-ADGroup { @([pscustomobject]@{ SamAccountName = 'Domain Admins'; Name = 'Domain Admins'; DistinguishedName = 'CN=Domain Admins,CN=Users,DC=test,DC=local'; SID = [pscustomobject]@{ Value = "$script:TestDomainSid-512" }; Member = @('CN=alice,CN=Users,DC=test,DC=local') }) }
+        Mock -ModuleName ADSecurityAudit Get-ADGroup { @([pscustomobject]@{ SamAccountName = 'Domain Admins'; Name = 'Domain Admins'; DistinguishedName = 'CN=Domain Admins,CN=Users,DC=test,DC=local'; SID = [pscustomobject]@{ Value = "$script:TestDomainSid-512" } }, [pscustomobject]@{ SamAccountName = 'Domain Users'; Name = 'Domain Users'; DistinguishedName = 'CN=Domain Users,CN=Users,DC=test,DC=local'; SID = [pscustomobject]@{ Value = "$script:TestDomainSid-513" }; Member = @('CN=should-never-be-read') }) }
+        Mock -ModuleName ADSecurityAudit Get-ADGroup { @([pscustomobject]@{ SamAccountName = 'Domain Admins'; Name = 'Domain Admins'; DistinguishedName = 'CN=Domain Admins,CN=Users,DC=test,DC=local'; SID = [pscustomobject]@{ Value = "$script:TestDomainSid-512" }; Member = @('CN=alice,CN=Users,DC=test,DC=local') }) } -ParameterFilter { $Identity }
         Mock -ModuleName ADSecurityAudit Get-ADDomainController { @([pscustomobject]@{ Name = 'DC1'; HostName = 'dc1.test.local'; OperatingSystem = 'Windows Server 2022'; OperatingSystemVersion = '10.0'; Site = 'Default'; IsGlobalCatalog = $true; IsReadOnly = $false; ComputerObjectDN = 'CN=DC1,OU=Domain Controllers,DC=test,DC=local' }) }
         Mock -ModuleName ADSecurityAudit Get-ADDefaultDomainPasswordPolicy { [pscustomobject]@{ MinPasswordLength = 12; PasswordHistoryCount = 24; ComplexityEnabled = $true; LockoutThreshold = 5; LockoutDuration = [timespan]::FromMinutes(30); LockoutObservationWindow = [timespan]::FromMinutes(30); ReversibleEncryptionEnabled = $false; MaxPasswordAge = [timespan]::FromDays(60); MinPasswordAge = [timespan]::FromDays(1) } }
         Mock -ModuleName ADSecurityAudit Get-ADFineGrainedPasswordPolicy { @() }
@@ -89,6 +90,17 @@ Describe 'Live collection with mocked ActiveDirectory cmdlets' {
         $s.sections.Gpos.data[0].LinkedTo[0].Target | Should -Be 'DC=test,DC=local'
         $s.sections.Gpos.data[0].SysvolStatus | Should -Be 'Skipped'
         $s.sections.DcHosts.status | Should -Be 'NotAssessed'
+    }
+    It 'fetches member lists only for privileged groups, never for large unrelated groups' {
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
+        $da = $s.sections.Groups.data | Where-Object Name -eq 'Domain Admins'
+        $du = $s.sections.Groups.data | Where-Object Name -eq 'Domain Users'
+        $da.MembersCollected | Should -BeTrue
+        $da.Members | Should -Contain 'CN=alice,CN=Users,DC=test,DC=local'
+        $du.MembersCollected | Should -BeFalse
+        @($du.Members).Count | Should -Be 0
+        Should -Invoke -CommandName Get-ADGroup -ModuleName ADSecurityAudit -ParameterFilter { $Filter -and ($Properties -notcontains 'Member') } -Times 1 -Exactly
+        Should -Invoke -CommandName Get-ADGroup -ModuleName ADSecurityAudit -ParameterFilter { $Identity -like '*Domain Users*' } -Times 0 -Exactly
     }
     It 'reads ACLs through nTSecurityDescriptor and records owner and ACEs' {
         $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol

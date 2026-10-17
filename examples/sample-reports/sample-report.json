@@ -1,0 +1,2388 @@
+{
+  "SchemaVersion": "1.0",
+  "Tool": {
+    "Name": "ADSecurityAudit",
+    "Version": "1.0.0"
+  },
+  "Metadata": {
+    "GeneratedAt": "2026-10-17T05:53:05Z",
+    "CollectionTime": "2026-10-01T00:00:00Z",
+    "DataSource": "Simulated",
+    "AnalysisMode": "OfflineSnapshot",
+    "Notice": "SIMULATED DATA: these results come from a synthetic fixture. They are not observations of a real domain and say nothing about the security of any real environment.",
+    "Domain": {
+      "Name": "contoso-sim.test",
+      "NetBiosName": "CONTOSOSIM",
+      "DomainFunctionalLevel": "Windows2012R2Domain",
+      "ForestFunctionalLevel": "Windows2008R2Forest"
+    },
+    "ConfigVersion": "1.0",
+    "Modules": [
+      "AccountLifecycle",
+      "PrivilegedAccess",
+      "Delegation",
+      "Acl",
+      "AuthenticationPolicy",
+      "GroupPolicy",
+      "Infrastructure"
+    ],
+    "Warnings": [],
+    "Exclusions": {
+      "Count": 0
+    }
+  },
+  "Summary": {
+    "Headline": "50 active finding(s) across 41 assessed rule(s); 5 rule(s) could not be fully assessed; 0 finding(s) covered by documented exceptions.",
+    "ResultsByStatus": {
+      "PASS": 6,
+      "FAIL": 50,
+      "ERROR": 5,
+      "NOT_APPLICABLE": 1,
+      "NOT_ASSESSED": 1
+    },
+    "ActiveFindingsBySeverity": {
+      "Critical": 2,
+      "High": 17,
+      "Medium": 20,
+      "Low": 11,
+      "Informational": 0
+    },
+    "ActiveFindings": 50,
+    "ExceptedFindings": 0,
+    "RulesInCatalog": 44,
+    "RulesAssessed": 41,
+    "RulesNotFullyAssessed": 5,
+    "TopFindings": [
+      {
+        "Severity": "Critical",
+        "RuleId": "ADSA-ACL-002",
+        "Title": "Directory replication rights granted to a non-default principal",
+        "AffectedObject": "DC=contoso-sim,DC=test",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "Critical",
+        "RuleId": "ADSA-GPO-003",
+        "Title": "Group Policy Preferences cpassword found in SYSVOL",
+        "AffectedObject": "Legacy Drive Mapping",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "High",
+        "RuleId": "ADSA-ACC-005",
+        "Title": "Enabled account does not require a password",
+        "AffectedObject": "grace.nopwd",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "High",
+        "RuleId": "ADSA-ACC-006",
+        "Title": "Kerberos pre-authentication disabled",
+        "AffectedObject": "frank.preauth",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "High",
+        "RuleId": "ADSA-ACL-001",
+        "Title": "Non-privileged principal holds high-risk rights on a sensitive object",
+        "AffectedObject": "CN=AdminSDHolder,CN=System,DC=contoso-sim,DC=test",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "High",
+        "RuleId": "ADSA-ACL-003",
+        "Title": "Sensitive object owned by a non-privileged principal",
+        "AffectedObject": "CN=Domain Admins,CN=Users,DC=contoso-sim,DC=test",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "High",
+        "RuleId": "ADSA-ACL-004",
+        "Title": "Non-privileged principal can modify a Group Policy Object",
+        "AffectedObject": "Legacy Drive Mapping",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "High",
+        "RuleId": "ADSA-DC-001",
+        "Title": "Print Spooler service running on domain controller",
+        "AffectedObject": "DC01",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "High",
+        "RuleId": "ADSA-DEL-001",
+        "Title": "Unconstrained delegation",
+        "AffectedObject": "APP01$",
+        "Confidence": "High"
+      },
+      {
+        "Severity": "High",
+        "RuleId": "ADSA-DEL-001",
+        "Title": "Unconstrained delegation",
+        "AffectedObject": "svc_web",
+        "Confidence": "High"
+      }
+    ]
+  },
+  "Coverage": {
+    "Rules": [
+      {
+        "RuleId": "ADSA-ACC-001",
+        "Title": "Stale enabled user account",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACC-002",
+        "Title": "Inactive enabled computer account",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACC-003",
+        "Title": "Enabled account with password that never expires",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 3,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACC-004",
+        "Title": "Potentially orphaned account (manager disabled)",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACC-005",
+        "Title": "Enabled account does not require a password",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACC-006",
+        "Title": "Kerberos pre-authentication disabled",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACC-007",
+        "Title": "Weak Kerberos or password storage flags",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACC-008",
+        "Title": "Enabled account that has never logged on",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-SVC-001",
+        "Title": "Service account (SPN) with an old password",
+        "Module": "AccountLifecycle",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-PRV-001",
+        "Title": "Privileged group membership exceeds the configured maximum",
+        "Module": "PrivilegedAccess",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-PRV-002",
+        "Title": "Disabled or stale account in a privileged group",
+        "Module": "PrivilegedAccess",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-PRV-003",
+        "Title": "Privileged account with a password that never expires",
+        "Module": "PrivilegedAccess",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-PRV-004",
+        "Title": "Privileged account with a service principal name",
+        "Module": "PrivilegedAccess",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-PRV-005",
+        "Title": "Schema Admins group is populated",
+        "Module": "PrivilegedAccess",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-PRV-006",
+        "Title": "Privileged account not marked sensitive and cannot be delegated",
+        "Module": "PrivilegedAccess",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 7,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-PRV-007",
+        "Title": "Group membership cycle reachable from a privileged group",
+        "Module": "PrivilegedAccess",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-PRV-008",
+        "Title": "Account with adminCount=1 outside privileged groups",
+        "Module": "PrivilegedAccess",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-DEL-001",
+        "Title": "Unconstrained delegation",
+        "Module": "Delegation",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-DEL-002",
+        "Title": "Constrained delegation with protocol transition",
+        "Module": "Delegation",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-DEL-003",
+        "Title": "Constrained delegation to a domain controller service",
+        "Module": "Delegation",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-DEL-004",
+        "Title": "Resource-based constrained delegation configured on a domain controller",
+        "Module": "Delegation",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACL-001",
+        "Title": "Non-privileged principal holds high-risk rights on a sensitive object",
+        "Module": "Acl",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACL-002",
+        "Title": "Directory replication rights granted to a non-default principal",
+        "Module": "Acl",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACL-003",
+        "Title": "Sensitive object owned by a non-privileged principal",
+        "Module": "Acl",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-ACL-004",
+        "Title": "Non-privileged principal can modify a Group Policy Object",
+        "Module": "Acl",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-POL-001",
+        "Title": "Minimum password length below baseline",
+        "Module": "AuthenticationPolicy",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-POL-002",
+        "Title": "Password complexity not required",
+        "Module": "AuthenticationPolicy",
+        "Status": "PASS",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-POL-003",
+        "Title": "Password history below baseline",
+        "Module": "AuthenticationPolicy",
+        "Status": "PASS",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-POL-004",
+        "Title": "Account lockout disabled or threshold too high",
+        "Module": "AuthenticationPolicy",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-POL-005",
+        "Title": "Account lockout duration below baseline",
+        "Module": "AuthenticationPolicy",
+        "Status": "NOT_APPLICABLE",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-POL-006",
+        "Title": "Reversible password encryption enabled in domain policy",
+        "Module": "AuthenticationPolicy",
+        "Status": "PASS",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-KRB-001",
+        "Title": "krbtgt password is old",
+        "Module": "AuthenticationPolicy",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-LDAP-001",
+        "Title": "LDAP signing not required on domain controller",
+        "Module": "AuthenticationPolicy",
+        "Status": "ERROR",
+        "Partial": true,
+        "Results": 3,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-LDAP-002",
+        "Title": "LDAP channel binding not enforced on domain controller",
+        "Module": "AuthenticationPolicy",
+        "Status": "FAIL",
+        "Partial": true,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-DC-001",
+        "Title": "Print Spooler service running on domain controller",
+        "Module": "AuthenticationPolicy",
+        "Status": "FAIL",
+        "Partial": true,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-AUD-001",
+        "Title": "Required advanced audit subcategory not fully enabled",
+        "Module": "AuthenticationPolicy",
+        "Status": "FAIL",
+        "Partial": true,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-AUD-002",
+        "Title": "Security event log capacity below baseline",
+        "Module": "AuthenticationPolicy",
+        "Status": "ERROR",
+        "Partial": true,
+        "Results": 2,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-GPO-001",
+        "Title": "Weak LAN Manager authentication level in GPO",
+        "Module": "GroupPolicy",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-GPO-002",
+        "Title": "SMB server signing not required in GPO",
+        "Module": "GroupPolicy",
+        "Status": "PASS",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-GPO-003",
+        "Title": "Group Policy Preferences cpassword found in SYSVOL",
+        "Module": "GroupPolicy",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-INF-001",
+        "Title": "Domain controller runs an unsupported operating system",
+        "Module": "Infrastructure",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-INF-002",
+        "Title": "Functional level below baseline",
+        "Module": "Infrastructure",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-INF-003",
+        "Title": "Trust without SID filtering protection",
+        "Module": "Infrastructure",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      },
+      {
+        "RuleId": "ADSA-INF-004",
+        "Title": "Trust without selective authentication",
+        "Module": "Infrastructure",
+        "Status": "FAIL",
+        "Partial": false,
+        "Results": 1,
+        "Note": ""
+      }
+    ],
+    "Sections": [
+      {
+        "Section": "Users",
+        "Status": "Collected",
+        "ObjectCount": 23,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      },
+      {
+        "Section": "Computers",
+        "Status": "Collected",
+        "ObjectCount": 6,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      },
+      {
+        "Section": "Groups",
+        "Status": "Collected",
+        "ObjectCount": 14,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      },
+      {
+        "Section": "DomainControllers",
+        "Status": "Collected",
+        "ObjectCount": 3,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      },
+      {
+        "Section": "PasswordPolicy",
+        "Status": "Collected",
+        "ObjectCount": 1,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      },
+      {
+        "Section": "FineGrainedPolicies",
+        "Status": "Error",
+        "ObjectCount": 0,
+        "ErrorCategory": "AccessDenied",
+        "WarningCount": 0
+      },
+      {
+        "Section": "Trusts",
+        "Status": "Collected",
+        "ObjectCount": 2,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      },
+      {
+        "Section": "Acls",
+        "Status": "Collected",
+        "ObjectCount": 4,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      },
+      {
+        "Section": "Gpos",
+        "Status": "Collected",
+        "ObjectCount": 3,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      },
+      {
+        "Section": "DcHosts",
+        "Status": "Collected",
+        "ObjectCount": 3,
+        "ErrorCategory": "",
+        "WarningCount": 0
+      }
+    ]
+  },
+  "CollectionErrors": [
+    {
+      "Source": "FineGrainedPolicies",
+      "Target": "",
+      "Category": "AccessDenied",
+      "Message": "Simulated: Access is denied. Fine-grained password policy objects are readable only by Domain Admins by default."
+    },
+    {
+      "Source": "DcHosts",
+      "Target": "DC02",
+      "Category": "Unreachable",
+      "Message": "Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable."
+    }
+  ],
+  "Inventories": {
+    "ServiceAccounts": [
+      {
+        "SamAccountName": "svc_sql",
+        "Enabled": true,
+        "PasswordLastSet": "2023-03-01T08:00:00Z",
+        "PasswordNeverExpires": true,
+        "Privileged": false,
+        "SpnCount": 1
+      },
+      {
+        "SamAccountName": "svc_backup",
+        "Enabled": true,
+        "PasswordLastSet": "2024-02-01T08:00:00Z",
+        "PasswordNeverExpires": true,
+        "Privileged": true,
+        "SpnCount": 1
+      },
+      {
+        "SamAccountName": "svc_web",
+        "Enabled": true,
+        "PasswordLastSet": "2026-08-01T08:00:00Z",
+        "PasswordNeverExpires": false,
+        "Privileged": false,
+        "SpnCount": 1
+      },
+      {
+        "SamAccountName": "svc_proto",
+        "Enabled": true,
+        "PasswordLastSet": "2026-08-01T08:00:00Z",
+        "PasswordNeverExpires": false,
+        "Privileged": false,
+        "SpnCount": 1
+      }
+    ],
+    "PrivilegedGroups": [
+      {
+        "Name": "Domain Admins",
+        "Found": true,
+        "EffectiveMemberCount": 6,
+        "NestedGroupCount": 2,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Enterprise Admins",
+        "Found": true,
+        "EffectiveMemberCount": 1,
+        "NestedGroupCount": 0,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Schema Admins",
+        "Found": true,
+        "EffectiveMemberCount": 1,
+        "NestedGroupCount": 0,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Administrators",
+        "Found": true,
+        "EffectiveMemberCount": 7,
+        "NestedGroupCount": 4,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Account Operators",
+        "Found": true,
+        "EffectiveMemberCount": 0,
+        "NestedGroupCount": 0,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Server Operators",
+        "Found": true,
+        "EffectiveMemberCount": 0,
+        "NestedGroupCount": 0,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Print Operators",
+        "Found": true,
+        "EffectiveMemberCount": 0,
+        "NestedGroupCount": 0,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Backup Operators",
+        "Found": true,
+        "EffectiveMemberCount": 0,
+        "NestedGroupCount": 0,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Replicator",
+        "Found": true,
+        "EffectiveMemberCount": 0,
+        "NestedGroupCount": 0,
+        "UnresolvedMemberCount": 0
+      },
+      {
+        "Name": "Group Policy Creator Owners",
+        "Found": true,
+        "EffectiveMemberCount": 0,
+        "NestedGroupCount": 0,
+        "UnresolvedMemberCount": 0
+      }
+    ],
+    "PasswordNeverExpiresCount": 3,
+    "DomainControllers": [
+      {
+        "Name": "DC01",
+        "OperatingSystem": "Windows Server 2022 Standard",
+        "Site": "Default-First-Site-Name",
+        "IsReadOnly": false
+      },
+      {
+        "Name": "DC02",
+        "OperatingSystem": "Windows Server 2012 R2 Standard",
+        "Site": "Branch-Site",
+        "IsReadOnly": false
+      },
+      {
+        "Name": "DC03",
+        "OperatingSystem": "Windows Server 2025 Datacenter",
+        "Site": "Default-First-Site-Name",
+        "IsReadOnly": false
+      }
+    ],
+    "Trusts": [
+      {
+        "Name": "partner.example.test",
+        "Direction": "3",
+        "Attributes": "0"
+      },
+      {
+        "Name": "fabrikam-sim.test",
+        "Direction": "3",
+        "Attributes": "20"
+      }
+    ],
+    "FineGrainedPolicies": []
+  },
+  "Findings": [
+    {
+      "RuleId": "ADSA-ACL-002",
+      "Title": "Directory replication rights granted to a non-default principal",
+      "Category": "Access control",
+      "Module": "Acl",
+      "Status": "FAIL",
+      "Severity": "Critical",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC=contoso-sim,DC=test",
+      "AffectedObjectType": "domainDNS",
+      "Evidence": {
+        "Principal": "svc_sync (S-1-5-21-1004336348-1177238915-682003330-1150)",
+        "GrantedVia": [
+          "DS-Replication-Get-Changes",
+          "DS-Replication-Get-Changes-All"
+        ],
+        "GetChanges": true,
+        "GetChangesAll": true
+      },
+      "Explanation": "A principal other than the expected administrators and domain controllers holds both DS-Replication-Get-Changes and DS-Replication-Get-Changes-All on the domain root, which allows it to replicate secrets from the directory (DCSync-capable).",
+      "Confidence": "High",
+      "Remediation": "Remove the rights unless required by a documented synchronisation product, then restrict and monitor the account that uses them.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Group membership of the principal is not expanded. Legitimate synchronisation accounts should be recorded as exceptions.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-GPO-003",
+      "Title": "Group Policy Preferences cpassword found in SYSVOL",
+      "Category": "Group Policy",
+      "Module": "GroupPolicy",
+      "Status": "FAIL",
+      "Severity": "Critical",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "Legacy Drive Mapping",
+      "AffectedObjectType": "GPO",
+      "Evidence": {
+        "GpoId": "9d3f0c1a-5b6e-4a7d-8f21-0a1b2c3d4e5f",
+        "Files": [
+          "Machine\\Preferences\\Groups\\Groups.xml"
+        ],
+        "Note": "cpassword values were detected but are intentionally not recorded."
+      },
+      "Explanation": "A Group Policy Preferences file contains a cpassword value. The encryption key is public, so any domain user can recover the password.",
+      "Confidence": "High",
+      "Remediation": "Remove the preference item, rotate the exposed credential, and use a secrets solution such as LAPS.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only common GPP file names are scanned. The cpassword value is never stored or reported, only the file path.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-005",
+      "Title": "Enabled account does not require a password",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "grace.nopwd",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=grace.nopwd,CN=Users,DC=contoso-sim,DC=test",
+        "FlagsSet": [
+          "PASSWD_NOTREQD"
+        ],
+        "UserAccountControl": 544
+      },
+      "Explanation": "The PASSWD_NOTREQD flag is set on an enabled account, which can allow an empty password if domain policy does not otherwise prevent it.",
+      "Confidence": "High",
+      "Remediation": "Clear the flag and ensure the account has a strong password; investigate why it was set.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "The flag permits, but does not prove, an empty password; the tool never tests passwords.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-006",
+      "Title": "Kerberos pre-authentication disabled",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "frank.preauth",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=frank.preauth,CN=Users,DC=contoso-sim,DC=test",
+        "FlagsSet": [
+          "DONT_REQ_PREAUTH"
+        ],
+        "UserAccountControl": 4194816
+      },
+      "Explanation": "The DONT_REQ_PREAUTH flag is set on an enabled account, so an unauthenticated party can request material derived from the account password for offline guessing.",
+      "Confidence": "High",
+      "Remediation": "Enable Kerberos pre-authentication unless a documented legacy dependency exists; ensure the password is long and random.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Configuration evidence only; the tool does not request or test any authentication material.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACL-001",
+      "Title": "Non-privileged principal holds high-risk rights on a sensitive object",
+      "Category": "Access control",
+      "Module": "Acl",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "CN=AdminSDHolder,CN=System,DC=contoso-sim,DC=test",
+      "AffectedObjectType": "container",
+      "Evidence": {
+        "TargetRole": "AdminSDHolder",
+        "Principal": "Helpdesk-Ops (S-1-5-21-1004336348-1177238915-682003330-1203)",
+        "HighRiskRights": [
+          "WriteDacl"
+        ],
+        "InheritedAce": false
+      },
+      "Explanation": "A principal that is not an expected administrator holds GenericAll, WriteDacl, WriteOwner, GenericWrite, write-all-properties, all-extended-rights, password reset, group membership write or GPO link write rights on a sensitive object.",
+      "Confidence": "High",
+      "Remediation": "Review the ACE with the object owner. Remove it if unnecessary, or document and monitor it. Do not modify ACLs without change control.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Selective coverage: domain root, AdminSDHolder, privileged groups, Domain Controllers OU, and domain controller objects. Group membership of the principal is not expanded. This is not an exhaustive attack-path analysis.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACL-003",
+      "Title": "Sensitive object owned by a non-privileged principal",
+      "Category": "Access control",
+      "Module": "Acl",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "CN=Domain Admins,CN=Users,DC=contoso-sim,DC=test",
+      "AffectedObjectType": "group",
+      "Evidence": {
+        "TargetRole": "PrivilegedGroup",
+        "Owner": "bob.helpdesk (S-1-5-21-1004336348-1177238915-682003330-1102)"
+      },
+      "Explanation": "The owner of a sensitive object is not an expected administrator. Owners can always rewrite the object's DACL.",
+      "Confidence": "High",
+      "Remediation": "Review and, under change control, restore ownership to an administrative group.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Selective coverage as for ADSA-ACL-001.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACL-004",
+      "Title": "Non-privileged principal can modify a Group Policy Object",
+      "Category": "Access control",
+      "Module": "Acl",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "Legacy Drive Mapping",
+      "AffectedObjectType": "groupPolicyContainer",
+      "Evidence": {
+        "GpoId": "9d3f0c1a-5b6e-4a7d-8f21-0a1b2c3d4e5f",
+        "Principal": "bob.helpdesk (S-1-5-21-1004336348-1177238915-682003330-1102)",
+        "HighRiskRights": [
+          "GenericAll"
+        ],
+        "LinkedTo": [
+          "OU=Workstations,DC=contoso-sim,DC=test"
+        ]
+      },
+      "Explanation": "A principal that is not an expected administrator has high-risk write rights on a GPO container. GPO edit rights can lead to code execution on every computer the GPO applies to.",
+      "Confidence": "High",
+      "Remediation": "Remove unnecessary edit rights or restrict them to dedicated policy administrators under change control.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only the GPO container object ACL is inspected, not the SYSVOL file ACL. Group Policy Creator Owners members are reported.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-DC-001",
+      "Title": "Print Spooler service running on domain controller",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC01",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "Service": "Spooler",
+        "State": "Running"
+      },
+      "Explanation": "The Print Spooler service is running on a domain controller, enlarging its attack surface.",
+      "Confidence": "High",
+      "Remediation": "Disable the Print Spooler service on domain controllers unless there is a documented need.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Reports the service state at collection time only. 1 domain controllers could not be queried (see ERROR results).",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-DEL-001",
+      "Title": "Unconstrained delegation",
+      "Category": "Delegation",
+      "Module": "Delegation",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "APP01$",
+      "AffectedObjectType": "Computer",
+      "Evidence": {
+        "DistinguishedName": "CN=APP01,CN=Computers,DC=contoso-sim,DC=test",
+        "Flag": "TRUSTED_FOR_DELEGATION",
+        "UserAccountControl": 528384
+      },
+      "Explanation": "An enabled non-domain-controller account is trusted for unconstrained delegation, so it receives the Kerberos TGTs of users that authenticate to it.",
+      "Confidence": "High",
+      "Remediation": "Move to constrained or resource-based constrained delegation, or remove delegation. Protect privileged accounts from delegation.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Domain controllers are excluded because unconstrained delegation is expected on them.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-DEL-001",
+      "Title": "Unconstrained delegation",
+      "Category": "Delegation",
+      "Module": "Delegation",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "svc_web",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_web,CN=Users,DC=contoso-sim,DC=test",
+        "Flag": "TRUSTED_FOR_DELEGATION",
+        "UserAccountControl": 524800
+      },
+      "Explanation": "An enabled non-domain-controller account is trusted for unconstrained delegation, so it receives the Kerberos TGTs of users that authenticate to it.",
+      "Confidence": "High",
+      "Remediation": "Move to constrained or resource-based constrained delegation, or remove delegation. Protect privileged accounts from delegation.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Domain controllers are excluded because unconstrained delegation is expected on them.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-DEL-003",
+      "Title": "Constrained delegation to a domain controller service",
+      "Category": "Delegation",
+      "Module": "Delegation",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "svc_proto",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_proto,CN=Users,DC=contoso-sim,DC=test",
+        "DomainControllerTargets": [
+          "cifs/dc01.contoso-sim.test"
+        ]
+      },
+      "Explanation": "An account is allowed to delegate to a sensitive service (for example ldap or cifs) on a domain controller.",
+      "Confidence": "High",
+      "Remediation": "Remove delegation to domain controller services unless there is a documented, reviewed requirement.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only service classes ldap, cifs, host, gc, rpcss and wsman are considered. Host matching uses collected DC names.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-DEL-004",
+      "Title": "Resource-based constrained delegation configured on a domain controller",
+      "Category": "Delegation",
+      "Module": "Delegation",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "PotentialRisk",
+      "AffectedObject": "DC02$",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "DistinguishedName": "CN=DC02,OU=Domain Controllers,DC=contoso-sim,DC=test",
+        "AllowedToActOnBehalf": [
+          "CN=svc_web,CN=Users,DC=contoso-sim,DC=test"
+        ]
+      },
+      "Explanation": "A domain controller computer object allows other principals to act on behalf of users (msDS-AllowedToActOnBehalfOfOtherIdentity). Anyone who controls an allowed principal can impersonate users to that DC.",
+      "Confidence": "Medium",
+      "Remediation": "Clear the attribute unless a documented, reviewed requirement exists.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only domain controller computer objects are inspected. The allowed principals are listed but not resolved to privilege level.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-INF-001",
+      "Title": "Domain controller runs an unsupported operating system",
+      "Category": "Infrastructure",
+      "Module": "Infrastructure",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC02",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "HostName": "dc02.contoso-sim.test",
+        "OperatingSystem": "Windows Server 2012 R2 Standard",
+        "OperatingSystemVersion": "6.3 (9600)",
+        "MatchedPattern": "Windows (Server )?(2000|2003|2008|2012)"
+      },
+      "Explanation": "A domain controller reports an operating system matching the configured unsupported pattern, so it may no longer receive security updates.",
+      "Confidence": "High",
+      "Remediation": "Plan migration to a supported Windows Server version and decommission the old controller.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Relies on the operatingSystem attribute and the configured regular expression; extended security update programmes are not considered.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-INF-003",
+      "Title": "Trust without SID filtering protection",
+      "Category": "Infrastructure",
+      "Module": "Infrastructure",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "partner.example.test",
+      "AffectedObjectType": "Trust",
+      "Evidence": {
+        "Direction": "Bidirectional",
+        "TrustAttributes": 0,
+        "Reason": "External trust without SID filtering (QUARANTINED_DOMAIN is not set)."
+      },
+      "Explanation": "An external or forest trust that this domain relies on (outbound) lacks SID filtering (quarantine) or is treated as external, allowing SID history abuse across the trust.",
+      "Confidence": "Medium",
+      "Remediation": "Enable SID filtering on the trust unless a documented migration scenario requires otherwise.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Trust direction semantics follow MS-ADTS (outbound means this domain trusts the other). Verify with Get-ADTrust before acting.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-KRB-001",
+      "Title": "krbtgt password is old",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "krbtgt",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=krbtgt,CN=Users,DC=contoso-sim,DC=test",
+        "PasswordLastSet": "2023-01-15T08:00:00Z",
+        "PasswordAgeDays": 1354,
+        "ThresholdDays": 180
+      },
+      "Explanation": "The krbtgt account password has not been rotated within the configured limit. A stolen krbtgt key allows forged Kerberos tickets until the password is changed twice.",
+      "Confidence": "High",
+      "Remediation": "Rotate krbtgt following Microsoft's documented two-step procedure during a maintenance window.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Based on pwdLastSet of the queried DC's copy. Read-only domain controller krbtgt_* accounts are not evaluated.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-002",
+      "Title": "Disabled or stale account in a privileged group",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Hygiene",
+      "AffectedObject": "mike.staleadmin",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=mike.staleadmin,CN=Users,DC=contoso-sim,DC=test",
+        "Reason": "Stale",
+        "DaysSinceLastLogon": 628,
+        "ThresholdDays": 90,
+        "Groups": [
+          "Domain Admins",
+          "Administrators (nested via Domain Admins)"
+        ]
+      },
+      "Explanation": "A disabled or stale account remains in a privileged group (directly or through nesting). Dormant privileged accounts are attractive and rarely monitored.",
+      "Confidence": "Medium",
+      "Remediation": "Remove the account from privileged groups after confirming it is no longer needed.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Staleness is based on lastLogonTimestamp and shares its replication-lag caveat. Disabled accounts are reported at Low severity.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-003",
+      "Title": "Privileged account with a password that never expires",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "Administrator",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=Administrator,CN=Users,DC=contoso-sim,DC=test",
+        "Flag": "DONT_EXPIRE_PASSWORD",
+        "Groups": [
+          "Domain Admins",
+          "Enterprise Admins",
+          "Administrators"
+        ]
+      },
+      "Explanation": "An enabled privileged account is exempt from password aging.",
+      "Confidence": "High",
+      "Remediation": "Remove the flag; use smart-card enforcement or a documented, owner-approved rotation process for break-glass accounts.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Documented break-glass accounts should be handled through configuration exceptions.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-003",
+      "Title": "Privileged account with a password that never expires",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "svc_backup",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_backup,CN=Users,DC=contoso-sim,DC=test",
+        "Flag": "DONT_EXPIRE_PASSWORD",
+        "Groups": [
+          "Domain Admins",
+          "Administrators (nested via Domain Admins)"
+        ]
+      },
+      "Explanation": "An enabled privileged account is exempt from password aging.",
+      "Confidence": "High",
+      "Remediation": "Remove the flag; use smart-card enforcement or a documented, owner-approved rotation process for break-glass accounts.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Documented break-glass accounts should be handled through configuration exceptions.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-004",
+      "Title": "Privileged account with a service principal name",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "svc_backup",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_backup,CN=Users,DC=contoso-sim,DC=test",
+        "ServicePrincipalNames": [
+          "backupsvc/bk01.contoso-sim.test"
+        ],
+        "Groups": [
+          "Domain Admins",
+          "Administrators (nested via Domain Admins)"
+        ]
+      },
+      "Explanation": "An enabled privileged user account has SPNs, so its service ticket can be requested by any domain user and attacked offline.",
+      "Confidence": "High",
+      "Remediation": "Remove the SPN from the privileged account or run the service under a dedicated least-privilege account or gMSA.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Documented privileged service accounts should be handled through configuration exceptions with an owner and expiry.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-003",
+      "Title": "Enabled account with password that never expires",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "Administrator",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=Administrator,CN=Users,DC=contoso-sim,DC=test",
+        "FlagsSet": [
+          "DONT_EXPIRE_PASSWORD"
+        ],
+        "UserAccountControl": 66048
+      },
+      "Explanation": "The DONT_EXPIRE_PASSWORD flag is set on an enabled user account, exempting it from password aging. This is a policy exception that needs a documented owner and compensating controls.",
+      "Confidence": "High",
+      "Remediation": "Remove the flag where possible. For genuine service accounts prefer group Managed Service Accounts; otherwise record a time-boxed exception with an owner.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "The flag is a fact; whether it is acceptable depends on the account's purpose, which this tool cannot determine.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-003",
+      "Title": "Enabled account with password that never expires",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "svc_backup",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_backup,CN=Users,DC=contoso-sim,DC=test",
+        "FlagsSet": [
+          "DONT_EXPIRE_PASSWORD"
+        ],
+        "UserAccountControl": 66048
+      },
+      "Explanation": "The DONT_EXPIRE_PASSWORD flag is set on an enabled user account, exempting it from password aging. This is a policy exception that needs a documented owner and compensating controls.",
+      "Confidence": "High",
+      "Remediation": "Remove the flag where possible. For genuine service accounts prefer group Managed Service Accounts; otherwise record a time-boxed exception with an owner.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "The flag is a fact; whether it is acceptable depends on the account's purpose, which this tool cannot determine.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-003",
+      "Title": "Enabled account with password that never expires",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "svc_sql",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_sql,CN=Users,DC=contoso-sim,DC=test",
+        "FlagsSet": [
+          "DONT_EXPIRE_PASSWORD"
+        ],
+        "UserAccountControl": 66048
+      },
+      "Explanation": "The DONT_EXPIRE_PASSWORD flag is set on an enabled user account, exempting it from password aging. This is a policy exception that needs a documented owner and compensating controls.",
+      "Confidence": "High",
+      "Remediation": "Remove the flag where possible. For genuine service accounts prefer group Managed Service Accounts; otherwise record a time-boxed exception with an owner.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "The flag is a fact; whether it is acceptable depends on the account's purpose, which this tool cannot determine.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-007",
+      "Title": "Weak Kerberos or password storage flags",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "henry.des",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=henry.des,CN=Users,DC=contoso-sim,DC=test",
+        "FlagsSet": [
+          "USE_DES_KEY_ONLY"
+        ],
+        "UserAccountControl": 2097664
+      },
+      "Explanation": "An enabled account is restricted to DES (USE_DES_KEY_ONLY) or stores its password with reversible encryption (ENCRYPTED_TEXT_PWD_ALLOWED).",
+      "Confidence": "High",
+      "Remediation": "Clear the flags, reset the password through your normal process so stronger keys are generated, and retire clients that need DES.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Configuration evidence only. Domain-wide encryption type policy is not evaluated by this rule.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-AUD-001",
+      "Title": "Required advanced audit subcategory not fully enabled",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC01",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "MissingCoverage": [
+          {
+            "Subcategory": "Kerberos Authentication Service",
+            "Configured": "No Auditing",
+            "RequiredSuccess": true,
+            "RequiredFailure": true
+          }
+        ]
+      },
+      "Explanation": "One or more required advanced audit policy subcategories do not audit the configured success or failure events on a domain controller.",
+      "Confidence": "Medium",
+      "Remediation": "Configure the subcategories via Group Policy so security-relevant events are recorded.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Parses English auditpol output only; other languages are reported NOT_ASSESSED. Reads local effective policy and requires administrator rights on the DC. 1 domain controllers could not be queried (see ERROR results).",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-DEL-002",
+      "Title": "Constrained delegation with protocol transition",
+      "Category": "Delegation",
+      "Module": "Delegation",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "svc_proto",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_proto,CN=Users,DC=contoso-sim,DC=test",
+        "Flag": "TRUSTED_TO_AUTH_FOR_DELEGATION",
+        "AllowedToDelegateTo": [
+          "cifs/dc01.contoso-sim.test"
+        ]
+      },
+      "Explanation": "An enabled account can use protocol transition (TRUSTED_TO_AUTH_FOR_DELEGATION), allowing it to obtain service tickets for users without those users authenticating via Kerberos.",
+      "Confidence": "High",
+      "Remediation": "Use Kerberos-only constrained delegation where possible and review the delegation targets.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Whether the configuration is acceptable depends on the targets and the application design.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-GPO-001",
+      "Title": "Weak LAN Manager authentication level in GPO",
+      "Category": "Group Policy",
+      "Module": "GroupPolicy",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "Default Domain Controllers Policy",
+      "AffectedObjectType": "GPO",
+      "Evidence": {
+        "GpoId": "6ac1786c-016f-11d2-945f-00c04fb984f9",
+        "Setting": "LAN Manager authentication level (LmCompatibilityLevel)",
+        "ConfiguredValue": "3",
+        "LinkedTo": [
+          "OU=Domain Controllers,DC=contoso-sim,DC=test"
+        ],
+        "ConflictingCompliantGpos": []
+      },
+      "Explanation": "A GPO linked to the domain root or Domain Controllers OU sets LmCompatibilityLevel below 5, permitting weaker NTLM variants.",
+      "Confidence": "Medium",
+      "Remediation": "Set 'Send NTLMv2 response only. Refuse LM and NTLM' after validating client compatibility.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "GPO precedence and RSOP are not modelled; conflicting GPOs are reported at Low confidence. If no GPO defines the setting the rule is NOT_ASSESSED.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-POL-001",
+      "Title": "Minimum password length below baseline",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {
+        "MinPasswordLength": 8,
+        "Required": 14
+      },
+      "Explanation": "The default domain password policy requires fewer characters than the configured baseline.",
+      "Confidence": "High",
+      "Remediation": "Raise the minimum length in the default domain policy, or apply a fine-grained policy where appropriate.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only the default domain policy is evaluated. Fine-grained password policies can override it for specific users and groups.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-POL-004",
+      "Title": "Account lockout disabled or threshold too high",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {
+        "LockoutThreshold": 0,
+        "Maximum": 10,
+        "Note": "Account lockout is disabled"
+      },
+      "Explanation": "The default domain policy has no account lockout, or a lockout threshold above the configured maximum, which weakens protection against online password guessing.",
+      "Confidence": "High",
+      "Remediation": "Set a lockout threshold within the baseline and monitor lockout events.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only the default domain policy is evaluated. Lockout can also be used for denial of service; the baseline is organisational policy.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-001",
+      "Title": "Privileged group membership exceeds the configured maximum",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "PotentialRisk",
+      "AffectedObject": "Domain Admins",
+      "AffectedObjectType": "Group",
+      "Evidence": {
+        "DistinguishedName": "CN=Domain Admins,CN=Users,DC=contoso-sim,DC=test",
+        "EffectiveMemberCount": 6,
+        "Maximum": 5,
+        "NestedGroupCount": 2,
+        "SampleMembers": [
+          "Administrator",
+          "alice.admin",
+          "mike.staleadmin",
+          "svc_backup",
+          "bob.helpdesk",
+          "nina.ops"
+        ]
+      },
+      "Explanation": "The effective (nested) membership of a privileged group is larger than the configured maximum, widening the set of accounts that can administer the domain.",
+      "Confidence": "High",
+      "Remediation": "Review membership against least privilege; remove accounts that do not need standing privilege and prefer just-in-time elevation.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Counts are derived from collected group membership. Members that could not be resolved are not counted. Thresholds are organisational policy, not a universal standard.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-005",
+      "Title": "Schema Admins group is populated",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "Schema Admins",
+      "AffectedObjectType": "Group",
+      "Evidence": {
+        "DistinguishedName": "CN=Schema Admins,CN=Users,DC=contoso-sim,DC=test",
+        "MemberCount": 1,
+        "Members": [
+          "sam.schema"
+        ]
+      },
+      "Explanation": "Schema Admins should be empty except during schema changes. Standing membership grants forest-wide schema modification rights.",
+      "Confidence": "High",
+      "Remediation": "Remove all members and add accounts only for the duration of an approved schema change.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only evaluated when the Schema Admins group exists in the queried domain (forest root).",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-006",
+      "Title": "Privileged account not marked sensitive and cannot be delegated",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "Administrator",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=Administrator,CN=Users,DC=contoso-sim,DC=test",
+        "AccountIsSensitiveAndCannotBeDelegated": false,
+        "ProtectedUsersMember": false,
+        "Groups": [
+          "Domain Admins",
+          "Enterprise Admins",
+          "Administrators"
+        ]
+      },
+      "Explanation": "An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.",
+      "Confidence": "High",
+      "Remediation": "Enable 'Account is sensitive and cannot be delegated' or place the account in the Protected Users group after testing.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-006",
+      "Title": "Privileged account not marked sensitive and cannot be delegated",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "alice.admin",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=alice.admin,CN=Users,DC=contoso-sim,DC=test",
+        "AccountIsSensitiveAndCannotBeDelegated": false,
+        "ProtectedUsersMember": false,
+        "Groups": [
+          "Domain Admins",
+          "Administrators (nested via Domain Admins)"
+        ]
+      },
+      "Explanation": "An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.",
+      "Confidence": "High",
+      "Remediation": "Enable 'Account is sensitive and cannot be delegated' or place the account in the Protected Users group after testing.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-006",
+      "Title": "Privileged account not marked sensitive and cannot be delegated",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "bob.helpdesk",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=bob.helpdesk,CN=Users,DC=contoso-sim,DC=test",
+        "AccountIsSensitiveAndCannotBeDelegated": false,
+        "ProtectedUsersMember": false,
+        "Groups": [
+          "Domain Admins (nested via IT-Admins)",
+          "Administrators (nested via Domain Admins > IT-Admins)"
+        ]
+      },
+      "Explanation": "An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.",
+      "Confidence": "High",
+      "Remediation": "Enable 'Account is sensitive and cannot be delegated' or place the account in the Protected Users group after testing.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-006",
+      "Title": "Privileged account not marked sensitive and cannot be delegated",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "mike.staleadmin",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=mike.staleadmin,CN=Users,DC=contoso-sim,DC=test",
+        "AccountIsSensitiveAndCannotBeDelegated": false,
+        "ProtectedUsersMember": false,
+        "Groups": [
+          "Domain Admins",
+          "Administrators (nested via Domain Admins)"
+        ]
+      },
+      "Explanation": "An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.",
+      "Confidence": "High",
+      "Remediation": "Enable 'Account is sensitive and cannot be delegated' or place the account in the Protected Users group after testing.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-006",
+      "Title": "Privileged account not marked sensitive and cannot be delegated",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "nina.ops",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=nina.ops,CN=Users,DC=contoso-sim,DC=test",
+        "AccountIsSensitiveAndCannotBeDelegated": false,
+        "ProtectedUsersMember": false,
+        "Groups": [
+          "Domain Admins (nested via IT-Admins > Server-Ops-Team)",
+          "Administrators (nested via Domain Admins > IT-Admins > Server-Ops-Team)"
+        ]
+      },
+      "Explanation": "An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.",
+      "Confidence": "High",
+      "Remediation": "Enable 'Account is sensitive and cannot be delegated' or place the account in the Protected Users group after testing.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-006",
+      "Title": "Privileged account not marked sensitive and cannot be delegated",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "sam.schema",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=sam.schema,CN=Users,DC=contoso-sim,DC=test",
+        "AccountIsSensitiveAndCannotBeDelegated": false,
+        "ProtectedUsersMember": false,
+        "Groups": [
+          "Schema Admins"
+        ]
+      },
+      "Explanation": "An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.",
+      "Confidence": "High",
+      "Remediation": "Enable 'Account is sensitive and cannot be delegated' or place the account in the Protected Users group after testing.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-006",
+      "Title": "Privileged account not marked sensitive and cannot be delegated",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "svc_backup",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_backup,CN=Users,DC=contoso-sim,DC=test",
+        "AccountIsSensitiveAndCannotBeDelegated": false,
+        "ProtectedUsersMember": false,
+        "Groups": [
+          "Domain Admins",
+          "Administrators (nested via Domain Admins)"
+        ]
+      },
+      "Explanation": "An enabled privileged account lacks the NOT_DELEGATED flag and is not a member of Protected Users, so its credentials could be forwarded by a delegation-enabled service.",
+      "Confidence": "High",
+      "Remediation": "Enable 'Account is sensitive and cannot be delegated' or place the account in the Protected Users group after testing.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Protected Users membership (direct or nested) is honoured only when that group is present in the collected Groups data; other delegation protections are not considered.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-SVC-001",
+      "Title": "Service account (SPN) with an old password",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "PotentialRisk",
+      "AffectedObject": "svc_backup",
+      "AffectedObjectType": "ServiceAccount",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_backup,CN=Users,DC=contoso-sim,DC=test",
+        "PasswordLastSet": "2024-02-01T08:00:00Z",
+        "PasswordAgeDays": 972,
+        "ThresholdDays": 365,
+        "ServicePrincipalNames": [
+          "backupsvc/bk01.contoso-sim.test"
+        ]
+      },
+      "Explanation": "An enabled user account with service principal names has a password older than the configured limit. Service tickets for such accounts can be requested by any domain user and attacked offline, so password strength and age matter.",
+      "Confidence": "Medium",
+      "Remediation": "Migrate to group Managed Service Accounts, or rotate to a long random password and document the rotation schedule.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Password age is a proxy for exposure; the tool cannot measure password strength.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-SVC-001",
+      "Title": "Service account (SPN) with an old password",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Medium",
+      "FindingType": "PotentialRisk",
+      "AffectedObject": "svc_sql",
+      "AffectedObjectType": "ServiceAccount",
+      "Evidence": {
+        "DistinguishedName": "CN=svc_sql,CN=Users,DC=contoso-sim,DC=test",
+        "PasswordLastSet": "2023-03-01T08:00:00Z",
+        "PasswordAgeDays": 1309,
+        "ThresholdDays": 365,
+        "ServicePrincipalNames": [
+          "MSSQLSvc/sql01.contoso-sim.test:1433"
+        ]
+      },
+      "Explanation": "An enabled user account with service principal names has a password older than the configured limit. Service tickets for such accounts can be requested by any domain user and attacked offline, so password strength and age matter.",
+      "Confidence": "Medium",
+      "Remediation": "Migrate to group Managed Service Accounts, or rotate to a long random password and document the rotation schedule.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Password age is a proxy for exposure; the tool cannot measure password strength.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-001",
+      "Title": "Stale enabled user account",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Hygiene",
+      "AffectedObject": "carol.stale",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=carol.stale,CN=Users,DC=contoso-sim,DC=test",
+        "LastLogonTimestamp": "2025-02-01T08:00:00Z",
+        "DaysSinceLastLogon": 606,
+        "ThresholdDays": 90,
+        "Note": "lastLogonTimestamp replicates with up to ~14 days of lag"
+      },
+      "Explanation": "An enabled user account has not logged on within the configured inactivity threshold. This is hygiene evidence of a possibly unused account, not a confirmed vulnerability.",
+      "Confidence": "Medium",
+      "Remediation": "Confirm with the account owner. If unused, disable the account, document the change, and delete it after your retention period.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "lastLogonTimestamp is replicated lazily (up to about 14 days of lag) and is not updated by every authentication type. Accounts used only via Kerberos service tickets or cached credentials may appear stale.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-001",
+      "Title": "Stale enabled user account",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Hygiene",
+      "AffectedObject": "mike.staleadmin",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=mike.staleadmin,CN=Users,DC=contoso-sim,DC=test",
+        "LastLogonTimestamp": "2025-01-10T08:00:00Z",
+        "DaysSinceLastLogon": 628,
+        "ThresholdDays": 90,
+        "Note": "lastLogonTimestamp replicates with up to ~14 days of lag"
+      },
+      "Explanation": "An enabled user account has not logged on within the configured inactivity threshold. This is hygiene evidence of a possibly unused account, not a confirmed vulnerability.",
+      "Confidence": "Medium",
+      "Remediation": "Confirm with the account owner. If unused, disable the account, document the change, and delete it after your retention period.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "lastLogonTimestamp is replicated lazily (up to about 14 days of lag) and is not updated by every authentication type. Accounts used only via Kerberos service tickets or cached credentials may appear stale.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-002",
+      "Title": "Inactive enabled computer account",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Hygiene",
+      "AffectedObject": "WS-OLD01$",
+      "AffectedObjectType": "Computer",
+      "Evidence": {
+        "DistinguishedName": "CN=WS-OLD01,CN=Computers,DC=contoso-sim,DC=test",
+        "LastActivity": "2025-03-01T08:00:00Z",
+        "DaysInactive": 578,
+        "ThresholdDays": 90,
+        "OperatingSystem": "Windows 10 Enterprise"
+      },
+      "Explanation": "An enabled, non-domain-controller computer account shows no logon or machine password change within the inactivity threshold. This is hygiene evidence, not a confirmed vulnerability.",
+      "Confidence": "Medium",
+      "Remediation": "Verify the host is decommissioned, then disable and later delete the computer object.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Computers that are powered off for long periods, or that do not rotate machine passwords, can appear inactive while still in use.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-004",
+      "Title": "Potentially orphaned account (manager disabled)",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "PotentialRisk",
+      "AffectedObject": "ivan.orphan",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=ivan.orphan,CN=Users,DC=contoso-sim,DC=test",
+        "Manager": "CN=jack.left,CN=Users,DC=contoso-sim,DC=test",
+        "ManagerEnabled": false
+      },
+      "Explanation": "An enabled account lists a manager whose account is disabled, which can indicate the account lost its accountable owner.",
+      "Confidence": "Low",
+      "Remediation": "Review ownership with HR or the application owner and assign a current manager or disable the account.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Heuristic only. Manager attributes are often stale or intentionally unset. Managers outside the collected user set cannot be evaluated.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-ACC-008",
+      "Title": "Enabled account that has never logged on",
+      "Category": "Account lifecycle",
+      "Module": "AccountLifecycle",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Hygiene",
+      "AffectedObject": "erin.nologon",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=erin.nologon,CN=Users,DC=contoso-sim,DC=test",
+        "WhenCreated": "2025-06-01T08:00:00Z",
+        "AccountAgeDays": 486,
+        "GraceDays": 30
+      },
+      "Explanation": "An enabled account was created longer ago than the grace period and has no recorded logon. This is hygiene evidence, not a confirmed vulnerability.",
+      "Confidence": "Medium",
+      "Remediation": "Confirm whether the account is still needed; disable it if not.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Accounts used only through non-logon paths, or whose lastLogonTimestamp was never replicated to the queried DC, may appear never used.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-INF-002",
+      "Title": "Functional level below baseline",
+      "Category": "Infrastructure",
+      "Module": "Infrastructure",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "ForestFunctionalLevel",
+      "Evidence": {
+        "Scope": "Forest",
+        "CurrentLevel": "Windows2008R2Forest",
+        "MinimumLevel": "Windows2012R2Forest"
+      },
+      "Explanation": "The domain or forest functional level is below the configured minimum, which blocks newer security features.",
+      "Confidence": "High",
+      "Remediation": "Raise the functional level once all domain controllers support it. This change is irreversible in many cases; plan carefully.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Unrecognised level names are skipped and reported as not assessed.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-INF-004",
+      "Title": "Trust without selective authentication",
+      "Category": "Infrastructure",
+      "Module": "Infrastructure",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "PotentialRisk",
+      "AffectedObject": "partner.example.test",
+      "AffectedObjectType": "Trust",
+      "Evidence": {
+        "Direction": "Bidirectional",
+        "TrustAttributes": 0,
+        "SelectiveAuthentication": false
+      },
+      "Explanation": "An outbound external or forest trust does not use selective authentication, so all authenticated users of the trusted side can reach resources that grant them access.",
+      "Confidence": "Medium",
+      "Remediation": "Consider enabling selective authentication and granting the 'Allowed to authenticate' right explicitly.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Selective authentication is a design choice; some trusts legitimately do not use it.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-LDAP-002",
+      "Title": "LDAP channel binding not enforced on domain controller",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC01",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "LdapEnforceChannelBinding": 1,
+        "Note": "Enforced only for clients that support channel binding"
+      },
+      "Explanation": "LdapEnforceChannelBinding is not set to 2 (always), so LDAP over TLS sessions can be relayed.",
+      "Confidence": "High",
+      "Remediation": "Enable channel binding enforcement after auditing clients with event ID 3039/3040.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Reads the registry value on each DC. Unset values are reported with Medium confidence. 1 domain controllers could not be queried (see ERROR results).",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-002",
+      "Title": "Disabled or stale account in a privileged group",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Hygiene",
+      "AffectedObject": "leo.disabledadmin",
+      "AffectedObjectType": "PrivilegedUser",
+      "Evidence": {
+        "DistinguishedName": "CN=leo.disabledadmin,CN=Users,DC=contoso-sim,DC=test",
+        "Reason": "Disabled",
+        "Groups": [
+          "Administrators"
+        ]
+      },
+      "Explanation": "A disabled or stale account remains in a privileged group (directly or through nesting). Dormant privileged accounts are attractive and rarely monitored.",
+      "Confidence": "Medium",
+      "Remediation": "Remove the account from privileged groups after confirming it is no longer needed.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Staleness is based on lastLogonTimestamp and shares its replication-lag caveat. Disabled accounts are reported at Low severity.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-007",
+      "Title": "Group membership cycle reachable from a privileged group",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Hygiene",
+      "AffectedObject": "IT-Admins",
+      "AffectedObjectType": "Group",
+      "Evidence": {
+        "Cycle": [
+          "IT-Admins",
+          "Server-Ops-Team",
+          "IT-Admins"
+        ],
+        "CycleDistinguishedNames": [
+          "CN=IT-Admins,CN=Users,DC=contoso-sim,DC=test",
+          "CN=Server-Ops-Team,CN=Users,DC=contoso-sim,DC=test",
+          "CN=IT-Admins,CN=Users,DC=contoso-sim,DC=test"
+        ]
+      },
+      "Explanation": "Groups are nested in a cycle (A in B in ... in A). Cycles do not grant extra access but obscure effective membership and break naive audits.",
+      "Confidence": "High",
+      "Remediation": "Break the cycle by removing the redundant nesting.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only cycles reachable from configured privileged groups are reported.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-PRV-008",
+      "Title": "Account with adminCount=1 outside privileged groups",
+      "Category": "Privileged access",
+      "Module": "PrivilegedAccess",
+      "Status": "FAIL",
+      "Severity": "Low",
+      "FindingType": "Hygiene",
+      "AffectedObject": "kate.oldadmin",
+      "AffectedObjectType": "User",
+      "Evidence": {
+        "DistinguishedName": "CN=kate.oldadmin,CN=Users,DC=contoso-sim,DC=test",
+        "AdminCount": 1,
+        "Enabled": true
+      },
+      "Explanation": "The account still has adminCount=1 but is no longer in a configured privileged group. AdminSDHolder protection and disabled ACL inheritance can persist after removal from privileged groups.",
+      "Confidence": "Medium",
+      "Remediation": "Verify the account is not privileged, clear adminCount, and re-enable ACL inheritance on the object.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Protected groups missing from privilegedGroups in the configuration can make legitimate accounts appear orphaned. krbtgt is excluded.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-DC-001",
+      "Title": "Print Spooler service running on domain controller",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "ERROR",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC02",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "ErrorCategory": "Unreachable",
+        "Detail": "Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable."
+      },
+      "Explanation": "Evaluation failed: Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable.",
+      "Confidence": "High",
+      "Remediation": "Disable the Print Spooler service on domain controllers unless there is a documented need.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Reports the service state at collection time only. Insufficient permission or connectivity is never treated as a pass.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-LDAP-001",
+      "Title": "LDAP signing not required on domain controller",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "ERROR",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC02",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "ErrorCategory": "Unreachable",
+        "Detail": "Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable."
+      },
+      "Explanation": "Evaluation failed: Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable.",
+      "Confidence": "High",
+      "Remediation": "Require LDAP signing via Group Policy after auditing clients with event ID 2889.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Reads the registry value on each DC. A GPO may set the effective value elsewhere; an unset value is reported with Medium confidence and its OS default is not asserted for Windows Server 2025. Insufficient permission or connectivity is never treated as a pass.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-AUD-001",
+      "Title": "Required advanced audit subcategory not fully enabled",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "ERROR",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC02",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "ErrorCategory": "Unreachable",
+        "Detail": "Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable."
+      },
+      "Explanation": "Evaluation failed: Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable.",
+      "Confidence": "Medium",
+      "Remediation": "Configure the subcategories via Group Policy so security-relevant events are recorded.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Parses English auditpol output only; other languages are reported NOT_ASSESSED. Reads local effective policy and requires administrator rights on the DC. Insufficient permission or connectivity is never treated as a pass.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-AUD-002",
+      "Title": "Security event log capacity below baseline",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "ERROR",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC02",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "ErrorCategory": "Unreachable",
+        "Detail": "Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable."
+      },
+      "Explanation": "Evaluation failed: Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable.",
+      "Confidence": "High",
+      "Remediation": "Increase the maximum size and forward events to a central collector.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Checks configured size only, not event forwarding or actual retention time. Insufficient permission or connectivity is never treated as a pass.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-LDAP-002",
+      "Title": "LDAP channel binding not enforced on domain controller",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "ERROR",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC02",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "ErrorCategory": "Unreachable",
+        "Detail": "Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable."
+      },
+      "Explanation": "Evaluation failed: Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable.",
+      "Confidence": "High",
+      "Remediation": "Enable channel binding enforcement after auditing clients with event ID 3039/3040.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Reads the registry value on each DC. Unset values are reported with Medium confidence. Insufficient permission or connectivity is never treated as a pass.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-LDAP-001",
+      "Title": "LDAP signing not required on domain controller",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "NOT_ASSESSED",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "DC03",
+      "AffectedObjectType": "DomainController",
+      "Evidence": {
+        "Detail": "LDAPServerIntegrity is not set and the default on this OS version is not asserted by this toolkit; verify the effective value."
+      },
+      "Explanation": "Not assessed: LDAPServerIntegrity is not set and the default on this OS version is not asserted by this toolkit; verify the effective value.",
+      "Confidence": "High",
+      "Remediation": "Require LDAP signing via Group Policy after auditing clients with event ID 2889.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Reads the registry value on each DC. A GPO may set the effective value elsewhere; an unset value is reported with Medium confidence and its OS default is not asserted for Windows Server 2025.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-LDAP-001",
+      "Title": "LDAP signing not required on domain controller",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "PASS",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {
+        "ObjectsEvaluated": 1,
+        "ObjectsSkipped": 0,
+        "ObjectsExcluded": 0,
+        "ObjectsErrored": 1,
+        "ObjectsNotAssessed": 1
+      },
+      "Explanation": "No domain controllers violated this rule among the 1 evaluated.",
+      "Confidence": "High",
+      "Remediation": "Require LDAP signing via Group Policy after auditing clients with event ID 2889.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Reads the registry value on each DC. A GPO may set the effective value elsewhere; an unset value is reported with Medium confidence and its OS default is not asserted for Windows Server 2025. 1 domain controllers could not be queried (see ERROR results). 1 domain controllers could not be assessed (see NOT_ASSESSED results).",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-POL-006",
+      "Title": "Reversible password encryption enabled in domain policy",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "PASS",
+      "Severity": "High",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {
+        "ObjectsEvaluated": 1,
+        "ObjectsSkipped": 0,
+        "ObjectsExcluded": 0,
+        "ObjectsErrored": 0,
+        "ObjectsNotAssessed": 0
+      },
+      "Explanation": "No policy settings violated this rule among the 1 evaluated.",
+      "Confidence": "High",
+      "Remediation": "Disable the policy and reset affected passwords through your normal process.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only the default domain policy is evaluated.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-AUD-002",
+      "Title": "Security event log capacity below baseline",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "PASS",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {
+        "ObjectsEvaluated": 2,
+        "ObjectsSkipped": 0,
+        "ObjectsExcluded": 0,
+        "ObjectsErrored": 1,
+        "ObjectsNotAssessed": 0
+      },
+      "Explanation": "No domain controllers violated this rule among the 2 evaluated.",
+      "Confidence": "High",
+      "Remediation": "Increase the maximum size and forward events to a central collector.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Checks configured size only, not event forwarding or actual retention time. 1 domain controllers could not be queried (see ERROR results).",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-GPO-002",
+      "Title": "SMB server signing not required in GPO",
+      "Category": "Group Policy",
+      "Module": "GroupPolicy",
+      "Status": "PASS",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {
+        "ObjectsEvaluated": 1,
+        "ObjectsSkipped": 0,
+        "ObjectsExcluded": 0,
+        "ObjectsErrored": 0,
+        "ObjectsNotAssessed": 0
+      },
+      "Explanation": "No GPOs violated this rule among the 1 evaluated.",
+      "Confidence": "Medium",
+      "Remediation": "Require SMB signing on domain controllers after validating client compatibility.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "GPO precedence and RSOP are not modelled. If no GPO defines the setting the rule is NOT_ASSESSED.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-POL-002",
+      "Title": "Password complexity not required",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "PASS",
+      "Severity": "Medium",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {
+        "ObjectsEvaluated": 1,
+        "ObjectsSkipped": 0,
+        "ObjectsExcluded": 0,
+        "ObjectsErrored": 0,
+        "ObjectsNotAssessed": 0
+      },
+      "Explanation": "No policy settings violated this rule among the 1 evaluated.",
+      "Confidence": "High",
+      "Remediation": "Enable password complexity or adopt a long-passphrase policy and update the baseline configuration.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only the default domain policy is evaluated. Modern guidance favours length over complexity; set passwordPolicy.complexityRequired accordingly.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-POL-003",
+      "Title": "Password history below baseline",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "PASS",
+      "Severity": "Low",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {
+        "ObjectsEvaluated": 1,
+        "ObjectsSkipped": 0,
+        "ObjectsExcluded": 0,
+        "ObjectsErrored": 0,
+        "ObjectsNotAssessed": 0
+      },
+      "Explanation": "No policy settings violated this rule among the 1 evaluated.",
+      "Confidence": "High",
+      "Remediation": "Increase the enforced password history.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only the default domain policy is evaluated.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    },
+    {
+      "RuleId": "ADSA-POL-005",
+      "Title": "Account lockout duration below baseline",
+      "Category": "Authentication policy",
+      "Module": "AuthenticationPolicy",
+      "Status": "NOT_APPLICABLE",
+      "Severity": "Low",
+      "FindingType": "Misconfiguration",
+      "AffectedObject": "contoso-sim.test",
+      "AffectedObjectType": "Domain",
+      "Evidence": {},
+      "Explanation": "Account lockout is disabled, so duration is not applicable (see ADSA-POL-004).",
+      "Confidence": "High",
+      "Remediation": "Increase the lockout duration to at least the baseline.",
+      "CollectionTime": "2026-10-01T00:00:00Z",
+      "Limitations": "Only the default domain policy is evaluated. A duration of 0 (administrator unlock) is treated as compliant.",
+      "DataSource": "Simulated",
+      "Excepted": false,
+      "Exception": null
+    }
+  ]
+}

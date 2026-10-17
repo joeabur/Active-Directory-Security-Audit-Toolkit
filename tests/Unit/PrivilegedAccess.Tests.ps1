@@ -92,4 +92,20 @@ Describe 'Privileged access' {
         $f.Excepted | Should -BeTrue
         $f.Exception.ApprovedBy | Should -Be 'CISO'
     }
+    It 'ADSA-PRV-006 treats Protected Users members (direct or nested) as compliant' {
+        $direct = New-TestUser -Sam 'protectedDirect' -Rid 1301
+        $nested = New-TestUser -Sam 'protectedNested' -Rid 1302
+        $exposed = New-TestUser -Sam 'exposed' -Rid 1303
+        $inner = New-TestGroup -Name 'InnerPU' -Sid "$script:TestDomainSid-2101" -Members @($nested.DistinguishedName)
+        $pu = New-TestGroup -Name 'Protected Users' -Sid "$script:TestDomainSid-525" -Members @($direct.DistinguishedName, (Get-TestGroupDn 'InnerPU'))
+        $da = New-TestGroup -Name 'Domain Admins' -Sid $script:da -Members @($direct.DistinguishedName, $nested.DistinguishedName, $exposed.DistinguishedName)
+        $r = Invoke-Prv -Users @($direct, $nested, $exposed) -Groups @($da, $pu, $inner)
+        @((Get-TestResult $r 'ADSA-PRV-006') | Where-Object Status -eq 'FAIL').AffectedObject | Should -Be @('exposed')
+    }
+    It 'ADSA-PRV-001 is NOT_ASSESSED for a privileged group whose member list was not collected' {
+        $da = New-TestGroup -Name 'Domain Admins' -Sid $script:da -Members @()
+        $da | Add-Member -NotePropertyName MembersCollected -NotePropertyValue $false
+        $r = Invoke-Prv -Users @() -Groups @($da)
+        (Get-TestResult $r 'ADSA-PRV-001').Status | Should -Be 'NOT_ASSESSED'
+    }
 }

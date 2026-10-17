@@ -43,11 +43,17 @@ function Invoke-ADSAInfrastructureAudit {
         New-ADSASectionResult -Context $ctx -RuleId 'ADSA-INF-001' -Section $dcs -SectionName 'DomainControllers'
     } else {
         $pattern = "$($dcCfg['unsupportedOsPattern'])"
+        # Operator-supplied pattern: bounded match time so a pathological expression cannot hang the run
+        $osRegex = New-Object System.Text.RegularExpressions.Regex($pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [timespan]::FromSeconds(2))
         Invoke-ADSAObjectRule -Context $ctx -RuleId 'ADSA-INF-001' -Objects @($dcs.Data) -Kind computer -ObjectType 'DomainController' -Scope 'domain controllers' -Evaluator {
             param($dc)
             $os = "$(Get-ADSAProp -InputObject $dc -Name 'OperatingSystem' -Default '')"
             if (-not $os) { return @{ Outcome = 'Skip'; SkipReason = 'operatingSystem was not retrieved' } }
-            if ($pattern -and $os -match $pattern) {
+            $isUnsupported = $false
+            if ($pattern) {
+                try { $isUnsupported = $osRegex.IsMatch($os) } catch [System.Text.RegularExpressions.RegexMatchTimeoutException] { return @{ Outcome = 'Skip'; SkipReason = 'unsupported-OS pattern timed out' } }
+            }
+            if ($isUnsupported) {
                 return @{ Outcome = 'Fail'; Evidence = [ordered]@{ HostName = "$(Get-ADSAProp -InputObject $dc -Name 'HostName' -Default '')"; OperatingSystem = $os; OperatingSystemVersion = "$(Get-ADSAProp -InputObject $dc -Name 'OperatingSystemVersion' -Default '')"; MatchedPattern = $pattern } }
             }
             return @{ Outcome = 'Pass' }
