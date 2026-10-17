@@ -37,7 +37,7 @@ function Find-ADSAGroupCycle {
         if (-not $GroupIndex.ContainsKey($root)) { continue }
         $color[$root] = 1
         $pathList.Add($root)
-        $stack.Add(@{ Dn = $root; Members = @(Get-ADSAList -InputObject $GroupIndex[$root] -Name 'Members'); Pos = 0 })
+        $stack.Add(@{ Dn = $root; Members = (Get-ADSAList -InputObject $GroupIndex[$root] -Name 'Members'); Pos = 0 })
         while ($stack.Count -gt 0) {
             $frame = $stack[$stack.Count - 1]
             if ($frame.Pos -ge $frame.Members.Count) {
@@ -65,7 +65,7 @@ function Find-ADSAGroupCycle {
             } elseif ($state -eq 0) {
                 $color[$member] = 1
                 $pathList.Add($member)
-                $stack.Add(@{ Dn = $member; Members = @(Get-ADSAList -InputObject $GroupIndex[$member] -Name 'Members'); Pos = 0 })
+                $stack.Add(@{ Dn = $member; Members = (Get-ADSAList -InputObject $GroupIndex[$member] -Name 'Members'); Pos = 0 })
             }
         }
     }
@@ -102,7 +102,7 @@ function Resolve-ADSAGroupMembership {
     while ($queue.Count -gt 0) {
         $item = $queue.Dequeue()
         $group = $GroupIndex[$item.Dn]
-        $direct = @(Get-ADSAList -InputObject $group -Name 'Members')
+        $direct = Get-ADSAList -InputObject $group -Name 'Members'
         if ($item.Dn -ieq $GroupDn -and $PrimaryGroupMemberDn) { $direct = @($direct) + @($PrimaryGroupMemberDn) }
         foreach ($m in $direct) {
             $mdn = "$m"
@@ -178,7 +178,7 @@ function Get-ADSAPrivilegedIndex {
         }
     }
     $cycles = @()
-    if ($rootDns.Count -gt 0) { $cycles = @(Find-ADSAGroupCycle -GroupIndex $groupIndex -RootDn $rootDns.ToArray()) }
+    if ($rootDns.Count -gt 0) { $cycles = Find-ADSAGroupCycle -GroupIndex $groupIndex -RootDn $rootDns.ToArray() }
 
     $index = [pscustomobject]@{
         Groups     = $groupResults.ToArray()

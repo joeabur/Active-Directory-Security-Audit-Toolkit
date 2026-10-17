@@ -119,12 +119,11 @@ function New-ADSAReportObject {
             continue
         }
         $agg = Get-ADSAAggregateStatus -Status @($rr | ForEach-Object { $_.Status })
-        $hasPass = @($rr | Where-Object { $_.Status -eq 'PASS' }).Count -gt 0
         $hasGap = @($rr | Where-Object { $_.Status -in 'ERROR', 'NOT_ASSESSED' }).Count -gt 0
-        $ruleCoverage.Add([pscustomobject][ordered]@{ RuleId = $rule.Id; Title = $rule.Title; Module = $rule.Module; Status = $agg; Partial = ($hasPass -and $hasGap); Results = $rr.Count; Note = '' })
+        $ruleCoverage.Add([pscustomobject][ordered]@{ RuleId = $rule.Id; Title = $rule.Title; Module = $rule.Module; Status = $agg; Partial = ($hasGap -and $agg -in 'PASS', 'FAIL'); Results = $rr.Count; Note = '' })
     }
     $assessed = @($ruleCoverage | Where-Object { $_.Status -in 'PASS', 'FAIL' }).Count
-    $notAssessed = @($ruleCoverage | Where-Object { $_.Status -in 'ERROR', 'NOT_ASSESSED' }).Count
+    $notAssessed = @($ruleCoverage | Where-Object { $_.Status -in 'ERROR', 'NOT_ASSESSED' -or $_.Partial }).Count
 
     # Section coverage and collection errors
     $sectionCoverage = New-Object System.Collections.Generic.List[object]

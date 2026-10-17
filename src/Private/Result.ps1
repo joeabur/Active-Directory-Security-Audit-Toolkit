@@ -61,7 +61,7 @@ function New-ADSAResult {
     if (-not $AffectedObject) { $AffectedObject = $domainName }
     if (-not $AffectedObjectType) { $AffectedObjectType = 'Domain' }
     $limits = @($rule.Limitations, $Limitations | Where-Object { $_ }) -join ' '
-    $text = if ($Explanation) { "$($rule.Description) $Explanation" } else { $rule.Description }
+    $text = if ($Explanation -and $Status -ne 'FAIL') { $Explanation } elseif ($Explanation) { "$($rule.Description) $Explanation" } else { $rule.Description }
     return [pscustomobject][ordered]@{
         RuleId             = $rule.Id
         Title              = $rule.Title
@@ -91,7 +91,7 @@ function Get-ADSASectionState {
     $sections = Get-ADSAProp -InputObject $Context.Snapshot -Name 'sections'
     $section = Get-ADSAProp -InputObject $sections -Name $Name
     if ($null -eq $section) {
-        return [pscustomobject]@{ State = 'Missing'; Data = @(); Error = "Section '$Name' is not present in the snapshot."; Category = 'NotCollected' }
+        return [pscustomobject]@{ State = 'Missing'; Data = @(); Error = "Section '$Name' is not present in the snapshot."; Category = 'NotCollected'; Warnings = @() }
     }
     $status = "$(Get-ADSAProp -InputObject $section -Name 'status')"
     $state = switch ($status) { 'Collected' { 'Ok' } 'Error' { 'Error' } 'NotAssessed' { 'NotAssessed' } default { 'Error' } }
@@ -101,6 +101,7 @@ function Get-ADSASectionState {
         Data     = $data
         Error    = "$(Get-ADSAProp -InputObject $section -Name 'error' -Default $(if ($status -notin 'Collected', 'Error', 'NotAssessed') { "Unrecognised section status '$status'." } else { '' }))"
         Category = "$(Get-ADSAProp -InputObject $section -Name 'errorCategory' -Default '')"
+        Warnings = @(Get-ADSAProp -InputObject $section -Name 'warnings' -Default @())
     }
 }
 
@@ -152,19 +153,21 @@ function Complete-ADSARule {
     $limit = $notes -join ' '
 
     foreach ($f in $Fail) {
-        $p = @{ Context = $Context; RuleId = $RuleId; Status = 'FAIL'; AffectedObject = $f.Object; AffectedObjectType = $(if ($f.ObjectType) { $f.ObjectType } else { $ObjectType }); Evidence = $f.Evidence; Limitations = (@($f.Limitations, $limit | Where-Object { $_ }) -join ' ') }
-        if ($f.Explanation) { $p.Explanation = $f.Explanation }
-        if ($f.Severity) { $p.Severity = $f.Severity }
-        if ($f.Confidence) { $p.Confidence = $f.Confidence }
+        $fType = Get-ADSAProp -InputObject $f -Name 'ObjectType'
+        $p = @{ Context = $Context; RuleId = $RuleId; Status = 'FAIL'; AffectedObject = (Get-ADSAProp -InputObject $f -Name 'Object'); AffectedObjectType = $(if ($fType) { $fType } else { $ObjectType }); Evidence = (Get-ADSAProp -InputObject $f -Name 'Evidence'); Limitations = (@((Get-ADSAProp -InputObject $f -Name 'Limitations'), $limit | Where-Object { $_ }) -join ' ') }
+        foreach ($pair in @(@('Explanation', 'Explanation'), @('Severity', 'Severity'), @('Confidence', 'Confidence'))) {
+            $val = Get-ADSAProp -InputObject $f -Name $pair[0]
+            if ($val) { $p[$pair[1]] = $val }
+        }
         New-ADSAResult @p
     }
     foreach ($e in $Errors) {
-        New-ADSAResult -Context $Context -RuleId $RuleId -Status 'ERROR' -AffectedObject $e.Object -AffectedObjectType $(if ($e.ObjectType) { $e.ObjectType } else { $ObjectType }) `
+        New-ADSAResult -Context $Context -RuleId $RuleId -Status 'ERROR' -AffectedObject $e.Object -AffectedObjectType $(if (Get-ADSAProp -InputObject $e -Name 'ObjectType') { $e.ObjectType } else { $ObjectType }) `
             -Evidence ([ordered]@{ ErrorCategory = $e.Category; Detail = $e.Message }) -Explanation "Evaluation failed: $($e.Message)" `
             -Limitations 'Insufficient permission or connectivity is never treated as a pass.'
     }
     foreach ($n in $NotAssessed) {
-        New-ADSAResult -Context $Context -RuleId $RuleId -Status 'NOT_ASSESSED' -AffectedObject $n.Object -AffectedObjectType $(if ($n.ObjectType) { $n.ObjectType } else { $ObjectType }) `
+        New-ADSAResult -Context $Context -RuleId $RuleId -Status 'NOT_ASSESSED' -AffectedObject $n.Object -AffectedObjectType $(if (Get-ADSAProp -InputObject $n -Name 'ObjectType') { $n.ObjectType } else { $ObjectType }) `
             -Evidence ([ordered]@{ Detail = $n.Message }) -Explanation "Not assessed: $($n.Message)"
     }
     if ($Fail.Count -eq 0) {
@@ -213,9 +216,9 @@ function Invoke-ADSAObjectRule {
             'Fail' {
                 $evaluated++
                 $label = if ($name) { $name } else { $dn }
-                $fails.Add(@{ Object = $label; ObjectType = $ObjectType; Evidence = $r.Evidence; Severity = $r.Severity; Confidence = $r.Confidence; Explanation = $r.Explanation })
+                $fails.Add(@{ Object = $label; ObjectType = $ObjectType; Evidence = (Get-ADSAProp -InputObject $r -Name 'Evidence'); Severity = (Get-ADSAProp -InputObject $r -Name 'Severity'); Confidence = (Get-ADSAProp -InputObject $r -Name 'Confidence'); Explanation = (Get-ADSAProp -InputObject $r -Name 'Explanation') })
             }
-            'Skip' { $skipped++; $reason = $r.SkipReason }
+            'Skip' { $skipped++; $reason = Get-ADSAProp -InputObject $r -Name 'SkipReason' -Default '' }
             default { }
         }
     }

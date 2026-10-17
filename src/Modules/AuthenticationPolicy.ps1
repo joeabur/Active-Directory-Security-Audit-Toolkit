@@ -50,8 +50,8 @@ function Invoke-ADSAPerDcRule {
         $r = & $Evaluator $dc $sub.Data
         switch ($r.Outcome) {
             'Pass' { $eval++ }
-            'Fail' { $eval++; $fails.Add(@{ Object = $name; ObjectType = 'DomainController'; Evidence = $r.Evidence; Severity = $r.Severity; Confidence = $r.Confidence; Explanation = $r.Explanation }) }
-            'NotAssessed' { $na.Add(@{ Object = $name; ObjectType = 'DomainController'; Message = $r.Message }) }
+            'Fail' { $eval++; $fails.Add(@{ Object = $name; ObjectType = 'DomainController'; Evidence = (Get-ADSAProp -InputObject $r -Name 'Evidence'); Severity = (Get-ADSAProp -InputObject $r -Name 'Severity'); Confidence = (Get-ADSAProp -InputObject $r -Name 'Confidence'); Explanation = (Get-ADSAProp -InputObject $r -Name 'Explanation') }) }
+            'NotAssessed' { $na.Add(@{ Object = $name; ObjectType = 'DomainController'; Message = (Get-ADSAProp -InputObject $r -Name 'Message') }) }
         }
     }
     Complete-ADSARule -Context $Context -RuleId $RuleId -Fail $fails.ToArray() -Errors $errs.ToArray() -NotAssessed $na.ToArray() -Evaluated $eval -ObjectType 'DomainController' -Scope 'domain controllers'

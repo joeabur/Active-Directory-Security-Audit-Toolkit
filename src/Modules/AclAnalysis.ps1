@@ -191,7 +191,7 @@ function Invoke-ADSAAclAudit {
                 $byPrincipal = @{}
                 foreach ($ace in $aces) {
                     if (Test-ADSAPrincipalTrusted -Ace $ace -TrustedSids $trusted -Config $Config -NameMap $nameMap) { continue }
-                    $risk = @(Get-ADSAAceRisk -Ace $ace -TargetClass $class)
+                    $risk = Get-ADSAAceRisk -Ace $ace -TargetClass $class
                     if ($risk.Count -eq 0) { continue }
                     $key = "$(Get-ADSAProp -InputObject $ace -Name 'IdentitySid' -Default (Get-ADSAProp -InputObject $ace -Name 'IdentityName' -Default ''))"
                     if (-not $byPrincipal.ContainsKey($key)) { $byPrincipal[$key] = @{ Ace = $ace; Risks = (New-Object System.Collections.Generic.List[string]); Inherited = $false } }
@@ -240,11 +240,12 @@ function Invoke-ADSAAclAudit {
             }
         }
         $noTargets = if ($targets.Count -eq 0) { 1 } else { 0 }
+        $aclWarn = if (@($acls.Warnings).Count -gt 0) { "$(@($acls.Warnings).Count) ACL target(s) could not be read or were truncated (see collection errors); the result covers only the targets that were read." } else { '' }
         if ($targets.Count -eq 0) { $skip3 = 1 }
-        Complete-ADSARule -Context $ctx -RuleId 'ADSA-ACL-001' -Fail $fail1.ToArray() -Evaluated $eval1 -Skipped $noTargets -SkipReason 'no ACL targets were collected' -ObjectType 'AdObject' -Scope 'sensitive objects'
+        Complete-ADSARule -Context $ctx -RuleId 'ADSA-ACL-001' -Fail $fail1.ToArray() -Evaluated $eval1 -Skipped $noTargets -SkipReason 'no ACL targets were collected' -ObjectType 'AdObject' -Scope 'sensitive objects' -ExtraLimitation $aclWarn
         $noRoot = if ($eval2 -eq 0) { 1 } else { 0 }
-        Complete-ADSARule -Context $ctx -RuleId 'ADSA-ACL-002' -Fail $fail2.ToArray() -Evaluated $eval2 -Skipped $noRoot -SkipReason 'the domain root ACL was not collected' -ObjectType 'domainDNS' -Scope 'domain root objects'
-        Complete-ADSARule -Context $ctx -RuleId 'ADSA-ACL-003' -Fail $fail3.ToArray() -Evaluated $eval3 -Skipped $skip3 -SkipReason 'owner SID not present in collected data' -ObjectType 'AdObject' -Scope 'sensitive objects'
+        Complete-ADSARule -Context $ctx -RuleId 'ADSA-ACL-002' -Fail $fail2.ToArray() -Evaluated $eval2 -Skipped $noRoot -SkipReason 'the domain root ACL was not collected' -ObjectType 'domainDNS' -Scope 'domain root objects' -ExtraLimitation $aclWarn
+        Complete-ADSARule -Context $ctx -RuleId 'ADSA-ACL-003' -Fail $fail3.ToArray() -Evaluated $eval3 -Skipped $skip3 -SkipReason 'owner SID not present in collected data' -ObjectType 'AdObject' -Scope 'sensitive objects' -ExtraLimitation $aclWarn
     }
 
     # ---- ADSA-ACL-004 over GPO containers
@@ -260,7 +261,7 @@ function Invoke-ADSAAclAudit {
             $byPrincipal = @{}
             foreach ($ace in @(Get-ADSAProp -InputObject $gpo -Name 'Aces' -Default @())) {
                 if (Test-ADSAPrincipalTrusted -Ace $ace -TrustedSids $trusted -Config $Config -NameMap $nameMap) { continue }
-                $risk = @(Get-ADSAAceRisk -Ace $ace -TargetClass 'groupPolicyContainer')
+                $risk = Get-ADSAAceRisk -Ace $ace -TargetClass 'groupPolicyContainer'
                 if ($risk.Count -eq 0) { continue }
                 $key = "$(Get-ADSAProp -InputObject $ace -Name 'IdentitySid' -Default (Get-ADSAProp -InputObject $ace -Name 'IdentityName' -Default ''))"
                 if (-not $byPrincipal.ContainsKey($key)) { $byPrincipal[$key] = @{ Ace = $ace; Risks = (New-Object System.Collections.Generic.List[string]) } }
@@ -268,7 +269,7 @@ function Invoke-ADSAAclAudit {
             }
             foreach ($key in $byPrincipal.Keys) {
                 $sid = Get-ADSAProp -InputObject $byPrincipal[$key].Ace -Name 'IdentitySid'
-                $linked = @(Get-ADSAList -InputObject $gpo -Name 'LinkedTo' | ForEach-Object { "$(Get-ADSAProp -InputObject $_ -Name 'Target' -Default $_)" })
+                $linked = @(foreach ($l in (Get-ADSAList -InputObject $gpo -Name 'LinkedTo')) { "$(Get-ADSAProp -InputObject $l -Name 'Target' -Default $l)" })
                 $fail4.Add(@{ Object = $name; ObjectType = 'groupPolicyContainer'; Severity = (Get-ADSASeverityForPrincipal -Sid $sid -DomainSid $domainSid)
                         Evidence = [ordered]@{ GpoId = "$(Get-ADSAProp -InputObject $gpo -Name 'Id' -Default '')"; Principal = (Get-ADSAPrincipalLabel -Ace $byPrincipal[$key].Ace -NameMap $nameMap); HighRiskRights = $byPrincipal[$key].Risks.ToArray(); LinkedTo = $linked } })
             }
