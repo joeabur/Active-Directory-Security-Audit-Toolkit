@@ -131,7 +131,7 @@ Describe 'Export-ADSAReport' {
         { Export-ADSAReport -Report $bad -OutputPath (Join-Path $TestDrive 'bad') } | Should -Throw '*schema validation*'
     }
     It 'exports only the requested formats' {
-        $files = Export-ADSAReport -Report (New-HostileReport) -OutputPath (Join-Path $TestDrive 'one') -Format Json
+        $files = @(Export-ADSAReport -Report (New-HostileReport) -OutputPath (Join-Path $TestDrive 'one') -Format Json)
         $files.Count | Should -Be 1
     }
 }

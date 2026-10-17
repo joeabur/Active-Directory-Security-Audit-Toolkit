@@ -15,6 +15,7 @@ BeforeDiscovery {
         [bool]$env:ADSA_INTEGRATION_SERVER -and
         $env:ADSA_INTEGRATION_CONFIRM -eq 'I-AM-AUTHORIZED-FOR-THIS-TEST-DOMAIN'
     )
+    $script:dcHosts = ($env:ADSA_INTEGRATION_DCHOSTS -eq '1')
 }
 
 BeforeAll {
