@@ -1,0 +1,1282 @@
+{
+  "schemaVersion": "1.0",
+  "dataSource": "Simulated",
+  "simulationNotice": "SYNTHETIC DATA. Every object in this file is invented. It demonstrates the toolkit and says nothing about any real domain.",
+  "collectionTime": "2026-10-01T00:00:00Z",
+  "domain": {
+    "name": "contoso-sim.test",
+    "distinguishedName": "DC=contoso-sim,DC=test",
+    "netBiosName": "CONTOSOSIM",
+    "sid": "S-1-5-21-1004336348-1177238915-682003330",
+    "domainMode": "Windows2012R2Domain",
+    "forestMode": "Windows2008R2Forest",
+    "forestName": "contoso-sim.test",
+    "domainControllersContainer": "OU=Domain Controllers,DC=contoso-sim,DC=test",
+    "pdcEmulator": "dc01.contoso-sim.test"
+  },
+  "sections": {
+    "Users": {
+      "status": "Collected",
+      "data": [
+        {
+          "SamAccountName": "Administrator",
+          "DistinguishedName": "CN=Administrator,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-500",
+          "UserAccountControl": 66048,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2025-11-02T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "Guest",
+          "DistinguishedName": "CN=Guest,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-501",
+          "UserAccountControl": 66082,
+          "Enabled": false,
+          "LastLogonTimestamp": null,
+          "PasswordLastSet": null,
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "krbtgt",
+          "DistinguishedName": "CN=krbtgt,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-502",
+          "UserAccountControl": 514,
+          "Enabled": false,
+          "LastLogonTimestamp": null,
+          "PasswordLastSet": "2023-01-15T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "alice.admin",
+          "DistinguishedName": "CN=alice.admin,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1101",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "bob.helpdesk",
+          "DistinguishedName": "CN=bob.helpdesk,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1102",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "svc_sql",
+          "DistinguishedName": "CN=svc_sql,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1103",
+          "UserAccountControl": 66048,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2023-03-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [
+            "MSSQLSvc/sql01.contoso-sim.test:1433"
+          ],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "svc_backup",
+          "DistinguishedName": "CN=svc_backup,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1104",
+          "UserAccountControl": 66048,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2024-02-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [
+            "backupsvc/bk01.contoso-sim.test"
+          ],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "carol.stale",
+          "DistinguishedName": "CN=carol.stale,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1105",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2025-02-01T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "dave.recent",
+          "DistinguishedName": "CN=dave.recent,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1106",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "erin.nologon",
+          "DistinguishedName": "CN=erin.nologon,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1107",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": null,
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2025-06-01T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "frank.preauth",
+          "DistinguishedName": "CN=frank.preauth,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1108",
+          "UserAccountControl": 4194816,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "grace.nopwd",
+          "DistinguishedName": "CN=grace.nopwd,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1109",
+          "UserAccountControl": 544,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "henry.des",
+          "DistinguishedName": "CN=henry.des,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1110",
+          "UserAccountControl": 2097664,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "jack.left",
+          "DistinguishedName": "CN=jack.left,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1111",
+          "UserAccountControl": 514,
+          "Enabled": false,
+          "LastLogonTimestamp": "2025-05-01T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "ivan.orphan",
+          "DistinguishedName": "CN=ivan.orphan,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1112",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "CN=jack.left,CN=Users,DC=contoso-sim,DC=test",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "kate.oldadmin",
+          "DistinguishedName": "CN=kate.oldadmin,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1113",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "leo.disabledadmin",
+          "DistinguishedName": "CN=leo.disabledadmin,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1114",
+          "UserAccountControl": 514,
+          "Enabled": false,
+          "LastLogonTimestamp": "2025-06-01T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "mike.staleadmin",
+          "DistinguishedName": "CN=mike.staleadmin,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1115",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2025-01-10T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "sam.schema",
+          "DistinguishedName": "CN=sam.schema,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1116",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "nina.ops",
+          "DistinguishedName": "CN=nina.ops,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1117",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 1,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "svc_web",
+          "DistinguishedName": "CN=svc_web,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1118",
+          "UserAccountControl": 524800,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [
+            "HTTP/web01.contoso-sim.test"
+          ],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        },
+        {
+          "SamAccountName": "svc_proto",
+          "DistinguishedName": "CN=svc_proto,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1119",
+          "UserAccountControl": 16777728,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [
+            "proto/app01.contoso-sim.test"
+          ],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": [
+            "cifs/dc01.contoso-sim.test"
+          ]
+        },
+        {
+          "SamAccountName": "svc_sync",
+          "DistinguishedName": "CN=svc_sync,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1150",
+          "UserAccountControl": 512,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-25T08:00:00Z",
+          "PasswordLastSet": "2026-08-01T08:00:00Z",
+          "WhenCreated": "2024-01-10T08:00:00Z",
+          "ServicePrincipalNames": [],
+          "Manager": "",
+          "AdminCount": 0,
+          "PrimaryGroupId": 513,
+          "AllowedToDelegateTo": []
+        }
+      ],
+      "error": "",
+      "errorCategory": ""
+    },
+    "Computers": {
+      "status": "Collected",
+      "data": [
+        {
+          "SamAccountName": "DC01$",
+          "DistinguishedName": "CN=DC01,OU=Domain Controllers,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1001",
+          "UserAccountControl": 532480,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-30T02:00:00Z",
+          "PasswordLastSet": "2026-09-10T02:00:00Z",
+          "WhenCreated": "2020-01-01T00:00:00Z",
+          "OperatingSystem": "Windows Server 2022 Standard",
+          "AllowedToDelegateTo": [],
+          "AllowedToActOnBehalf": []
+        },
+        {
+          "SamAccountName": "DC02$",
+          "DistinguishedName": "CN=DC02,OU=Domain Controllers,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1002",
+          "UserAccountControl": 532480,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-30T02:00:00Z",
+          "PasswordLastSet": "2026-09-10T02:00:00Z",
+          "WhenCreated": "2020-01-01T00:00:00Z",
+          "OperatingSystem": "Windows Server 2012 R2 Standard",
+          "AllowedToDelegateTo": [],
+          "AllowedToActOnBehalf": [
+            "CN=svc_web,CN=Users,DC=contoso-sim,DC=test"
+          ]
+        },
+        {
+          "SamAccountName": "DC03$",
+          "DistinguishedName": "CN=DC03,OU=Domain Controllers,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1003",
+          "UserAccountControl": 532480,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-30T02:00:00Z",
+          "PasswordLastSet": "2026-09-10T02:00:00Z",
+          "WhenCreated": "2025-06-01T00:00:00Z",
+          "OperatingSystem": "Windows Server 2025 Datacenter",
+          "AllowedToDelegateTo": [],
+          "AllowedToActOnBehalf": []
+        },
+        {
+          "SamAccountName": "WS-OK01$",
+          "DistinguishedName": "CN=WS-OK01,CN=Computers,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-2001",
+          "UserAccountControl": 4096,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-28T08:00:00Z",
+          "PasswordLastSet": "2026-09-05T08:00:00Z",
+          "WhenCreated": "2024-03-01T00:00:00Z",
+          "OperatingSystem": "Windows 11 Enterprise",
+          "AllowedToDelegateTo": [],
+          "AllowedToActOnBehalf": []
+        },
+        {
+          "SamAccountName": "WS-OLD01$",
+          "DistinguishedName": "CN=WS-OLD01,CN=Computers,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-2002",
+          "UserAccountControl": 4096,
+          "Enabled": true,
+          "LastLogonTimestamp": "2025-03-01T08:00:00Z",
+          "PasswordLastSet": "2025-03-01T08:00:00Z",
+          "WhenCreated": "2022-03-01T00:00:00Z",
+          "OperatingSystem": "Windows 10 Enterprise",
+          "AllowedToDelegateTo": [],
+          "AllowedToActOnBehalf": []
+        },
+        {
+          "SamAccountName": "APP01$",
+          "DistinguishedName": "CN=APP01,CN=Computers,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-2003",
+          "UserAccountControl": 528384,
+          "Enabled": true,
+          "LastLogonTimestamp": "2026-09-29T08:00:00Z",
+          "PasswordLastSet": "2026-09-02T08:00:00Z",
+          "WhenCreated": "2023-03-01T00:00:00Z",
+          "OperatingSystem": "Windows Server 2019 Standard",
+          "AllowedToDelegateTo": [],
+          "AllowedToActOnBehalf": []
+        }
+      ],
+      "error": "",
+      "errorCategory": ""
+    },
+    "Groups": {
+      "status": "Collected",
+      "data": [
+        {
+          "SamAccountName": "Domain Admins",
+          "Name": "Domain Admins",
+          "DistinguishedName": "CN=Domain Admins,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-512",
+          "Members": [
+            "CN=Administrator,CN=Users,DC=contoso-sim,DC=test",
+            "CN=alice.admin,CN=Users,DC=contoso-sim,DC=test",
+            "CN=mike.staleadmin,CN=Users,DC=contoso-sim,DC=test",
+            "CN=svc_backup,CN=Users,DC=contoso-sim,DC=test",
+            "CN=IT-Admins,CN=Users,DC=contoso-sim,DC=test"
+          ],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Enterprise Admins",
+          "Name": "Enterprise Admins",
+          "DistinguishedName": "CN=Enterprise Admins,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-519",
+          "Members": [
+            "CN=Administrator,CN=Users,DC=contoso-sim,DC=test"
+          ],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Schema Admins",
+          "Name": "Schema Admins",
+          "DistinguishedName": "CN=Schema Admins,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-518",
+          "Members": [
+            "CN=sam.schema,CN=Users,DC=contoso-sim,DC=test"
+          ],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Group Policy Creator Owners",
+          "Name": "Group Policy Creator Owners",
+          "DistinguishedName": "CN=Group Policy Creator Owners,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-520",
+          "Members": [],
+          "AdminCount": 0
+        },
+        {
+          "SamAccountName": "Administrators",
+          "Name": "Administrators",
+          "DistinguishedName": "CN=Administrators,CN=Builtin,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-32-544",
+          "Members": [
+            "CN=Domain Admins,CN=Users,DC=contoso-sim,DC=test",
+            "CN=Enterprise Admins,CN=Users,DC=contoso-sim,DC=test",
+            "CN=Administrator,CN=Users,DC=contoso-sim,DC=test",
+            "CN=leo.disabledadmin,CN=Users,DC=contoso-sim,DC=test"
+          ],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Account Operators",
+          "Name": "Account Operators",
+          "DistinguishedName": "CN=Account Operators,CN=Builtin,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-32-548",
+          "Members": [],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Server Operators",
+          "Name": "Server Operators",
+          "DistinguishedName": "CN=Server Operators,CN=Builtin,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-32-549",
+          "Members": [],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Print Operators",
+          "Name": "Print Operators",
+          "DistinguishedName": "CN=Print Operators,CN=Builtin,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-32-550",
+          "Members": [],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Backup Operators",
+          "Name": "Backup Operators",
+          "DistinguishedName": "CN=Backup Operators,CN=Builtin,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-32-551",
+          "Members": [],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Replicator",
+          "Name": "Replicator",
+          "DistinguishedName": "CN=Replicator,CN=Builtin,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-32-552",
+          "Members": [],
+          "AdminCount": 1
+        },
+        {
+          "SamAccountName": "Domain Users",
+          "Name": "Domain Users",
+          "DistinguishedName": "CN=Domain Users,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-513",
+          "Members": [],
+          "AdminCount": 0
+        },
+        {
+          "SamAccountName": "IT-Admins",
+          "Name": "IT-Admins",
+          "DistinguishedName": "CN=IT-Admins,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1201",
+          "Members": [
+            "CN=bob.helpdesk,CN=Users,DC=contoso-sim,DC=test",
+            "CN=Server-Ops-Team,CN=Users,DC=contoso-sim,DC=test"
+          ],
+          "AdminCount": 0
+        },
+        {
+          "SamAccountName": "Server-Ops-Team",
+          "Name": "Server-Ops-Team",
+          "DistinguishedName": "CN=Server-Ops-Team,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1202",
+          "Members": [
+            "CN=nina.ops,CN=Users,DC=contoso-sim,DC=test",
+            "CN=IT-Admins,CN=Users,DC=contoso-sim,DC=test"
+          ],
+          "AdminCount": 0
+        },
+        {
+          "SamAccountName": "Helpdesk-Ops",
+          "Name": "Helpdesk-Ops",
+          "DistinguishedName": "CN=Helpdesk-Ops,CN=Users,DC=contoso-sim,DC=test",
+          "Sid": "S-1-5-21-1004336348-1177238915-682003330-1203",
+          "Members": [],
+          "AdminCount": 0
+        }
+      ],
+      "error": "",
+      "errorCategory": ""
+    },
+    "DomainControllers": {
+      "status": "Collected",
+      "error": "",
+      "errorCategory": "",
+      "data": [
+        {
+          "Name": "DC01",
+          "HostName": "dc01.contoso-sim.test",
+          "OperatingSystem": "Windows Server 2022 Standard",
+          "OperatingSystemVersion": "10.0 (20348)",
+          "Site": "Default-First-Site-Name",
+          "IsGlobalCatalog": true,
+          "IsReadOnly": false,
+          "ComputerObjectDN": "CN=DC01,OU=Domain Controllers,DC=contoso-sim,DC=test"
+        },
+        {
+          "Name": "DC02",
+          "HostName": "dc02.contoso-sim.test",
+          "OperatingSystem": "Windows Server 2012 R2 Standard",
+          "OperatingSystemVersion": "6.3 (9600)",
+          "Site": "Branch-Site",
+          "IsGlobalCatalog": false,
+          "IsReadOnly": false,
+          "ComputerObjectDN": "CN=DC02,OU=Domain Controllers,DC=contoso-sim,DC=test"
+        },
+        {
+          "Name": "DC03",
+          "HostName": "dc03.contoso-sim.test",
+          "OperatingSystem": "Windows Server 2025 Datacenter",
+          "OperatingSystemVersion": "10.0 (26100)",
+          "Site": "Default-First-Site-Name",
+          "IsGlobalCatalog": true,
+          "IsReadOnly": false,
+          "ComputerObjectDN": "CN=DC03,OU=Domain Controllers,DC=contoso-sim,DC=test"
+        }
+      ]
+    },
+    "PasswordPolicy": {
+      "status": "Collected",
+      "error": "",
+      "errorCategory": "",
+      "data": {
+        "MinPasswordLength": 8,
+        "PasswordHistoryCount": 24,
+        "ComplexityEnabled": true,
+        "LockoutThreshold": 0,
+        "LockoutDurationMinutes": 30,
+        "LockoutObservationWindowMinutes": 30,
+        "ReversibleEncryptionEnabled": false,
+        "MaxPasswordAgeDays": 90,
+        "MinPasswordAgeDays": 1
+      }
+    },
+    "FineGrainedPolicies": {
+      "status": "Error",
+      "data": [],
+      "error": "Simulated: Access is denied. Fine-grained password policy objects are readable only by Domain Admins by default.",
+      "errorCategory": "AccessDenied"
+    },
+    "Trusts": {
+      "status": "Collected",
+      "error": "",
+      "errorCategory": "",
+      "data": [
+        {
+          "Name": "partner.example.test",
+          "FlatName": "PARTNER",
+          "TrustAttributes": 0,
+          "TrustDirection": 3,
+          "TrustType": 2
+        },
+        {
+          "Name": "fabrikam-sim.test",
+          "FlatName": "FABRIKAM",
+          "TrustAttributes": 20,
+          "TrustDirection": 3,
+          "TrustType": 2
+        }
+      ]
+    },
+    "Acls": {
+      "status": "Collected",
+      "data": [
+        {
+          "DistinguishedName": "DC=contoso-sim,DC=test",
+          "ObjectClass": "domainDNS",
+          "Role": "DomainRoot",
+          "OwnerSid": "S-1-5-32-544",
+          "Aces": [
+            {
+              "IdentitySid": "S-1-5-18",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-512",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-32-544",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-1150",
+              "IdentityName": "",
+              "Rights": [
+                "ExtendedRight"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "1131f6aa-9c07-11d1-f79f-00c04fc2dcd2",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-1150",
+              "IdentityName": "",
+              "Rights": [
+                "ExtendedRight"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "1131f6ad-9c07-11d1-f79f-00c04fc2dcd2",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-11",
+              "IdentityName": "",
+              "Rights": [
+                "ReadProperty",
+                "GenericExecute"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            }
+          ]
+        },
+        {
+          "DistinguishedName": "CN=AdminSDHolder,CN=System,DC=contoso-sim,DC=test",
+          "ObjectClass": "container",
+          "Role": "AdminSDHolder",
+          "OwnerSid": "S-1-5-21-1004336348-1177238915-682003330-512",
+          "Aces": [
+            {
+              "IdentitySid": "S-1-5-18",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-512",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-32-544",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-1203",
+              "IdentityName": "",
+              "Rights": [
+                "WriteDacl"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            }
+          ]
+        },
+        {
+          "DistinguishedName": "CN=Domain Admins,CN=Users,DC=contoso-sim,DC=test",
+          "ObjectClass": "group",
+          "Role": "PrivilegedGroup",
+          "OwnerSid": "S-1-5-21-1004336348-1177238915-682003330-1102",
+          "Aces": [
+            {
+              "IdentitySid": "S-1-5-18",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-512",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-32-544",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            }
+          ]
+        },
+        {
+          "DistinguishedName": "OU=Domain Controllers,DC=contoso-sim,DC=test",
+          "ObjectClass": "organizationalUnit",
+          "Role": "DomainControllersOu",
+          "OwnerSid": "S-1-5-21-1004336348-1177238915-682003330-512",
+          "Aces": [
+            {
+              "IdentitySid": "S-1-5-18",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-512",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-32-544",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            }
+          ]
+        }
+      ],
+      "error": "",
+      "errorCategory": ""
+    },
+    "Gpos": {
+      "status": "Collected",
+      "data": [
+        {
+          "Id": "31b2f340-016d-11d2-945f-00c04fb984f9",
+          "DisplayName": "Default Domain Policy",
+          "DistinguishedName": "CN={31B2F340-016D-11D2-945F-00C04FB984F9},CN=Policies,CN=System,DC=contoso-sim,DC=test",
+          "LinkedTo": [
+            {
+              "Target": "DC=contoso-sim,DC=test",
+              "Enabled": true,
+              "Enforced": false
+            }
+          ],
+          "OwnerSid": "S-1-5-21-1004336348-1177238915-682003330-512",
+          "Aces": [
+            {
+              "IdentitySid": "S-1-5-18",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-512",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-11",
+              "IdentityName": "",
+              "Rights": [
+                "ReadProperty",
+                "ExtendedRight"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "edacfd8f-ffb3-11d1-b41d-00a0c968f939",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            }
+          ],
+          "SysvolStatus": "Read",
+          "Settings": {},
+          "CpasswordFiles": []
+        },
+        {
+          "Id": "6ac1786c-016f-11d2-945f-00c04fb984f9",
+          "DisplayName": "Default Domain Controllers Policy",
+          "DistinguishedName": "CN={6AC1786C-016F-11D2-945F-00C04FB984F9},CN=Policies,CN=System,DC=contoso-sim,DC=test",
+          "LinkedTo": [
+            {
+              "Target": "OU=Domain Controllers,DC=contoso-sim,DC=test",
+              "Enabled": true,
+              "Enforced": false
+            }
+          ],
+          "OwnerSid": "S-1-5-21-1004336348-1177238915-682003330-512",
+          "Aces": [
+            {
+              "IdentitySid": "S-1-5-18",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-512",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-11",
+              "IdentityName": "",
+              "Rights": [
+                "ReadProperty",
+                "ExtendedRight"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "edacfd8f-ffb3-11d1-b41d-00a0c968f939",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            }
+          ],
+          "SysvolStatus": "Read",
+          "Settings": {
+            "machine\\system\\currentcontrolset\\services\\lanmanserver\\parameters\\requiresecuritysignature": "1",
+            "machine\\system\\currentcontrolset\\control\\lsa\\lmcompatibilitylevel": "3"
+          },
+          "CpasswordFiles": []
+        },
+        {
+          "Id": "9d3f0c1a-5b6e-4a7d-8f21-0a1b2c3d4e5f",
+          "DisplayName": "Legacy Drive Mapping",
+          "DistinguishedName": "CN={9D3F0C1A-5B6E-4A7D-8F21-0A1B2C3D4E5F},CN=Policies,CN=System,DC=contoso-sim,DC=test",
+          "LinkedTo": [
+            {
+              "Target": "OU=Workstations,DC=contoso-sim,DC=test",
+              "Enabled": true,
+              "Enforced": false
+            }
+          ],
+          "OwnerSid": "S-1-5-21-1004336348-1177238915-682003330-512",
+          "Aces": [
+            {
+              "IdentitySid": "S-1-5-18",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-512",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-11",
+              "IdentityName": "",
+              "Rights": [
+                "ReadProperty",
+                "ExtendedRight"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "edacfd8f-ffb3-11d1-b41d-00a0c968f939",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            },
+            {
+              "IdentitySid": "S-1-5-21-1004336348-1177238915-682003330-1102",
+              "IdentityName": "",
+              "Rights": [
+                "GenericAll"
+              ],
+              "AccessControlType": "Allow",
+              "ObjectType": "00000000-0000-0000-0000-000000000000",
+              "InheritedObjectType": "00000000-0000-0000-0000-000000000000",
+              "IsInherited": false,
+              "InheritanceType": "None"
+            }
+          ],
+          "SysvolStatus": "Read",
+          "Settings": {},
+          "CpasswordFiles": [
+            "Machine\\Preferences\\Groups\\Groups.xml"
+          ]
+        }
+      ],
+      "error": "",
+      "errorCategory": ""
+    },
+    "DcHosts": {
+      "status": "Collected",
+      "data": [
+        {
+          "Name": "DC01",
+          "HostName": "dc01.contoso-sim.test",
+          "OperatingSystem": "Windows Server 2022 Standard",
+          "Reachable": true,
+          "Error": "",
+          "ErrorCategory": "",
+          "Ldap": {
+            "Status": "Collected",
+            "ServerIntegrity": 2,
+            "ChannelBinding": 1
+          },
+          "Spooler": {
+            "Status": "Collected",
+            "State": "Running"
+          },
+          "AuditPolicy": {
+            "Status": "Collected",
+            "Entries": [
+              {
+                "Guid": "{0CCE923F-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Credential Validation",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9242-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Kerberos Authentication Service",
+                "Setting": "No Auditing"
+              },
+              {
+                "Guid": "{0CCE9240-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Kerberos Service Ticket Operations",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9235-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "User Account Management",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9236-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Computer Account Management",
+                "Setting": "Success"
+              },
+              {
+                "Guid": "{0CCE9237-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Security Group Management",
+                "Setting": "Success"
+              },
+              {
+                "Guid": "{0CCE923C-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Directory Service Changes",
+                "Setting": "Success"
+              },
+              {
+                "Guid": "{0CCE9215-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Logon",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE921B-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Special Logon",
+                "Setting": "Success"
+              },
+              {
+                "Guid": "{0CCE922F-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Audit Policy Change",
+                "Setting": "Success"
+              }
+            ]
+          },
+          "SecurityLog": {
+            "Status": "Collected",
+            "MaximumSizeInBytes": 4294967296,
+            "LogMode": "Circular"
+          }
+        },
+        {
+          "Name": "DC02",
+          "HostName": "dc02.contoso-sim.test",
+          "OperatingSystem": "Windows Server 2012 R2 Standard",
+          "Reachable": false,
+          "Error": "Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable.",
+          "ErrorCategory": "Unreachable"
+        },
+        {
+          "Name": "DC03",
+          "HostName": "dc03.contoso-sim.test",
+          "OperatingSystem": "Windows Server 2025 Datacenter",
+          "Reachable": true,
+          "Error": "",
+          "ErrorCategory": "",
+          "Ldap": {
+            "Status": "Collected",
+            "ServerIntegrity": null,
+            "ChannelBinding": 2
+          },
+          "Spooler": {
+            "Status": "Collected",
+            "State": "Stopped"
+          },
+          "AuditPolicy": {
+            "Status": "Collected",
+            "Entries": [
+              {
+                "Guid": "{0CCE923F-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Credential Validation",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9242-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Kerberos Authentication Service",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9240-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Kerberos Service Ticket Operations",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9235-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "User Account Management",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9236-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Computer Account Management",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9237-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Security Group Management",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE923C-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Directory Service Changes",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE9215-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Logon",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE921B-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Special Logon",
+                "Setting": "Success and Failure"
+              },
+              {
+                "Guid": "{0CCE922F-69AE-11D9-BED3-505054503030}",
+                "Subcategory": "Audit Policy Change",
+                "Setting": "Success and Failure"
+              }
+            ]
+          },
+          "SecurityLog": {
+            "Status": "Collected",
+            "MaximumSizeInBytes": 4294967296,
+            "LogMode": "Circular"
+          }
+        }
+      ],
+      "error": "",
+      "errorCategory": ""
+    }
+  },
+  "collector": {
+    "tool": "New-SampleSnapshot.ps1",
+    "note": "hand-authored synthetic fixture"
+  }
+}

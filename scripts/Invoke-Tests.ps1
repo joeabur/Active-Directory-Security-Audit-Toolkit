@@ -16,7 +16,13 @@ param(
 )
 Set-StrictMode -Version 2.0
 $root = Split-Path -Path $PSScriptRoot -Parent
-$pester = Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version -ge [version]'5.0.0' } | Sort-Object Version -Descending | Select-Object -First 1
+# Prefer the pinned version installed by Install-DevDependencies.ps1; otherwise use the newest Pester 5.
+$candidates = @(Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version -ge [version]'5.0.0' } | Sort-Object Version -Descending)
+$pester = $candidates | Where-Object { $_.Version -eq [version]'5.7.1' } | Select-Object -First 1
+if (-not $pester) { $pester = $candidates | Select-Object -First 1 }
+# Plain text keeps ANSI escape codes out of captured child output, which would make the NUnit XML export fail.
+$env:NO_COLOR = '1'
+if (Get-Variable -Name PSStyle -ErrorAction SilentlyContinue) { $PSStyle.OutputRendering = 'PlainText' }
 if (-not $pester) { throw 'Pester 5 is required. Run ./scripts/Install-DevDependencies.ps1' }
 Import-Module $pester.Path -Force
 
@@ -37,5 +43,6 @@ if ($CI) {
     $config.TestResult.OutputFormat = 'NUnitXml'
 }
 $result = Invoke-Pester -Configuration $config
+if ($null -eq $result -or -not $result.PSObject.Properties['PassedCount']) { Write-Error 'Pester did not return a result object (the run aborted).'; exit 1 }
 Write-Information ("Passed: {0}  Failed: {1}  Skipped: {2}  NotRun: {3}" -f $result.PassedCount, $result.FailedCount, $result.SkippedCount, $result.NotRunCount) -InformationAction Continue
 if ($result.FailedCount -gt 0 -or $result.Result -eq 'Failed') { exit 1 }

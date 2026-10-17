@@ -1,6 +1,8 @@
 # Audit output and directory data must never be committed
 output/
 *.snapshot.json
+# ...except the committed SYNTHETIC sample (dataSource = Simulated)
+!sample-data/contoso-sim.snapshot.json
 snapshots/
 logs/
 *.log
