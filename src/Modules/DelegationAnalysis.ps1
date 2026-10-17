@@ -1,7 +1,7 @@
 # Delegation analysis module. Independent of the other audit modules: consumes only the 'Users', 'Computers'
 # and 'DomainControllers' snapshot sections. Reports selected risky Kerberos delegation configurations.
 
-function Get-ADSASpnParts {
+function Get-ADSASpnPart {
     # 'service/host[:port][/name]' -> @{ Service; Host }. Returns $null for unparsable values.
     [CmdletBinding()]
     param([AllowNull()] [string] $Spn)
@@ -99,7 +99,7 @@ function Invoke-ADSADelegationAudit {
                     $eval['ADSA-DEL-003']++
                     $hits = New-Object System.Collections.Generic.List[string]
                     foreach ($spn in (Get-ADSAList -InputObject $acct -Name 'AllowedToDelegateTo')) {
-                        $parts = Get-ADSASpnParts -Spn "$spn"
+                        $parts = Get-ADSASpnPart -Spn "$spn"
                         if ($null -ne $parts -and $parts.Service -in 'ldap', 'cifs', 'host', 'gc', 'rpcss', 'wsman' -and (Test-ADSAHostMatchesDc -HostName $parts.Host -DomainControllers $dcList)) { $hits.Add("$spn") }
                     }
                     if ($hits.Count -gt 0) {

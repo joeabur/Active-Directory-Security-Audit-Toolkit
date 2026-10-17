@@ -74,7 +74,7 @@ function ConvertTo-ADSAEvidenceHtml {
     [CmdletBinding()]
     param([AllowNull()] $Evidence)
     if ($null -eq $Evidence) { return '' }
-    $names = if ($Evidence -is [System.Collections.IDictionary]) { @($Evidence.Keys) } else { @($Evidence.PSObject.Properties.Name) }
+    $names = Get-ADSAKeyName -InputObject $Evidence
     $sb = New-Object System.Text.StringBuilder
     [void]$sb.Append('<dl class="ev">')
     foreach ($n in $names) {

@@ -35,21 +35,21 @@ Describe 'Delegation analysis (independent module)' {
         (Get-TestResult $r 'ADSA-DEL-003').Status | Should -Be 'NOT_ASSESSED'
     }
     It 'reports ERROR, not PASS, when both account sections failed' {
-        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Status 'Error' -Error 'denied' -Category 'AccessDenied'); Computers = (New-TestSection -Status 'Error' -Error 'denied' -Category 'AccessDenied'); DomainControllers = (New-TestSection -Data @()) }
+        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Status 'Error' -ErrorText 'denied' -Category 'AccessDenied'); Computers = (New-TestSection -Status 'Error' -ErrorText 'denied' -Category 'AccessDenied'); DomainControllers = (New-TestSection -Data @()) }
         $r = Invoke-TestAudit -Snapshot $snap -Module Delegation
         @($r.Findings | Where-Object Status -eq 'ERROR').Count | Should -Be 4
         @($r.Findings | Where-Object Status -eq 'PASS').Count | Should -Be 0
     }
     It 'warns in limitations when only one account section was available' {
-        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Status 'Error' -Error 'denied' -Category 'AccessDenied'); Computers = (New-TestSection -Data @((New-TestComputer -Sam 'W$'))); DomainControllers = (New-TestSection -Data @()) }
+        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Status 'Error' -ErrorText 'denied' -Category 'AccessDenied'); Computers = (New-TestSection -Data @((New-TestComputer -Sam 'W$'))); DomainControllers = (New-TestSection -Data @()) }
         $r = Invoke-TestAudit -Snapshot $snap -Module Delegation
         (Get-TestResult $r 'ADSA-DEL-001').Limitations | Should -Match 'Users section Error'
     }
     It 'parses SPNs defensively' {
         InModuleScope ADSecurityAudit {
-            (Get-ADSASpnParts -Spn 'ldap/dc01.t.local:389/DomainDnsZones.t.local').Host | Should -Be 'dc01.t.local'
-            Get-ADSASpnParts -Spn 'garbage' | Should -BeNullOrEmpty
-            Get-ADSASpnParts -Spn '' | Should -BeNullOrEmpty
+            (Get-ADSASpnPart -Spn 'ldap/dc01.t.local:389/DomainDnsZones.t.local').Host | Should -Be 'dc01.t.local'
+            Get-ADSASpnPart -Spn 'garbage' | Should -BeNullOrEmpty
+            Get-ADSASpnPart -Spn '' | Should -BeNullOrEmpty
         }
     }
 }

@@ -78,13 +78,13 @@ Describe 'Group Policy rules' {
         Set-Content -LiteralPath (Join-Path $grp 'Groups.xml') -Value '<Groups><User><Properties cpassword="SECRETVALUE123" userName="x"/></User></Groups>'
         InModuleScope ADSecurityAudit -Parameters @{ Root = $root } {
             param($Root)
-            $r = Get-ADSAGpoSysvolSettings -Path $Root
+            $r = Get-ADSAGpoSysvolSetting -Path $Root
             $r.SysvolStatus | Should -Be 'Read'
             $r.Settings['machine\system\currentcontrolset\control\lsa\lmcompatibilitylevel'] | Should -Be '3'
             $r.CpasswordFiles.Count | Should -Be 1
             ($r | ConvertTo-Json -Depth 5) | Should -Not -Match 'SECRETVALUE123'
-            (Get-ADSAGpoSysvolSettings -Path (Join-Path $Root 'missing')).SysvolStatus | Should -Be 'NotFound'
-            (Get-ADSAGpoSysvolSettings -Path '').SysvolStatus | Should -Be 'NotFound'
+            (Get-ADSAGpoSysvolSetting -Path (Join-Path $Root 'missing')).SysvolStatus | Should -Be 'NotFound'
+            (Get-ADSAGpoSysvolSetting -Path '').SysvolStatus | Should -Be 'NotFound'
         }
     }
 }
@@ -129,7 +129,7 @@ Describe 'Infrastructure rules' {
         (Get-TestResult (Invoke-Inf -Trusts @()) 'ADSA-INF-003').Status | Should -Be 'NOT_APPLICABLE'
     }
     It 'reports ERROR when trusts could not be read' {
-        $snap = New-TestSnapshot -Sections @{ DomainControllers = (New-TestSection -Data @()); Trusts = (New-TestSection -Status 'Error' -Error 'LDAP referral' -Category 'LdapError') }
+        $snap = New-TestSnapshot -Sections @{ DomainControllers = (New-TestSection -Data @()); Trusts = (New-TestSection -Status 'Error' -ErrorText 'LDAP referral' -Category 'LdapError') }
         $r = Invoke-TestAudit -Snapshot $snap -Module Infrastructure
         (Get-TestResult $r 'ADSA-INF-003').Status | Should -Be 'ERROR'
     }

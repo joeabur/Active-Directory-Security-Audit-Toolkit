@@ -93,7 +93,7 @@ Describe 'Engine safeguards' {
     }
     It 'degrades gracefully when the ActiveDirectory module is absent (live mode on a non-domain host)' {
         Mock -ModuleName ADSecurityAudit Get-Command { $null } -ParameterFilter { $Name -eq 'Get-ADDomain' }
-        $r = Invoke-ADSecurityAudit -Server 'dc.invalid.test' -Module AccountLifecycle, Acl
+        $r = Invoke-ADSecurityAudit -AuthorizedAssessment -Server 'dc.invalid.test' -Module AccountLifecycle, Acl
         @($r.Findings | Where-Object Status -in 'PASS', 'FAIL').Count | Should -Be 0
         @($r.CollectionErrors | Where-Object Category -eq 'ModuleUnavailable').Count | Should -BeGreaterThan 0
         $r.Metadata.AnalysisMode | Should -Be 'LiveCollection'
@@ -119,5 +119,28 @@ Describe 'Prerequisite check' {
         $p = Test-ADSAPrerequisite
         $p.OfflineReady | Should -BeTrue
         @($p.Checks).Count | Should -BeGreaterThan 3
+    }
+}
+
+Describe 'Authorization gate and log path' {
+    It 'refuses live collection unless -AuthorizedAssessment is supplied' {
+        { Invoke-ADSecurityAudit -Server 'dc.invalid.test' } | Should -Throw '*-AuthorizedAssessment*'
+        { Invoke-ADSecurityAudit } | Should -Throw '*-AuthorizedAssessment*'
+        { Get-ADSASnapshot -Server 'dc.invalid.test' } | Should -Throw '*-AuthorizedAssessment*'
+    }
+    It 'does not require the gate for offline analysis' {
+        { Invoke-ADSecurityAudit -SnapshotPath $script:sample -Module Infrastructure } | Should -Not -Throw
+    }
+    It 'refuses a log path inside a tracked repository folder' {
+        $cfg = New-TestConfigFile ('{ "logging": { "path": "' + ((Join-Path $PSScriptRoot '../../docs/run.log') -replace '\\', '/') + '" } }')
+        { Invoke-ADSecurityAudit -SnapshotPath $script:sample -ConfigPath $cfg -Module Infrastructure } | Should -Throw '*tracked repository folder*'
+    }
+    It 'writes structured logs to an allowed path' {
+        $log = (Join-Path $TestDrive 'logs/audit.log') -replace '\\', '/'
+        $cfg = New-TestConfigFile ('{ "logging": { "path": "' + $log + '" } }')
+        $null = Invoke-ADSecurityAudit -SnapshotPath $script:sample -ConfigPath $cfg -Module Infrastructure
+        $lines = Get-Content -LiteralPath $log | ForEach-Object { $_ | ConvertFrom-Json }
+        $lines.Count | Should -BeGreaterThan 0
+        $lines[0].correlationId | Should -Not -BeNullOrEmpty
     }
 }

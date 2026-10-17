@@ -168,3 +168,12 @@ function ConvertTo-ADSAObject {
     }
     return $InputObject
 }
+
+function Get-ADSAKeyName {
+    # Property or key names of a dictionary / PSCustomObject; safe for empty objects under strict mode.
+    [CmdletBinding()]
+    param([AllowNull()] $InputObject)
+    if ($null -eq $InputObject) { return , @() }
+    if ($InputObject -is [System.Collections.IDictionary]) { return , @($InputObject.Keys | ForEach-Object { "$_" }) }
+    return , @($InputObject.PSObject.Properties | ForEach-Object { $_.Name })
+}

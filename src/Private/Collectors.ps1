@@ -103,7 +103,7 @@ function ConvertTo-ADSAAclRecord {
     }
 }
 
-function Get-ADSAGpoSysvolSettings {
+function Get-ADSAGpoSysvolSetting {
     <#
     .SYNOPSIS
         Reads GptTmpl.inf registry settings and scans for GPP cpassword files in one GPO's SYSVOL folder (read-only).
@@ -188,6 +188,7 @@ function Get-ADSADcHostData {
 }
 
 function Get-ADSASnapshotData {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'SkipSysvol', Justification = 'Used inside the Gpos collector script block.')]
     <#
     .SYNOPSIS
         Collects a snapshot from a live domain. Internal implementation of Get-ADSASnapshot.
@@ -318,7 +319,7 @@ function Get-ADSASnapshotData {
             $rec = [ordered]@{ Id = $guid; DisplayName = "$(Get-ADSAProp -InputObject $g -Name 'displayName' -Default $g.Name)"; DistinguishedName = "$($g.DistinguishedName)"; LinkedTo = $(if ($linkMap.ContainsKey($guid)) { $linkMap[$guid].ToArray() } else { @() }) }
             try { $acl = ConvertTo-ADSAAclRecord -AdObject $g -Role 'GroupPolicyContainer'; $rec.OwnerSid = $acl.OwnerSid; $rec.Aces = $acl.Aces } catch { Write-ADSALog -Level Warning -Message "GPO ACL for $guid unreadable: $($_.Exception.Message)" }
             if ($SkipSysvol -or -not [bool]$Config['collection']['collectSysvol']) { $rec.SysvolStatus = 'Skipped'; $rec.Settings = @{}; $rec.CpasswordFiles = @() }
-            else { $sv = Get-ADSAGpoSysvolSettings -Path "$(Get-ADSAProp -InputObject $g -Name 'gPCFileSysPath' -Default '')"; $rec.SysvolStatus = $sv.SysvolStatus; $rec.Settings = $sv.Settings; $rec.CpasswordFiles = $sv.CpasswordFiles }
+            else { $sv = Get-ADSAGpoSysvolSetting -Path "$(Get-ADSAProp -InputObject $g -Name 'gPCFileSysPath' -Default '')"; $rec.SysvolStatus = $sv.SysvolStatus; $rec.Settings = $sv.Settings; $rec.CpasswordFiles = $sv.CpasswordFiles }
             $rec
         }
     }
@@ -371,7 +372,7 @@ function Test-ADSASnapshotData {
     $sections = Get-ADSAProp -InputObject $Snapshot -Name 'sections'
     if ($null -eq $sections) { $errors.Add('sections is missing.') }
     else {
-        $names = if ($sections -is [System.Collections.IDictionary]) { @($sections.Keys) } else { @($sections.PSObject.Properties.Name) }
+        $names = Get-ADSAKeyName -InputObject $sections
         foreach ($n in $names) {
             $sec = Get-ADSAProp -InputObject $sections -Name $n
             $st = "$(Get-ADSAProp -InputObject $sec -Name 'status')"

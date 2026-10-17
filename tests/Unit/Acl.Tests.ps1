@@ -118,7 +118,7 @@ Describe 'ACL audit rules' {
         (Get-TestResult $r 'ADSA-ACL-004').Status | Should -Be 'NOT_ASSESSED'
     }
     It 'reports ERROR for all ACL rules when ACL collection was denied' {
-        $snap = New-TestSnapshot -Sections @{ Acls = (New-TestSection -Status 'Error' -Error 'Access is denied' -Category 'AccessDenied'); Gpos = (New-TestSection -Status 'Error' -Error 'Access is denied' -Category 'AccessDenied') }
+        $snap = New-TestSnapshot -Sections @{ Acls = (New-TestSection -Status 'Error' -ErrorText 'Access is denied' -Category 'AccessDenied'); Gpos = (New-TestSection -Status 'Error' -ErrorText 'Access is denied' -Category 'AccessDenied') }
         $r = Invoke-TestAudit -Snapshot $snap -Module Acl
         @($r.Findings | Where-Object Status -eq 'ERROR').Count | Should -Be 4
         @($r.Findings | Where-Object Status -eq 'PASS').Count | Should -Be 0

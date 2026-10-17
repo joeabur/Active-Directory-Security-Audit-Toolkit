@@ -43,8 +43,8 @@ function New-TestComputer {
 }
 
 function New-TestSection {
-    param([string] $Status = 'Collected', $Data = @(), [string] $Error = '', [string] $Category = '')
-    return [pscustomobject][ordered]@{ status = $Status; data = $Data; error = $Error; errorCategory = $Category }
+    param([string] $Status = 'Collected', $Data = @(), [string] $ErrorText = '', [string] $Category = '')
+    return [pscustomobject][ordered]@{ status = $Status; data = $Data; error = $ErrorText; errorCategory = $Category }
 }
 
 function New-TestSnapshot {

@@ -124,7 +124,7 @@ Describe 'Exclusions and exceptions' {
 
 Describe 'Collection failures are never passes' {
     It 'turns an access-denied Users section into ERROR for every user rule' {
-        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Status 'Error' -Error 'Access is denied.' -Category 'AccessDenied'); Computers = (New-TestSection -Data @()) }
+        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Status 'Error' -ErrorText 'Access is denied.' -Category 'AccessDenied'); Computers = (New-TestSection -Data @()) }
         $r = Invoke-TestAudit -Snapshot $snap -Module AccountLifecycle
         foreach ($id in 'ADSA-ACC-001', 'ADSA-ACC-003', 'ADSA-ACC-005', 'ADSA-SVC-001') {
             $f = Get-TestResult $r $id
@@ -135,7 +135,7 @@ Describe 'Collection failures are never passes' {
         @($r.Findings | Where-Object Status -eq 'PASS' | Where-Object RuleId -ne 'ADSA-ACC-002').Count | Should -Be 0
     }
     It 'turns a NotAssessed or missing section into NOT_ASSESSED' {
-        $snap = New-TestSnapshot -Sections @{ Computers = (New-TestSection -Status 'NotAssessed' -Error 'skipped' -Category 'Skipped') }
+        $snap = New-TestSnapshot -Sections @{ Computers = (New-TestSection -Status 'NotAssessed' -ErrorText 'skipped' -Category 'Skipped') }
         $r = Invoke-TestAudit -Snapshot $snap -Module AccountLifecycle
         (Get-TestResult $r 'ADSA-ACC-001').Status | Should -Be 'NOT_ASSESSED'
         (Get-TestResult $r 'ADSA-ACC-002').Status | Should -Be 'NOT_ASSESSED'

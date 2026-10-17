@@ -44,7 +44,7 @@ Describe 'Domain password and lockout policy' {
         (Get-TestResult $r 'ADSA-POL-004').Status | Should -Be 'NOT_ASSESSED'
     }
     It 'is ERROR when the policy cannot be read' {
-        $snap = New-TestSnapshot -Sections @{ PasswordPolicy = (New-TestSection -Status 'Error' -Error 'Insufficient access' -Category 'AccessDenied'); Users = (New-TestSection -Data @()) }
+        $snap = New-TestSnapshot -Sections @{ PasswordPolicy = (New-TestSection -Status 'Error' -ErrorText 'Insufficient access' -Category 'AccessDenied'); Users = (New-TestSection -Data @()) }
         $r = Invoke-TestAudit -Snapshot $snap -Module AuthenticationPolicy
         foreach ($i in 1..6) { (Get-TestResult $r ('ADSA-POL-00{0}' -f $i)).Status | Should -Be 'ERROR' }
     }
@@ -124,7 +124,7 @@ Describe 'Per-DC settings' {
         (Get-TestResult $r 'ADSA-LDAP-001').Status | Should -Be 'PASS'
     }
     It 'is NOT_ASSESSED for all per-DC rules when host checks were skipped' {
-        $r = Invoke-Pol -Policy $script:goodPolicy -DcHosts (New-TestSection -Status 'NotAssessed' -Error 'skipped' -Category 'Skipped')
+        $r = Invoke-Pol -Policy $script:goodPolicy -DcHosts (New-TestSection -Status 'NotAssessed' -ErrorText 'skipped' -Category 'Skipped')
         foreach ($id in 'ADSA-LDAP-001', 'ADSA-LDAP-002', 'ADSA-DC-001', 'ADSA-AUD-001', 'ADSA-AUD-002') { (Get-TestResult $r $id).Status | Should -Be 'NOT_ASSESSED' }
     }
 }

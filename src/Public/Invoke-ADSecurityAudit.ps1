@@ -8,13 +8,14 @@ function Invoke-ADSecurityAudit {
     .EXAMPLE
         Invoke-ADSecurityAudit -SnapshotPath .\sample-data\contoso-sim.snapshot.json -OutputPath .\output
     .EXAMPLE
-        Invoke-ADSecurityAudit -Server dc01.lab.example -Credential (Get-Credential) -Module AccountLifecycle,Acl -OutputPath .\output
+        Invoke-ADSecurityAudit -AuthorizedAssessment -Server dc01.lab.example -Credential (Get-Credential) -Module AccountLifecycle,Acl -OutputPath .\output
     #>
     [CmdletBinding(DefaultParameterSetName = 'Live')]
     param(
         [string] $ConfigPath,
         [Parameter(ParameterSetName = 'Offline', Mandatory)] [string] $SnapshotPath,
         [Parameter(ParameterSetName = 'Object', Mandatory)] $Snapshot,
+        [Parameter(ParameterSetName = 'Live')] [switch] $AuthorizedAssessment,
         [Parameter(ParameterSetName = 'Live')] [string] $Server,
         [Parameter(ParameterSetName = 'Live')] [pscredential] $Credential,
         [Parameter(ParameterSetName = 'Live')] [switch] $SkipDcHostChecks,
@@ -24,14 +25,20 @@ function Invoke-ADSecurityAudit {
         [ValidateSet('AccountLifecycle', 'PrivilegedAccess', 'Delegation', 'Acl', 'AuthenticationPolicy', 'GroupPolicy', 'Infrastructure')] [string[]] $Module,
         [string] $OutputPath,
         [ValidateSet('Json', 'Csv', 'Html')] [string[]] $Format = @('Json', 'Csv', 'Html'),
+        [switch] $Redact,
+        [string] $RedactionSalt,
         [switch] $AllowUncOutput,
         [switch] $AllowRepositoryOutput
     )
+    if ($PSCmdlet.ParameterSetName -eq 'Live' -and -not $AuthorizedAssessment) {
+        throw 'Live collection reads directory data from a real domain. Re-run with -AuthorizedAssessment to confirm you are authorized to assess it, or use -SnapshotPath for offline analysis.'
+    }
     $loaded = Import-ADSAConfigData -Path $ConfigPath
     $config = $loaded.Config
     $logPath = $config['logging']['path']
     Initialize-ADSALog -Level $config['logging']['level'] -Path $(if ($logPath) { "$logPath" } else { $null })
     foreach ($w in $loaded.Warnings) { Write-ADSALog -Level Warning -Message $w }
+    if ($logPath) { $null = Resolve-ADSAOutputPath -Path (Split-Path -Path ([System.IO.Path]::GetFullPath("$logPath")) -Parent) -AllowUnc:$AllowUncOutput -AllowRepositoryPath:$AllowRepositoryOutput }
 
     # Validate the output location before spending time on collection
     $outDir = $null
@@ -60,6 +67,7 @@ function Invoke-ADSecurityAudit {
     $ref = ConvertTo-ADSADateTime -Value (Get-ADSAProp -InputObject $snap -Name 'collectionTime')
     $unused = Add-ADSAExceptionInfo -Result $results.ToArray() -Config $config -ReferenceTime $ref
     $report = New-ADSAReportObject -Snapshot $snap -Config $config -Result $results.ToArray() -ModulesRun $modules -AnalysisMode $mode -ConfigWarning (@($loaded.Warnings) + @($unused))
+    if ($Redact) { $report = Protect-ADSAReportData -Report $report -Salt $RedactionSalt }
     if ($outDir) {
         $files = Export-ADSAReport -Report $report -OutputPath $outDir -Format $Format -AllowUncOutput:$AllowUncOutput -AllowRepositoryOutput:$AllowRepositoryOutput
         Add-Member -InputObject $report -MemberType NoteProperty -Name OutputFiles -Value @($files | ForEach-Object { $_.FullName }) -Force

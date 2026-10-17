@@ -79,7 +79,7 @@ Describe 'Privileged access' {
         @($r.Findings | Where-Object Status -eq 'PASS').Count | Should -Be 0
     }
     It 'is ERROR for every rule when the Groups section failed (permission failure)' {
-        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Data @()); Groups = (New-TestSection -Status 'Error' -Error 'Insufficient access rights' -Category 'AccessDenied') }
+        $snap = New-TestSnapshot -Sections @{ Users = (New-TestSection -Data @()); Groups = (New-TestSection -Status 'Error' -ErrorText 'Insufficient access rights' -Category 'AccessDenied') }
         $r = Invoke-TestAudit -Snapshot $snap -Module PrivilegedAccess
         @($r.Findings | Where-Object Status -eq 'ERROR').Count | Should -Be 8
     }

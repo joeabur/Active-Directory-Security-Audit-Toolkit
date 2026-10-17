@@ -130,7 +130,7 @@ function New-ADSAReportObject {
     $sectionCoverage = New-Object System.Collections.Generic.List[object]
     $collectionErrors = New-Object System.Collections.Generic.List[object]
     $sectionsObj = Get-ADSAProp -InputObject $Snapshot -Name 'sections'
-    $sectionNames = if ($null -eq $sectionsObj) { @() } elseif ($sectionsObj -is [System.Collections.IDictionary]) { @($sectionsObj.Keys) } else { @($sectionsObj.PSObject.Properties.Name) }
+    $sectionNames = Get-ADSAKeyName -InputObject $sectionsObj
     foreach ($n in $sectionNames) {
         $sec = Get-ADSAProp -InputObject $sectionsObj -Name $n
         $data = Get-ADSAProp -InputObject $sec -Name 'data'

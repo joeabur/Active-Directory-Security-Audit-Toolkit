@@ -34,7 +34,7 @@ function Invoke-ADSAPerDcRule {
     .SYNOPSIS
         Runs an evaluator for each domain controller and completes the rule.
     .DESCRIPTION
-        Evaluator receives ($dc, $sub) and returns @{ Outcome = Pass|Fail|NotAssessed; Evidence; Severity; Confidence; Message }.
+        Evaluator receives the sub-collection data ($sub); the current DC is available as $dc in the calling scope and returns @{ Outcome = Pass|Fail|NotAssessed; Evidence; Severity; Confidence; Message }.
     #>
     [CmdletBinding()]
     param([Parameter(Mandatory)] $Context, [Parameter(Mandatory)] [string] $RuleId, [Parameter(Mandatory)] [string] $Subsection, [Parameter(Mandatory)] [scriptblock] $Evaluator)
@@ -47,7 +47,7 @@ function Invoke-ADSAPerDcRule {
         if (Test-ADSAExcluded -Context $Context -RuleId $RuleId -Name $name -DistinguishedName '' -Kind computer) { continue }
         $sub = Get-ADSADcSubsection -Dc $dc -Name $Subsection
         if (-not $sub.Ok) { $errs.Add(@{ Object = $name; ObjectType = 'DomainController'; Category = $sub.Category; Message = $sub.Error }); continue }
-        $r = & $Evaluator $dc $sub.Data
+        $r = & $Evaluator $sub.Data
         switch ($r.Outcome) {
             'Pass' { $eval++ }
             'Fail' { $eval++; $fails.Add(@{ Object = $name; ObjectType = 'DomainController'; Evidence = (Get-ADSAProp -InputObject $r -Name 'Evidence'); Severity = (Get-ADSAProp -InputObject $r -Name 'Severity'); Confidence = (Get-ADSAProp -InputObject $r -Name 'Confidence'); Explanation = (Get-ADSAProp -InputObject $r -Name 'Explanation') }) }
@@ -74,10 +74,10 @@ function Invoke-ADSAAuthenticationPolicyAudit {
         $p = $policy.Data
         $checks = @(
             @{ Id = 'ADSA-POL-001'; Prop = 'MinPasswordLength'; Test = { param($v) [int]$v -lt [int]$pp['minLength'] }; Ev = { param($v) [ordered]@{ MinPasswordLength = [int]$v; Required = [int]$pp['minLength'] } } }
-            @{ Id = 'ADSA-POL-002'; Prop = 'ComplexityEnabled'; Applicable = [bool]$pp['complexityRequired']; Test = { param($v) $v -eq $false }; Ev = { param($v) [ordered]@{ ComplexityEnabled = $false } } }
+            @{ Id = 'ADSA-POL-002'; Prop = 'ComplexityEnabled'; Applicable = [bool]$pp['complexityRequired']; Test = { param($v) $v -eq $false }; Ev = { [ordered]@{ ComplexityEnabled = $false } } }
             @{ Id = 'ADSA-POL-003'; Prop = 'PasswordHistoryCount'; Test = { param($v) [int]$v -lt [int]$pp['minHistory'] }; Ev = { param($v) [ordered]@{ PasswordHistoryCount = [int]$v; Required = [int]$pp['minHistory'] } } }
             @{ Id = 'ADSA-POL-004'; Prop = 'LockoutThreshold'; Test = { param($v) ([int]$v -eq 0) -or ([int]$v -gt [int]$pp['lockoutThresholdMax']) }; Ev = { param($v) [ordered]@{ LockoutThreshold = [int]$v; Maximum = [int]$pp['lockoutThresholdMax']; Note = $(if ([int]$v -eq 0) { 'Account lockout is disabled' } else { 'Threshold exceeds the configured maximum' }) } } }
-            @{ Id = 'ADSA-POL-006'; Prop = 'ReversibleEncryptionEnabled'; Test = { param($v) $v -eq $true }; Ev = { param($v) [ordered]@{ ReversibleEncryptionEnabled = $true } } }
+            @{ Id = 'ADSA-POL-006'; Prop = 'ReversibleEncryptionEnabled'; Test = { param($v) $v -eq $true }; Ev = { [ordered]@{ ReversibleEncryptionEnabled = $true } } }
         )
         foreach ($c in $checks) {
             if ($c.ContainsKey('Applicable') -and -not $c.Applicable) {
@@ -137,7 +137,7 @@ function Invoke-ADSAAuthenticationPolicyAudit {
 
     # ---- per-DC rules
     Invoke-ADSAPerDcRule -Context $ctx -RuleId 'ADSA-LDAP-001' -Subsection 'Ldap' -Evaluator {
-        param($dc, $ldap)
+        param($ldap)
         $v = Get-ADSAProp -InputObject $ldap -Name 'ServerIntegrity'
         $os = "$(Get-ADSAProp -InputObject $dc -Name 'OperatingSystem' -Default '')"
         if ($null -eq $v) {
@@ -148,7 +148,7 @@ function Invoke-ADSAAuthenticationPolicyAudit {
         return @{ Outcome = 'Fail'; Evidence = [ordered]@{ LDAPServerIntegrity = [int]$v; Required = 2 } }
     }
     Invoke-ADSAPerDcRule -Context $ctx -RuleId 'ADSA-LDAP-002' -Subsection 'Ldap' -Evaluator {
-        param($dc, $ldap)
+        param($ldap)
         $v = Get-ADSAProp -InputObject $ldap -Name 'ChannelBinding'
         if ($null -ne $v -and [int]$v -ge 2) { return @{ Outcome = 'Pass' } }
         if ($null -ne $v -and [int]$v -eq 1) { return @{ Outcome = 'Fail'; Severity = 'Low'; Evidence = [ordered]@{ LdapEnforceChannelBinding = 1; Note = 'Enforced only for clients that support channel binding' } } }
@@ -156,14 +156,14 @@ function Invoke-ADSAAuthenticationPolicyAudit {
         return @{ Outcome = 'Fail'; Confidence = $(if ($null -eq $v) { 'Medium' } else { 'High' }); Evidence = [ordered]@{ LdapEnforceChannelBinding = $shown; Required = 2 } }
     }
     Invoke-ADSAPerDcRule -Context $ctx -RuleId 'ADSA-DC-001' -Subsection 'Spooler' -Evaluator {
-        param($dc, $svc)
+        param($svc)
         $state = "$(Get-ADSAProp -InputObject $svc -Name 'State' -Default '')"
         if (-not $state) { return @{ Outcome = 'NotAssessed'; Message = 'Print Spooler state was not returned.' } }
         if ($state -ieq 'Running') { return @{ Outcome = 'Fail'; Evidence = [ordered]@{ Service = 'Spooler'; State = $state } } }
         return @{ Outcome = 'Pass' }
     }
     Invoke-ADSAPerDcRule -Context $ctx -RuleId 'ADSA-AUD-001' -Subsection 'AuditPolicy' -Evaluator {
-        param($dc, $audit)
+        param($audit)
         $entries = @(Get-ADSAProp -InputObject $audit -Name 'Entries' -Default @())
         $missing = New-Object System.Collections.Generic.List[object]
         foreach ($req in @($Config['auditPolicy']['required'])) {
@@ -181,7 +181,7 @@ function Invoke-ADSAAuthenticationPolicyAudit {
         return @{ Outcome = 'Pass' }
     }
     Invoke-ADSAPerDcRule -Context $ctx -RuleId 'ADSA-AUD-002' -Subsection 'SecurityLog' -Evaluator {
-        param($dc, $log)
+        param($log)
         $size = Get-ADSAProp -InputObject $log -Name 'MaximumSizeInBytes'
         if ($null -eq $size) { return @{ Outcome = 'NotAssessed'; Message = 'Security log maximum size was not returned.' } }
         $minBytes = [int64]$Config['securityLog']['minSizeMB'] * 1MB

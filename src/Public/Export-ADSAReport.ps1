@@ -3,6 +3,7 @@ function Export-ADSAReport {
     .SYNOPSIS
         Writes JSON, CSV and/or HTML reports to a validated output directory.
     .DESCRIPTION
+        With -Redact, object names are pseudonymised before anything is written.
         HTML output is escaped and script-free; CSV cells that look like formulas are neutralised.
         Files are restricted to the current user where the platform allows it.
     #>
@@ -12,9 +13,12 @@ function Export-ADSAReport {
         [Parameter(Mandatory)] [string] $OutputPath,
         [ValidateSet('Json', 'Csv', 'Html')] [string[]] $Format = @('Json', 'Csv', 'Html'),
         [string] $BaseName,
+        [switch] $Redact,
+        [string] $RedactionSalt,
         [switch] $AllowUncOutput,
         [switch] $AllowRepositoryOutput
     )
+    if ($Redact -and -not (Get-ADSAProp -InputObject $Report.Metadata -Name 'Redacted' -Default $false)) { $Report = Protect-ADSAReportData -Report $Report -Salt $RedactionSalt }
     $check = Test-ADSAReport -Report $Report
     if (-not $check.IsValid) { throw ("Report failed schema validation:`n - " + ($check.Errors -join "`n - ")) }
     $dir = Resolve-ADSAOutputPath -Path $OutputPath -AllowUnc:$AllowUncOutput -AllowRepositoryPath:$AllowRepositoryOutput

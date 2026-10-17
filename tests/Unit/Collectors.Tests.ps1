@@ -71,7 +71,7 @@ Describe 'Live collection with mocked ActiveDirectory cmdlets' {
     BeforeEach { Set-HappyMocks }
 
     It 'collects a valid snapshot labelled Live and normalises values' {
-        $s = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         $s.dataSource | Should -Be 'Live'
         $s.domain.name | Should -Be 'test.local'
         $s.domain.sid | Should -Be $script:TestDomainSid
@@ -91,7 +91,7 @@ Describe 'Live collection with mocked ActiveDirectory cmdlets' {
         $s.sections.DcHosts.status | Should -Be 'NotAssessed'
     }
     It 'reads ACLs through nTSecurityDescriptor and records owner and ACEs' {
-        $s = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         $s.sections.Acls.status | Should -Be 'Collected'
         $root = $s.sections.Acls.data | Where-Object Role -eq 'DomainRoot'
         $root.OwnerSid | Should -Be 'S-1-5-32-544'
@@ -103,7 +103,7 @@ Describe 'Live collection with mocked ActiveDirectory cmdlets' {
         $roles | Should -Contain 'DomainController'
     }
     It 'runs a full audit over a collected snapshot' {
-        $s = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         $r = Invoke-ADSecurityAudit -Snapshot $s -Module AccountLifecycle, AuthenticationPolicy, Acl
         $r.Metadata.DataSource | Should -Be 'Live'
         (Get-TestResult $r 'ADSA-ACC-003' | Where-Object Status -eq 'FAIL').AffectedObject | Should -Be 'alice'
@@ -112,16 +112,16 @@ Describe 'Live collection with mocked ActiveDirectory cmdlets' {
         (Test-ADSAReport -Report $r).IsValid | Should -BeTrue
     }
     It 'never calls any state-changing ActiveDirectory cmdlet' {
-        $null = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $null = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         foreach ($n in 'Set-ADUser', 'Set-ADObject', 'Set-ADAccountPassword', 'Add-ADGroupMember', 'Remove-ADGroupMember', 'Remove-ADObject', 'New-ADUser', 'Unlock-ADAccount', 'Disable-ADAccount', 'Set-ADDefaultDomainPasswordPolicy') {
             Should -Invoke -CommandName $n -ModuleName ADSecurityAudit -Times 0 -Exactly
         }
     }
     It 'passes -Server and -Credential through without persisting them' {
-        $cred = [pscredential]::new('TEST\auditor', (ConvertTo-SecureString 'not-a-real-password' -AsPlainText -Force))
-        $s = Get-ADSASnapshot -Server 'dc1.test.local' -Credential $cred -SkipDcHostChecks -SkipSysvol
+        $cred = [pscredential]::new('TEST\auditor', (New-Object System.Security.SecureString))
+        $s = Get-ADSASnapshot -AuthorizedAssessment -Server 'dc1.test.local' -Credential $cred -SkipDcHostChecks -SkipSysvol
         Should -Invoke -CommandName Get-ADUser -ModuleName ADSecurityAudit -ParameterFilter { $Server -eq 'dc1.test.local' -and $Credential.UserName -eq 'TEST\auditor' }
-        ($s | ConvertTo-Json -Depth 12) | Should -Not -Match 'not-a-real-password|auditor'
+        ($s | ConvertTo-Json -Depth 12) | Should -Not -Match 'auditor'
     }
 }
 
@@ -130,7 +130,7 @@ Describe 'Collection failures' {
 
     It 'records an access-denied section as Error/AccessDenied while other sections still collect' {
         Mock -ModuleName ADSecurityAudit Get-ADUser { throw [System.UnauthorizedAccessException]::new('Access is denied.') }
-        $s = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         $s.sections.Users.status | Should -Be 'Error'
         $s.sections.Users.errorCategory | Should -Be 'AccessDenied'
         $s.sections.Groups.status | Should -Be 'Collected'
@@ -140,25 +140,25 @@ Describe 'Collection failures' {
     }
     It 'records an unsupported attribute error distinctly' {
         Mock -ModuleName ADSecurityAudit Get-ADComputer { throw [System.Exception]::new('One or more properties are invalid.') }
-        $s = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         $s.sections.Computers.errorCategory | Should -Be 'UnsupportedAttribute'
     }
     It 'handles an LDAP failure on one section' {
         Mock -ModuleName ADSecurityAudit Get-ADGroup { throw [System.Exception]::new('A referral was returned from the server (LDAP).') }
-        $s = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         $s.sections.Groups.errorCategory | Should -Be 'LdapError'
         $s.sections.Users.status | Should -Be 'Collected'
     }
     It 'marks every section Error/Unreachable when the domain cannot be contacted' {
         Mock -ModuleName ADSecurityAudit Get-ADDomain { throw [System.Exception]::new('Unable to contact the server.') }
-        $s = Get-ADSASnapshot -Server 'down.test.local'
+        $s = Get-ADSASnapshot -AuthorizedAssessment -Server 'down.test.local'
         foreach ($sec in $s.sections.PSObject.Properties) { $sec.Value.status | Should -Be 'Error'; $sec.Value.errorCategory | Should -Be 'Unreachable' }
         $r = Invoke-ADSecurityAudit -Snapshot $s
         @($r.Findings | Where-Object Status -in 'PASS', 'FAIL').Count | Should -Be 0
     }
     It 'marks every section NotAssessed/ModuleUnavailable when the ActiveDirectory module is missing' {
         Mock -ModuleName ADSecurityAudit Get-Command { $null } -ParameterFilter { $Name -eq 'Get-ADDomain' }
-        $s = Get-ADSASnapshot
+        $s = Get-ADSASnapshot -AuthorizedAssessment
         foreach ($sec in $s.sections.PSObject.Properties) { $sec.Value.status | Should -Be 'NotAssessed'; $sec.Value.errorCategory | Should -Be 'ModuleUnavailable' }
         $r = Invoke-ADSecurityAudit -Snapshot $s
         @($r.Findings | Where-Object Status -in 'PASS', 'FAIL').Count | Should -Be 0
@@ -166,13 +166,13 @@ Describe 'Collection failures' {
     }
     It 'keeps collecting ACLs when one target is unreadable and reports it' {
         Mock -ModuleName ADSecurityAudit Get-ADObject { if ($Identity -like 'CN=AdminSDHolder*') { throw [System.UnauthorizedAccessException]::new('Access is denied.') }; [pscustomobject]@{ DistinguishedName = $Identity; ObjectClass = 'container'; nTSecurityDescriptor = (New-FakeSd 'S-1-5-32-544' @($script:rule)) } } -ParameterFilter { $Identity }
-        $s = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         $s.sections.Acls.status | Should -Be 'Collected'
         @($s.sections.Acls.warnings | Where-Object category -eq 'AccessDenied').Count | Should -Be 1
     }
     It 'fails the ACL section when no descriptor can be read at all' {
         Mock -ModuleName ADSecurityAudit Get-ADObject { throw [System.UnauthorizedAccessException]::new('Access is denied.') } -ParameterFilter { $Identity }
-        $s = Get-ADSASnapshot -SkipDcHostChecks -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipDcHostChecks -SkipSysvol
         $s.sections.Acls.status | Should -Be 'Error'
         $s.sections.Acls.errorCategory | Should -Be 'AccessDenied'
     }
@@ -185,7 +185,7 @@ Describe 'Domain controller host collection (mocked remoting)' {
         Mock -ModuleName ADSecurityAudit Invoke-Command {
             @{ Ldap = @{ Status = 'Collected'; ServerIntegrity = 2; ChannelBinding = 2 }; Spooler = @{ Status = 'Collected'; State = 'Stopped' }; AuditPolicy = @{ Status = 'Collected'; Entries = @() }; SecurityLog = @{ Status = 'Collected'; MaximumSizeInBytes = 1GB; LogMode = 'Circular' } }
         }
-        $s = Get-ADSASnapshot -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipSysvol
         $dc = $s.sections.DcHosts.data[0]
         $dc.Reachable | Should -BeTrue
         $dc.Ldap.ServerIntegrity | Should -Be 2
@@ -193,7 +193,7 @@ Describe 'Domain controller host collection (mocked remoting)' {
     }
     It 'records an unreachable DC without failing the whole run' {
         Mock -ModuleName ADSecurityAudit Invoke-Command { throw [System.Exception]::new('WinRM cannot process the request. Unable to contact the server.') }
-        $s = Get-ADSASnapshot -SkipSysvol
+        $s = Get-ADSASnapshot -AuthorizedAssessment -SkipSysvol
         $dc = $s.sections.DcHosts.data[0]
         $dc.Reachable | Should -BeFalse
         $dc.ErrorCategory | Should -Be 'Unreachable'
