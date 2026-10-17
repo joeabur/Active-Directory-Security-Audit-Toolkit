@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ADSecurityAudit report",
+  "type": "object",
+  "required": ["SchemaVersion", "Tool", "Metadata", "Summary", "Coverage", "CollectionErrors", "Inventories", "Findings"],
+  "properties": {
+    "SchemaVersion": { "type": "string", "pattern": "^1\\.\\d+$" },
+    "Tool": { "type": "object", "required": ["Name", "Version"], "properties": { "Name": { "type": "string" }, "Version": { "type": "string" } } },
+    "Metadata": {
+      "type": "object",
+      "required": ["GeneratedAt", "CollectionTime", "DataSource", "AnalysisMode", "Notice", "Domain", "ConfigVersion", "Modules"],
+      "properties": {
+        "DataSource": { "enum": ["Live", "Simulated"] },
+        "AnalysisMode": { "enum": ["LiveCollection", "OfflineSnapshot"] },
+        "Domain": { "type": "object", "required": ["Name"] },
+        "Modules": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "Summary": {
+      "type": "object",
+      "required": ["Headline", "ResultsByStatus", "ActiveFindingsBySeverity", "ActiveFindings", "ExceptedFindings", "RulesInCatalog", "RulesAssessed", "RulesNotFullyAssessed"]
+    },
+    "Coverage": {
+      "type": "object",
+      "required": ["Rules", "Sections"],
+      "properties": {
+        "Rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["RuleId", "Title", "Module", "Status", "Partial"],
+            "properties": { "Status": { "enum": ["PASS", "FAIL", "ERROR", "NOT_APPLICABLE", "NOT_ASSESSED"] } }
+          }
+        },
+        "Sections": { "type": "array", "items": { "type": "object", "required": ["Section", "Status", "ObjectCount"] } }
+      }
+    },
+    "CollectionErrors": { "type": "array", "items": { "type": "object", "required": ["Source", "Category", "Message"] } },
+    "Inventories": { "type": "object" },
+    "Findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["RuleId", "Title", "Category", "Module", "Status", "Severity", "FindingType", "AffectedObject", "AffectedObjectType", "Evidence", "Explanation", "Confidence", "Remediation", "CollectionTime", "Limitations", "DataSource", "Excepted", "Exception"],
+        "properties": {
+          "RuleId": { "type": "string", "pattern": "^ADSA-[A-Z]+-\\d{3}$" },
+          "Status": { "enum": ["PASS", "FAIL", "ERROR", "NOT_APPLICABLE", "NOT_ASSESSED"] },
+          "Severity": { "enum": ["Critical", "High", "Medium", "Low", "Informational"] },
+          "Confidence": { "enum": ["High", "Medium", "Low"] },
+          "FindingType": { "enum": ["Hygiene", "Misconfiguration", "PotentialRisk", "Informational"] },
+          "Evidence": { "type": "object" },
+          "CollectionTime": { "type": "string", "format": "date-time" },
+          "DataSource": { "enum": ["Live", "Simulated"] },
+          "Excepted": { "type": "boolean" },
+          "Exception": { "type": ["object", "null"] }
+        }
+      }
+    }
+  }
+}

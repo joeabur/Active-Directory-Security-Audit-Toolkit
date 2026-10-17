@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ADSecurityAudit configuration (documentation schema)",
+  "description": "Authoritative validation is performed by Test-ADSAConfig, which also rejects unknown keys and checks cross-field rules. Configuration never holds credentials.",
+  "type": "object",
+  "properties": {
+    "configVersion": { "type": "string", "pattern": "^1\\.\\d+$" },
+    "thresholds": {
+      "type": "object",
+      "properties": {
+        "staleUserDays": { "type": "integer", "minimum": 15, "maximum": 3650 },
+        "staleComputerDays": { "type": "integer", "minimum": 15, "maximum": 3650 },
+        "neverLoggedOnGraceDays": { "type": "integer", "minimum": 0, "maximum": 3650 },
+        "servicePasswordMaxAgeDays": { "type": "integer", "minimum": 30, "maximum": 3650 },
+        "krbtgtMaxAgeDays": { "type": "integer", "minimum": 30, "maximum": 3650 }
+      },
+      "additionalProperties": false
+    },
+    "privilegedGroupMaxMembers": { "type": "object", "required": ["default"], "additionalProperties": { "type": "integer", "minimum": 0 } },
+    "passwordPolicy": { "type": "object" },
+    "privilegedGroups": { "type": "array", "items": { "type": "object", "required": ["name"], "oneOf": [{ "required": ["sid"] }, { "required": ["rid"] }] } },
+    "trustedPrincipals": { "type": "object", "properties": { "sids": { "type": "array", "items": { "type": "string" } }, "names": { "type": "array", "items": { "type": "string" } } } },
+    "domainControllers": { "type": "object" },
+    "securityLog": { "type": "object" },
+    "auditPolicy": { "type": "object" },
+    "collection": { "type": "object" },
+    "exclusions": { "type": "array", "items": { "type": "object", "required": ["pattern", "reason"], "properties": { "pattern": { "type": "string" }, "appliesTo": { "type": "array", "items": { "enum": ["user", "computer", "group", "any"] } }, "ruleIds": { "type": "array", "items": { "type": "string", "pattern": "^ADSA-[A-Z]+-\\d{3}$" } }, "reason": { "type": "string", "minLength": 1 } }, "additionalProperties": false } },
+    "exceptions": { "type": "array", "items": { "type": "object", "required": ["id", "ruleId", "objectPattern", "reason", "owner", "expires"], "properties": { "id": { "type": "string" }, "ruleId": { "type": "string", "pattern": "^ADSA-[A-Z]+-\\d{3}$" }, "objectPattern": { "type": "string" }, "reason": { "type": "string" }, "owner": { "type": "string" }, "approvedBy": { "type": "string" }, "expires": { "type": "string", "format": "date" } }, "additionalProperties": false } },
+    "logging": { "type": "object" }
+  }
+}

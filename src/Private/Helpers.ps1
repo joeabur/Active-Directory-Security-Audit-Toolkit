@@ -149,3 +149,22 @@ function Get-ADSASidRid {
 function Test-ADSAWindowsPlatform {
     return ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT)
 }
+
+function ConvertTo-ADSAObject {
+    # Recursively converts dictionaries to PSCustomObject so live snapshots have the same shape as imported JSON.
+    [CmdletBinding()]
+    param([AllowNull()] $InputObject)
+    if ($null -eq $InputObject) { return $null }
+    if ($InputObject -is [string] -or $InputObject -is [ValueType]) { return $InputObject }
+    if ($InputObject -is [System.Collections.IDictionary]) {
+        $out = [ordered]@{}
+        foreach ($k in $InputObject.Keys) { $out["$k"] = ConvertTo-ADSAObject -InputObject $InputObject[$k] }
+        return [pscustomobject]$out
+    }
+    if ($InputObject -is [System.Collections.IEnumerable]) {
+        $list = New-Object System.Collections.Generic.List[object]
+        foreach ($i in $InputObject) { $list.Add((ConvertTo-ADSAObject -InputObject $i)) }
+        return , $list.ToArray()
+    }
+    return $InputObject
+}

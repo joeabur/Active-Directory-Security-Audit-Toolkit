@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ADSecurityAudit snapshot",
+  "description": "Normalized directory data. dataSource is Simulated for synthetic fixtures. Real snapshots contain sensitive directory data.",
+  "type": "object",
+  "required": ["schemaVersion", "dataSource", "collectionTime", "domain", "sections"],
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^1\\.\\d+$" },
+    "dataSource": { "enum": ["Live", "Simulated"] },
+    "collectionTime": { "type": "string" },
+    "domain": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string", "minLength": 1 } } },
+    "sections": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": { "enum": ["Collected", "Error", "NotAssessed"] },
+          "errorCategory": { "type": "string" },
+          "error": { "type": "string" }
+        }
+      }
+    }
+  }
+}

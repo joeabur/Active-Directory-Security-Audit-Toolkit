@@ -19,5 +19,5 @@ function Get-ADSASnapshot {
     )
     $config = Get-ADSAConfig -Path $ConfigPath
     $snapshot = Get-ADSASnapshotData -Config $config -Server $Server -Credential $Credential -SkipDcHostChecks:$SkipDcHostChecks -SkipSysvol:$SkipSysvol -SkipAcls:$SkipAcls
-    return [pscustomobject]$snapshot
+    return ConvertTo-ADSAObject -InputObject $snapshot
 }

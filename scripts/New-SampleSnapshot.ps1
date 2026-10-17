@@ -56,6 +56,7 @@ Add-SimUser 'svc_sync' 1150
 $computers = @(
     [ordered]@{ SamAccountName = 'DC01$'; DistinguishedName = "CN=DC01,$dcOu"; Sid = "$domainSid-1001"; UserAccountControl = 532480; Enabled = $true; LastLogonTimestamp = '2026-09-30T02:00:00Z'; PasswordLastSet = '2026-09-10T02:00:00Z'; WhenCreated = '2020-01-01T00:00:00Z'; OperatingSystem = 'Windows Server 2022 Standard'; AllowedToDelegateTo = @(); AllowedToActOnBehalf = @() }
     [ordered]@{ SamAccountName = 'DC02$'; DistinguishedName = "CN=DC02,$dcOu"; Sid = "$domainSid-1002"; UserAccountControl = 532480; Enabled = $true; LastLogonTimestamp = '2026-09-30T02:00:00Z'; PasswordLastSet = '2026-09-10T02:00:00Z'; WhenCreated = '2020-01-01T00:00:00Z'; OperatingSystem = 'Windows Server 2012 R2 Standard'; AllowedToDelegateTo = @(); AllowedToActOnBehalf = @((Get-SimDn 'svc_web')) }
+    [ordered]@{ SamAccountName = 'DC03$'; DistinguishedName = "CN=DC03,$dcOu"; Sid = "$domainSid-1003"; UserAccountControl = 532480; Enabled = $true; LastLogonTimestamp = '2026-09-30T02:00:00Z'; PasswordLastSet = '2026-09-10T02:00:00Z'; WhenCreated = '2025-06-01T00:00:00Z'; OperatingSystem = 'Windows Server 2025 Datacenter'; AllowedToDelegateTo = @(); AllowedToActOnBehalf = @() }
     [ordered]@{ SamAccountName = 'WS-OK01$'; DistinguishedName = "CN=WS-OK01,CN=Computers,$domainDn"; Sid = "$domainSid-2001"; UserAccountControl = 4096; Enabled = $true; LastLogonTimestamp = '2026-09-28T08:00:00Z'; PasswordLastSet = '2026-09-05T08:00:00Z'; WhenCreated = '2024-03-01T00:00:00Z'; OperatingSystem = 'Windows 11 Enterprise'; AllowedToDelegateTo = @(); AllowedToActOnBehalf = @() }
     [ordered]@{ SamAccountName = 'WS-OLD01$'; DistinguishedName = "CN=WS-OLD01,CN=Computers,$domainDn"; Sid = "$domainSid-2002"; UserAccountControl = 4096; Enabled = $true; LastLogonTimestamp = '2025-03-01T08:00:00Z'; PasswordLastSet = '2025-03-01T08:00:00Z'; WhenCreated = '2022-03-01T00:00:00Z'; OperatingSystem = 'Windows 10 Enterprise'; AllowedToDelegateTo = @(); AllowedToActOnBehalf = @() }
     [ordered]@{ SamAccountName = 'APP01$'; DistinguishedName = "CN=APP01,CN=Computers,$domainDn"; Sid = "$domainSid-2003"; UserAccountControl = (4096 -bor 0x80000); Enabled = $true; LastLogonTimestamp = '2026-09-29T08:00:00Z'; PasswordLastSet = '2026-09-02T08:00:00Z'; WhenCreated = '2023-03-01T00:00:00Z'; OperatingSystem = 'Windows Server 2019 Standard'; AllowedToDelegateTo = @(); AllowedToActOnBehalf = @() }
@@ -133,6 +134,11 @@ $dcHosts = @(
         SecurityLog = [ordered]@{ Status = 'Collected'; MaximumSizeInBytes = 4294967296; LogMode = 'Circular' } }
     [ordered]@{ Name = 'DC02'; HostName = 'dc02.contoso-sim.test'; OperatingSystem = 'Windows Server 2012 R2 Standard'; Reachable = $false
         Error = 'Simulated: WinRM cannot process the request because the server dc02.contoso-sim.test is unreachable.'; ErrorCategory = 'Unreachable' }
+    [ordered]@{ Name = 'DC03'; HostName = 'dc03.contoso-sim.test'; OperatingSystem = 'Windows Server 2025 Datacenter'; Reachable = $true; Error = ''; ErrorCategory = ''
+        Ldap = [ordered]@{ Status = 'Collected'; ServerIntegrity = $null; ChannelBinding = 2 }
+        Spooler = [ordered]@{ Status = 'Collected'; State = 'Stopped' }
+        AuditPolicy = [ordered]@{ Status = 'Collected'; Entries = @($entries | ForEach-Object { [ordered]@{ Guid = $_.Guid; Subcategory = $_.Subcategory; Setting = 'Success and Failure' } }) }
+        SecurityLog = [ordered]@{ Status = 'Collected'; MaximumSizeInBytes = 4294967296; LogMode = 'Circular' } }
 )
 
 $snapshot = [ordered]@{
@@ -148,6 +154,7 @@ $snapshot = [ordered]@{
         DomainControllers   = [ordered]@{ status = 'Collected'; error = ''; errorCategory = ''; data = @(
                 [ordered]@{ Name = 'DC01'; HostName = 'dc01.contoso-sim.test'; OperatingSystem = 'Windows Server 2022 Standard'; OperatingSystemVersion = '10.0 (20348)'; Site = 'Default-First-Site-Name'; IsGlobalCatalog = $true; IsReadOnly = $false; ComputerObjectDN = "CN=DC01,$dcOu" }
                 [ordered]@{ Name = 'DC02'; HostName = 'dc02.contoso-sim.test'; OperatingSystem = 'Windows Server 2012 R2 Standard'; OperatingSystemVersion = '6.3 (9600)'; Site = 'Branch-Site'; IsGlobalCatalog = $false; IsReadOnly = $false; ComputerObjectDN = "CN=DC02,$dcOu" }
+                [ordered]@{ Name = 'DC03'; HostName = 'dc03.contoso-sim.test'; OperatingSystem = 'Windows Server 2025 Datacenter'; OperatingSystemVersion = '10.0 (26100)'; Site = 'Default-First-Site-Name'; IsGlobalCatalog = $true; IsReadOnly = $false; ComputerObjectDN = "CN=DC03,$dcOu" }
             ) }
         PasswordPolicy      = [ordered]@{ status = 'Collected'; error = ''; errorCategory = ''; data = [ordered]@{ MinPasswordLength = 8; PasswordHistoryCount = 24; ComplexityEnabled = $true; LockoutThreshold = 0; LockoutDurationMinutes = 30; LockoutObservationWindowMinutes = 30; ReversibleEncryptionEnabled = $false; MaxPasswordAgeDays = 90; MinPasswordAgeDays = 1 } }
         FineGrainedPolicies = [ordered]@{ status = 'Error'; data = @(); error = 'Simulated: Access is denied. Fine-grained password policy objects are readable only by Domain Admins by default.'; errorCategory = 'AccessDenied' }

@@ -206,7 +206,7 @@ function Get-ADSASnapshotData {
     if ($Server) { $common.Server = $Server }
     if ($Credential) { $common.Credential = $Credential }
     $sections = [ordered]@{}
-    $domain = [ordered]@{ name = "$Server"; distinguishedName = ''; netBiosName = ''; sid = ''; domainMode = ''; forestMode = ''; forestName = ''; domainControllersContainer = ''; pdcEmulator = '' }
+    $domain = [ordered]@{ name = $(if ($Server) { "$Server" } else { '(unknown)' }); distinguishedName = ''; netBiosName = ''; sid = ''; domainMode = ''; forestMode = ''; forestName = ''; domainControllersContainer = ''; pdcEmulator = '' }
 
     $adAvailable = [bool](Get-Command -Name 'Get-ADDomain' -ErrorAction SilentlyContinue)
     $allSections = 'Users', 'Computers', 'Groups', 'DomainControllers', 'PasswordPolicy', 'FineGrainedPolicies', 'Trusts', 'Acls', 'Gpos', 'DcHosts'

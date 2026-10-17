@@ -17,7 +17,7 @@ function Get-ADSASpnParts {
 
 function Test-ADSAHostMatchesDc {
     [CmdletBinding()]
-    param([Parameter(Mandatory)] [string] $HostName, [Parameter(Mandatory)] [object[]] $DomainControllers)
+    param([Parameter(Mandatory)] [string] $HostName, [Parameter(Mandatory)] [AllowEmptyCollection()] [object[]] $DomainControllers)
     foreach ($dc in $DomainControllers) {
         $names = @(
             "$(Get-ADSAProp -InputObject $dc -Name 'HostName' -Default '')"
@@ -46,7 +46,7 @@ function Invoke-ADSADelegationAudit {
     if ($computers.State -eq 'Ok') { $accountSections += , @{ Kind = 'computer'; Data = @($computers.Data) } }
     $unavailable = ($users.State -ne 'Ok' -and $computers.State -ne 'Ok')
 
-    $dcList = if ($dcs.State -eq 'Ok') { @($dcs.Data) } else { @() }
+    $dcList = @(if ($dcs.State -eq 'Ok') { $dcs.Data })
     $unusableNote = New-Object System.Collections.Generic.List[string]
     if ($users.State -ne 'Ok') { $unusableNote.Add("Users section $($users.State)") }
     if ($computers.State -ne 'Ok') { $unusableNote.Add("Computers section $($computers.State)") }

@@ -44,7 +44,7 @@ function Invoke-ADSecurityAudit {
         default {
             $mode = 'LiveCollection'
             Write-ADSALog -Message 'Starting read-only live collection.' -Data @{ server = "$Server" }
-            $snap = [pscustomobject](Get-ADSASnapshotData -Config $config -Server $Server -Credential $Credential -SkipDcHostChecks:$SkipDcHostChecks -SkipSysvol:$SkipSysvol -SkipAcls:$SkipAcls)
+            $snap = ConvertTo-ADSAObject -InputObject (Get-ADSASnapshotData -Config $config -Server $Server -Credential $Credential -SkipDcHostChecks:$SkipDcHostChecks -SkipSysvol:$SkipSysvol -SkipAcls:$SkipAcls)
             if ($SaveSnapshotPath) { $null = Export-ADSASnapshot -Snapshot $snap -OutputPath $SaveSnapshotPath -AllowUncOutput:$AllowUncOutput -AllowRepositoryOutput:$AllowRepositoryOutput }
         }
     }
